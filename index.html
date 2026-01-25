@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ValvePro Insights - David Young</title>
+    <meta name="description" content="A professional landing page showcasing expertise in valves for the power, oil, and gas industries.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0d1226;
+            --bg-card: #111827;
+            --bg-card-hover: #1a2235;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-blue: #3b82f6;
+            --accent-blue-hover: #2563eb;
+            --accent-orange: #f59e0b;
+            --accent-green: #10b981;
+            --border-color: #1f2937;
+            --border-light: #374151;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0 60px;
+            position: relative;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-left {
+            z-index: 1;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: rgba(59, 130, 246, 0.15);
+            color: var(--accent-blue);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            color: var(--accent-blue);
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .hero-description {
+            color: var(--text-secondary);
+            font-size: 18px;
+            line-height: 1.7;
+            margin-bottom: 32px;
+            max-width: 460px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-blue-hover);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--bg-card);
+            border-color: var(--text-secondary);
+        }
+
+        .hero-right {
+            position: relative;
+        }
+
+        .hero-image-wrapper {
+            position: relative;
+        }
+
+        .hero-image {
+            width: 100%;
+            max-width: 420px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            display: block;
+            object-fit: cover;
+            aspect-ratio: 3/4;
+            background-color: var(--bg-card);
+        }
+
+        .stats-card {
+            position: absolute;
+            bottom: -40px;
+            right: 0;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px 32px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 120px 0 80px;
+            background-color: var(--bg-secondary);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .about-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+        }
+
+        .about-card-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 20px;
+        }
+
+        .about-card-icon svg {
+            width: 100%;
+            height: 100%;
+            color: var(--accent-orange);
+        }
+
+        .about-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .about-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .about-right .badge {
+            border: 1px solid var(--border-light);
+            background-color: transparent;
+            color: var(--text-primary);
+        }
+
+        .about-right h2 {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .about-right p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        /* Expertise Section */
+        .expertise-section {
+            padding: 80px 0;
+            background-color: var(--bg-secondary);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header .badge {
+            border: 1px solid var(--border-light);
+            background-color: transparent;
+            color: var(--text-primary);
+        }
+
+        .section-header h2 {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .expertise-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .expertise-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 28px;
+            display: flex;
+            gap: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .expertise-card:hover {
+            border-color: var(--border-light);
+            background-color: var(--bg-card-hover);
+        }
+
+        .expertise-icon {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            background-color: rgba(59, 130, 246, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .expertise-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--accent-blue);
+        }
+
+        .expertise-content h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .expertise-content p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Industries Section */
+        .industries-section {
+            padding: 80px 0;
+            background-color: var(--bg-primary);
+        }
+
+        .industries-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .industries-left .badge {
+            background-color: rgba(59, 130, 246, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .industries-left h2 {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .industries-left > p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        .industry-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .industry-tag {
+            background-color: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .industry-tag:hover {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .industries-right {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .industry-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .industry-card-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 16px;
+        }
+
+        .industry-card-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .industry-card h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--accent-blue);
+        }
+
+        .industry-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Career Section */
+        .career-section {
+            padding: 80px 0;
+            background-color: var(--bg-secondary);
+        }
+
+        .career-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .career-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .career-number {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 80px;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.05);
+            line-height: 1;
+        }
+
+        .career-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+        }
+
+        .career-card h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .career-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            background-color: var(--bg-secondary);
+        }
+
+        .cta-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 60px;
+            text-align: center;
+        }
+
+        .cta-card h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .cta-card p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto 32px;
+            line-height: 1.7;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+            padding: 32px 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-logo-icon {
+            width: 36px;
+            height: 36px;
+        }
+
+        .footer-logo-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .footer-logo span {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .footer-copyright {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-social a {
+            color: var(--text-muted);
+            transition: color 0.2s ease;
+        }
+
+        .footer-social a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-social svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Scroll Animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animate-on-scroll.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .animate-fade {
+            opacity: 0;
+            transition: opacity 0.8s ease-out;
+        }
+
+        .animate-fade.animate-in {
+            opacity: 1;
+        }
+
+        .animate-slide-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animate-slide-left.animate-in {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .animate-slide-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animate-slide-right.animate-in {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .animate-scale {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .animate-scale.animate-in {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Staggered animations for grid items */
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-4 { transition-delay: 0.4s; }
+        .stagger-5 { transition-delay: 0.5s; }
+        .stagger-6 { transition-delay: 0.6s; }
+        .stagger-7 { transition-delay: 0.7s; }
+        .stagger-8 { transition-delay: 0.8s; }
+
+        /* Hero specific animations */
+        .hero-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: slideInLeft 0.8s ease-out 0.2s forwards;
+        }
+
+        .hero-right {
+            opacity: 0;
+            transform: translateX(30px);
+            animation: slideInRight 0.8s ease-out 0.4s forwards;
+        }
+
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Stats card bounce animation */
+        .stats-card {
+            animation: floatIn 0.6s ease-out 0.8s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes floatIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hover lift effect for cards */
+        .expertise-card,
+        .industry-card,
+        .career-card,
+        .about-card {
+            transition: all 0.3s ease;
+        }
+
+        .expertise-card:hover,
+        .industry-card:hover,
+        .career-card:hover,
+        .about-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Button pulse animation */
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn-primary:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Badge subtle pulse */
+        .badge {
+            animation: subtlePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes subtlePulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+            }
+        }
+
+        /* Industry tag hover effect */
+        .industry-tag {
+            transition: all 0.3s ease;
+        }
+
+        .industry-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Career number animation */
+        .career-number {
+            transition: all 0.3s ease;
+        }
+
+        .career-card:hover .career-number {
+            color: rgba(59, 130, 246, 0.15);
+            transform: scale(1.1);
+        }
+
+        /* CTA card glow effect */
+        .cta-card {
+            transition: all 0.4s ease;
+        }
+
+        .cta-card:hover {
+            box-shadow: 0 0 60px rgba(59, 130, 246, 0.15);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .hero-right {
+                order: -1;
+                display: flex;
+                justify-content: center;
+            }
+
+            .hero-image-wrapper {
+                max-width: 400px;
+            }
+
+            .stats-card {
+                position: relative;
+                bottom: 0;
+                margin-top: 24px;
+                width: 100%;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .about-content,
+            .industries-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .expertise-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .industries-right {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .career-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 0 40px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .section-header h2,
+            .about-right h2,
+            .industries-left h2 {
+                font-size: 32px;
+            }
+
+            .cta-card {
+                padding: 40px 24px;
+            }
+
+            .cta-card h2 {
+                font-size: 28px;
+            }
+
+            .career-grid,
+            .industries-right {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .stats-card {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px 24px;
+                padding: 20px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .cta-buttons .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-left">
+                    <span class="badge">Valve Engineering Excellence</span>
+                    <h1>David Young</h1>
+                    <p class="hero-subtitle">TheValve.pro</p>
+                    <p class="hero-description">
+                        30+ years of global leadership in valve engineering, aftermarket services, and lifecycle management. Combining deep technical expertise with strategic operational direction to deliver high‑performance valve solutions across the energy and process industries.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="mailto:contact@thevalve.pro" class="btn btn-primary">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="20" height="16" x="2" y="4" rx="2"/>
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                            </svg>
+                            Get in Touch
+                        </a>
+                        <a href="https://linkedin.com" class="btn btn-outline" target="_blank">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                <rect width="4" height="12" x="2" y="9"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                            Connect on LinkedIn
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-right">
+                    <div class="hero-image-wrapper">
+                        <img src="https://ext.same-assets.com/622189511/2337932645.png" alt="David Young" class="hero-image">
+                        <div class="stats-card">
+                            <div class="stat-item">
+                                <div class="stat-value">30+</div>
+                                <div class="stat-label">Years Experience</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">Global</div>
+                                <div class="stat-label">Operations Reach</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">M.Eng</div>
+                                <div class="stat-label">Mechanical Engineering</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">100s</div>
+                                <div class="stat-label">Projects Delivered</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-left">
+                    <div class="about-card animate-on-scroll animate-slide-left">
+                        <div class="about-card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 3v18h18"/>
+                                <path d="m19 9-5 5-4-4-3 3"/>
+                            </svg>
+                        </div>
+                        <h3>From Engineering Foundations to Industry Leader</h3>
+                        <p>Beginning his career as an apprentice in Glasgow, David progressed through engineering, design, and leadership roles to become a global authority in valve service and lifecycle management. His foundation in hands‑on engineering, combined with decades of international operational leadership, underpins his ability to solve complex technical challenges while driving strategic business outcomes.</p>
+                    </div>
+                </div>
+                <div class="about-right animate-on-scroll animate-slide-right">
+                    <span class="badge">About</span>
+                    <h2>Technical Expertise Backed by Global Leadership</h2>
+                    <p>With a Master’s degree in Mechanical Engineering and more than three decades of hands‑on and strategic experience, David Young brings a unique blend of technical authority and executive leadership to the global valve industry. His career spans major engineering and service organisations including Severn, Petrofac, and Celeros Flow Technology.</p>
+                    <p>CDavid has led multi‑country service operations, engineered complex valve and rotating equipment solutions, and delivered commercial growth through innovative service models, preventative maintenance strategies, and digital performance tools. His background combines deep engineering credibility with proven business acumen, making him a trusted partner for operators seeking reliability, safety, and lifecycle optimisation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Expertise Section -->
+    <section class="expertise-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="badge">Expertise</span>
+                <h2>Comprehensive Valve Solutions</h2>
+                <p>Deep technical knowledge combined with strategic vision and global service leadershipto deliver operational efficiencies and extended equipment across the full valve lifecycle.</p>
+            </div>
+            <div class="expertise-grid">
+                <div class="expertise-card animate-on-scroll stagger-1">
+                    <div class="expertise-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                    </div>
+                    <div class="expertise-content">
+                        <h3>Valve Design & Manufacturing</h3>
+                        <p>Expert knowledge and Extensive experience in the design, re‑engineering, and manufacture of valves and rotating equipment, including API, ASME, and ATEX‑compliant systems for critical applications.</p>
+                    </div>
+                </div>
+                <div class="expertise-card animate-on-scroll stagger-2">
+                    <div class="expertise-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                        </svg>
+                    </div>
+                    <div class="expertise-content">
+                        <h3>Aftermarket Services</h3>
+                        <p>Leadership of global service centres delivering maintenance, repair, overhaul, diagnostics, and performance optimisation for valves and associated equipment across upstream, downstream, and power sectors, driving new service offers and business growth</p>
+                    </div>
+                </div>
+                <div class="expertise-card animate-on-scroll stagger-3">
+                    <div class="expertise-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M2 12h20"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                    </div>
+                    <div class="expertise-content">
+                        <h3>Global Operations</h3>
+                        <p>International experience managing complex technical and operational challenges across multiple regions and facilities.</p>
+                    </div>
+                </div>
+                <div class="expertise-card animate-on-scroll stagger-4">
+                    <div class="expertise-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <div class="expertise-content">
+                        <h3>OEM & Third-Party Support</h3>
+                        <p>Strategic and technical oversight for OEM and third‑party valve portfolios qnd diverse legacy equipment requiring specialised engineering for lifecycle extension.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Industries Section -->
+    <section class="industries-section">
+        <div class="container">
+            <div class="industries-content">
+                <div class="industries-left animate-on-scroll animate-slide-left">
+                    <span class="badge">Industries</span>
+                    <h2>Serving Critical Industries Worldwide</h2>
+                    <p>Expertise across the full spectrum of energy and process industries, delivering solutions that improve operational efficiency and reduce environmental emissions.</p>
+                    <div class="industry-tags">
+                        <span class="industry-tag">Oil & Gas Upstream</span>
+                        <span class="industry-tag">Oil & Gas Downstream</span>
+                        <span class="industry-tag">Power Generation</span>
+                        <span class="industry-tag">Petrochemical</span>
+                        <span class="industry-tag">LNG</span>
+                        <span class="industry-tag">Nuclear</span>
+                        <span class="industry-tag">Renewable Energy</span>
+                        <span class="industry-tag">Process Industries</span>
+                    </div>
+                </div>
+                <div class="industries-right">
+                    <div class="industry-card animate-on-scroll stagger-1">
+                        <div class="industry-card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 3v18h18"/>
+                                <path d="m19 9-5 5-4-4-3 3"/>
+                            </svg>
+                        </div>
+                        <h4>Operational Efficiency</h4>
+                        <p>Optimizing valve performance for maximum uptime witj disciplined approach to safety, quality, and process control ensuring consistent delivery across global service centres and field operations.</p>
+                    </div>
+                    <div class="industry-card animate-on-scroll stagger-2">
+                        <div class="industry-card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </div>
+                        <h4>Lifecycle Extension</h4>
+                        <p>Maximizing asset value and longevity</p>
+                    </div>
+                    <div class="industry-card animate-on-scroll stagger-3">
+                        <div class="industry-card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                        </div>
+                        <h4>Emissions Reduction</h4>
+                        <p>Supporting environmental compliance goals</p>
+                    </div>
+                    <div class="industry-card animate-on-scroll stagger-4">
+                        <div class="industry-card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <h4>Global Partnership</h4>
+                        <p>Trusted advisor to industry leaders building long‑term relationships based on trust, transparency, and a deep understanding of customer challenges, ensuring solutions that deliver measurable value.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Career Section -->
+    <section class="career-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="badge">Career</span>
+                <h2>A Track Record of Excellence</h2>
+                <p>Building expertise through progressive leadership roles at industry-leading organizations.</p>
+            </div>
+            <div class="career-grid">
+                <div class="career-card animate-on-scroll stagger-1">
+                    <span class="career-number">1</span>
+                    <h3>Celeros Flow Technology</h3>
+                    <h4>Aftermarket Service Development Director</h4>
+                    <p>Leading global valve aftermarket support and lifecycle services expansion</p>
+                </div>
+                <div class="career-card animate-on-scroll stagger-2">
+                    <span class="career-number">2</span>
+                    <h3>Severn</h3>
+                    <h4>Senior Technical & Managerial Roles</h4>
+                    <p>Valve engineering excellence and operational leadership</p>
+                </div>
+                <div class="career-card animate-on-scroll stagger-3">
+                    <span class="career-number">3</span>
+                    <h3>Petrofac</h3>
+                    <h4>Engineering Leadership</h4>
+                    <p>International project delivery and technical management</p>
+                </div>
+                <div class="career-card animate-on-scroll stagger-4">
+                    <span class="career-number">4</span>
+                    <h3>ClydeUnion Pumps</h3>
+                    <h4>From Apprentice to Principal Engineer</h4>
+                    <p>Foundation in rotating and static equipment engineering</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-card animate-on-scroll animate-scale">
+                <h2>Let's Discuss Your Valve Challenges</h2>
+                <p>Whether you require support with valve repair, lifecycle management, service centre development, or strategic operational guidance, David brings the technical depth and leadership experience to help you achieve safe, reliable, and commercially strong outcomes.</p>
+                <div class="cta-buttons">
+                    <a href="mailto:contact@thevalve.pro" class="btn btn-primary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="16" x="2" y="4" rx="2"/>
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                        </svg>
+                        Contact David
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14"/>
+                            <path d="m12 5 7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="https://linkedin.com" class="btn btn-outline" target="_blank">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                            <rect width="4" height="12" x="2" y="9"/>
+                            <circle cx="4" cy="4" r="2"/>
+                        </svg>
+                        LinkedIn Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="footer-logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                    </div>
+                    <span>thevalve.pro</span>
+                </div>
+                <div class="footer-copyright">
+                    &copy; 2026 David Young. Valve Engineering Excellence.
+                </div>
+                <div class="footer-social">
+                    <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                            <rect width="4" height="12" x="2" y="9"/>
+                            <circle cx="4" cy="4" r="2"/>
+                        </svg>
+                    </a>
+                    <a href="mailto:contact@thevalve.pro" aria-label="Email">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="16" x="2" y="4" rx="2"/>
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Intersection Observer for scroll animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const animatedElements = document.querySelectorAll('.animate-on-scroll, .animate-fade, .animate-slide-left, .animate-slide-right, .animate-scale');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -50px 0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                        // Optional: unobserve after animation
+                        // observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            animatedElements.forEach(element => {
+                observer.observe(element);
+            });
+
+            // Smooth scroll for anchor links (if any)
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Parallax effect for hero section
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        const scrolled = window.pageYOffset;
+                        const hero = document.querySelector('.hero');
+                        if (hero && scrolled < window.innerHeight) {
+                            hero.style.backgroundPosition = `center ${scrolled * 0.3}px`;
+                        }
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+
+            // Counter animation for stats
+            const statValues = document.querySelectorAll('.stat-value');
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        const text = el.textContent;
+
+                        // Only animate numeric values
+                        if (text.includes('+') && !isNaN(parseInt(text))) {
+                            const num = parseInt(text);
+                            let current = 0;
+                            const increment = num / 30;
+                            const timer = setInterval(() => {
+                                current += increment;
+                                if (current >= num) {
+                                    el.textContent = text;
+                                    clearInterval(timer);
+                                } else {
+                                    el.textContent = Math.floor(current) + '+';
+                                }
+                            }, 30);
+                        }
+                        statsObserver.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            statValues.forEach(stat => statsObserver.observe(stat));
+        });
+    </script>
+</body>
+</html>
