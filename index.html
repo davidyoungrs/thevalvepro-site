@@ -44,9 +44,105 @@
             padding: 0 24px;
         }
 
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+            background: rgba(10, 14, 26, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .navbar.scrolled {
+            padding: 15px 0;
+            background: rgba(10, 14, 26, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--accent-blue);
+        }
+
+        .nav-link-highlight {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        /* Valve App Section */
+        .valve-app-section {
+            padding: 100px 0;
+            background-color: var(--bg-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .valve-app-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .valve-app-image-wrapper {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .valve-app-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .valve-app-image:hover {
+            transform: scale(1.02);
+        }
+
         /* Hero Section */
         .hero {
-            padding: 80px 0 60px;
+            padding: 140px 0 60px;
+            /* Increased top padding for fixed navbar */
             position: relative;
         }
 
@@ -881,10 +977,38 @@
                 width: 100%;
             }
         }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <a href="#" class="nav-logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+                TheValvePro
+            </a>
+            <ul class="nav-links">
+                <li><a href="#valve-app" class="nav-link nav-link-highlight">TheValve.app</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#expertise" class="nav-link">Expertise</a></li>
+                <li><a href="#industries" class="nav-link">Industries</a></li>
+                <li><a href="#career" class="nav-link">Career</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
@@ -947,8 +1071,25 @@
         </div>
     </section>
 
+    <!-- Valve App Section -->
+    <section id="valve-app" class="valve-app-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="badge">Innovation</span>
+                <h2>Bridging the Valve Reality Gap</h2>
+                <p>Enterprise Governance vs. Operational Truth: A new approach to valve management.</p>
+            </div>
+            <div class="valve-app-container">
+                <div class="valve-app-image-wrapper animate-on-scroll animate-scale">
+                    <img src="assets/images/valve-reality-gap.png" alt="Bridging the Valve Reality Gap Infographic"
+                        class="valve-app-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- About Section -->
-    <section class="about-section">
+    <section id="about" class="about-section">
         <div class="container">
             <div class="about-content">
                 <div class="about-left">
@@ -985,7 +1126,7 @@
     </section>
 
     <!-- Expertise Section -->
-    <section class="expertise-section">
+    <section id="expertise" class="expertise-section">
         <div class="container">
             <div class="section-header animate-on-scroll">
                 <span class="badge">Expertise</span>
@@ -1059,7 +1200,7 @@
     </section>
 
     <!-- Industries Section -->
-    <section class="industries-section">
+    <section id="industries" class="industries-section">
         <div class="container">
             <div class="industries-content">
                 <div class="industries-left animate-on-scroll animate-slide-left">
@@ -1133,7 +1274,7 @@
     </section>
 
     <!-- Career Section -->
-    <section class="career-section">
+    <section id="career" class="career-section">
         <div class="container">
             <div class="section-header animate-on-scroll">
                 <span class="badge">Career</span>
@@ -1170,7 +1311,7 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="cta-section">
+    <section id="contact" class="cta-section">
         <div class="container">
             <div class="cta-card animate-on-scroll animate-scale">
                 <h2>Let's Discuss Your Valve Challenges</h2>
