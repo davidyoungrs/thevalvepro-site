@@ -1194,7 +1194,7 @@
             padding: 60px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
         }
 
         .comparison-left {
@@ -1203,11 +1203,13 @@
         }
 
         .comparison-title {
-            font-size: 14px;
+            font-size: 20px;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             color: var(--text-muted);
-            margin-bottom: 16px;
+            margin-bottom: 24px;
+            font-weight: 800;
+            display: block;
         }
 
         .comparison-value {
@@ -1224,6 +1226,58 @@
             background: linear-gradient(to right, var(--accent-blue), var(--accent-green));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .comparison-items {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .comparison-item {
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .comparison-header {
+            padding: 24px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.02);
+            font-weight: 600;
+        }
+
+        .comparison-header.highlight {
+            color: var(--text-primary);
+            background: rgba(59, 130, 246, 0.1);
+            text-transform: none;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .comparison-cell {
+            padding: 24px;
+            font-size: 16px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .comparison-cell.highlight {
+            color: var(--text-primary);
+            font-weight: 500;
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        /* Last items border removal */
+        .comparison-cell:nth-last-child(1),
+        .comparison-cell:nth-last-child(2) {
+            border-bottom: none;
         }
 
         @media (max-width: 768px) {
@@ -1375,14 +1429,25 @@
                 </div>
                 <div class="comparison-container animate-on-scroll animate-scale">
                     <div class="comparison-card">
-                        <div class="comparison-half comparison-left"><span class="comparison-title">Traditional CMMS
-                                Valve Management</span><span class="comparison-value"
-                                style="color: var(--text-muted);">Governance &
-                                Cost</span></div>
-                        <div class="comparison-half comparison-right"><span class="comparison-title"
-                                style="color: var(--accent-blue);">TheValve.app</span><span class="comparison-value"
-                                style="color: var(--accent-blue);">Understanding &
-                                Condition</span></div>
+                        <div class="comparison-half comparison-left">
+                            <span class="comparison-title">Traditional CMMS</span>
+                            <div class="comparison-items" style="color: var(--text-muted);">
+                                <div class="comparison-item">Governance & Cost</div>
+
+                                <div class="comparison-item">"Enterprise first"</div>
+                                <div class="comparison-item">Slow, governed</div>
+                                <div class="comparison-item">Planner, reliability engineer, auditor lead</div>
+                            </div>
+                        </div>
+                        <div class="comparison-half comparison-right">
+                            <span class="comparison-title" style="color: var(--accent-blue);">TheValve.app</span>
+                            <div class="comparison-items" style="color: var(--accent-blue);">
+                                <div class="comparison-item">Understanding & Condition</div>
+                                <div class="comparison-item">"Valve first"</div>
+                                <div class="comparison-item">Fast, operational</div>
+                                <div class="comparison-item">Valve engineer, inspector, technician lead</div>
+                            </div>
+                        </div>
                     </div>
                     <div class="roi-stat animate-on-scroll">"Even a single avoided outage delay can pay for
                         years of use."
