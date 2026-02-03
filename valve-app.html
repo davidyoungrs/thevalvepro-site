@@ -53,63 +53,91 @@
         }
 
         /* Navbar */
-        .navbar {
+        /* Floating Navigation */
+        .floating-nav {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+            top: 32px;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 1000;
-            padding: 20px 0;
-            transition: all 0.3s ease;
-            background: rgba(10, 14, 26, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .navbar.scrolled {
-            padding: 15px 0;
-            background: rgba(10, 14, 26, 0.95);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .navbar-content {
+            background: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            padding: 8px 32px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .floating-nav:hover {
+            background: rgba(10, 14, 26, 0.95);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
         }
 
         .nav-logo {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: var(--text-primary);
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            margin-right: 16px;
+        }
+
+        .nav-logo span {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .nav-logo span {
+                display: inline;
+            }
         }
 
         .nav-links {
             display: flex;
-            gap: 32px;
+            gap: 8px;
             list-style: none;
+            margin: 0;
+            padding: 0;
         }
 
         .nav-link {
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 500;
-            transition: color 0.2s ease;
+            transition: all 0.2s ease;
+            padding: 8px 16px;
+            border-radius: 20px;
         }
 
         .nav-link:hover,
         .nav-link.active {
-            color: var(--accent-blue);
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .nav-link-highlight {
-            color: var(--accent-blue);
-            font-weight: 600;
+            background-color: var(--accent-blue);
+            color: white !important;
+        }
+
+        .nav-link-highlight:hover {
+            background-color: var(--accent-blue-hover);
+            opacity: 1;
+        }
+
+        /* Hero Adjustments for no top nav */
+        .hero {
+            padding-top: 80px;
+            /* Reduced since no top nav */
         }
 
         /* Valve App Section */
@@ -172,8 +200,8 @@
 
         /* Hero Section */
         .hero {
-            padding: 140px 0 60px;
-            /* Increased top padding for fixed navbar */
+            padding: 100px 0 60px;
+            /* Adjusted padding */
             position: relative;
         }
 
@@ -1304,326 +1332,325 @@
 </head>
 
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container navbar-content">
-            <a href="index.html" class="nav-logo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M7 6a5 5 0 0 1 10 0" />
-                    <path d="M6 6h12" />
-                    <path d="M12 6v9" />
-                    <path d="M4 19l8-4-8-4v8z" />
-                    <path d="M20 19l-8-4 8-4v8z" />
-                </svg>TheValvePro </a>
-            <ul class="nav-links">
-                <li><a href="index.html" class="nav-link">About</a></li>
-                <li><a href="index.html#expertise" class="nav-link">Expertise</a></li>
-                <li><a href="index.html#industries" class="nav-link">Industries</a></li>
-                <li><a href="index.html#career" class="nav-link">Career</a></li>
-                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-                <li><a href="#" class="nav-link nav-link-highlight">TheValve.app</a></li>
-            </ul>
-        </div>
+    <!-- Floating Navigation -->
+    <nav class="floating-nav">
+        <a href="index.html" class="nav-logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <path d="M2 17L12 22L22 17" stroke="white" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <path d="M2 12L12 17L22 12" stroke="white" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            <span>TheValve.Pro</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">About</a></li>
+            <li><a href="index.html#expertise" class="nav-link">Expertise</a></li>
+            <li><a href="index.html#industries" class="nav-link">Industries</a></li>
+            <li><a href="index.html#career" class="nav-link">Career</a></li>
+            <li><a href="#" class="nav-link nav-link-highlight">TheValve.app</a></li>
+        </ul>
     </nav>
-    < !-- Hero Section -->
-        <section class="app-hero">
-            <div class="container">
-                <div class="app-hero-content animate-on-scroll animate-slide-left">
-                    <h1>Understand Your Valves &mdash;
-                        Not Just Your Work Orders.</h1>
-                    <p class="app-hero-subtitle">The missing layer between your CMMS valve management and reality.
-                        Capture the lived
-                        history of your valves.</p>
-                    <div class="hero-buttons"><a href="#valve-app" class="btn btn-primary">See the Platform <svg
-                                width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M5 12h14"></path>
-                                <path d="m12 5 7 7-7 7"></path>
-                            </svg></a></div>
-                </div>
+    <!-- Hero Section -->
+    <section class="app-hero">
+        <div class="container">
+            <div class="app-hero-content animate-on-scroll animate-slide-left">
+                <h1>Understand Your Valves &mdash;
+                    Not Just Your Work Orders.</h1>
+                <p class="app-hero-subtitle">The missing layer between your CMMS valve management and reality.
+                    Capture the lived
+                    history of your valves.</p>
+                <div class="hero-buttons"><a href="#valve-app" class="btn btn-primary">See the Platform <svg width="20"
+                            height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14"></path>
+                            <path d="m12 5 7 7-7 7"></path>
+                        </svg></a></div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="app-section">
-            <div class="container">
-                <h2 class="section-title animate-on-scroll">The Problem: Administration vs. Understanding</h2>
-                <p class="section-intro animate-on-scroll">Despite mature enterprise systems,
-                    operators still face fragmented records and latent compliance risk.</p>
-                <div class="problem-layout">
-                    <div class="problem-content">
-                        <div class="problem-grid">
-                            <div class="problem-card animate-on-scroll stagger-1">
-                                <div class="problem-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                        stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg></div>
-                                <h3>Fragmented Records</h3>
-                                <p>Data scattered across online systems, CMMS, spreadsheets, PDFs and paper prints.</p>
-                            </div>
-                            <div class="problem-card animate-on-scroll stagger-2">
-                                <div class="problem-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                        stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                    </svg></div>
-                                <h3>Latent Risk</h3>
-                                <p>Poor visibility of pending repairs and testing.</p>
-                            </div>
-                            <div class="problem-card animate-on-scroll stagger-3">
-                                <div class="problem-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                        stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg></div>
-                                <h3>Knowledge Loss</h3>
-                                <p>History lost between outages / different contractors.</p>
-                            </div>
+    <section class="app-section">
+        <div class="container">
+            <h2 class="section-title animate-on-scroll">The Problem: Administration vs. Understanding</h2>
+            <p class="section-intro animate-on-scroll">Despite mature enterprise systems,
+                operators still face fragmented records and latent compliance risk.</p>
+            <div class="problem-layout">
+                <div class="problem-content">
+                    <div class="problem-grid">
+                        <div class="problem-card animate-on-scroll stagger-1">
+                            <div class="problem-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg></div>
+                            <h3>Fragmented Records</h3>
+                            <p>Data scattered across online systems, CMMS, spreadsheets, PDFs and paper prints.</p>
+                        </div>
+                        <div class="problem-card animate-on-scroll stagger-2">
+                            <div class="problem-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg></div>
+                            <h3>Latent Risk</h3>
+                            <p>Poor visibility of pending repairs and testing.</p>
+                        </div>
+                        <div class="problem-card animate-on-scroll stagger-3">
+                            <div class="problem-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg></div>
+                            <h3>Knowledge Loss</h3>
+                            <p>History lost between outages / different contractors.</p>
                         </div>
                     </div>
-                    <div class="problem-image-wrapper animate-on-scroll animate-scale"><img
-                            src="assets/images/messy-engineering-desk.png" alt="Disorganized Engineering Desk"
-                            class="problem-image"></div>
                 </div>
+                <div class="problem-image-wrapper animate-on-scroll animate-scale"><img
+                        src="assets/images/messy-engineering-desk.png" alt="Disorganized Engineering Desk"
+                        class="problem-image"></div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="app-section" style="background-color: var(--bg-secondary);">
-            <div class="container">
-                <div class="solution-layout">
-                    <div class="solution-content animate-on-scroll animate-slide-left"><span class="badge">The
-                            Solution</span>
-                        <h2 class="section-title">A System of Valve Truth</h2>
-                        <p class="section-intro">TheValve.app sits alongside your CMMS / VAMS to provide Valve
-                            Identity,
-                            Test History,
-                            and Contractor Handover Continuity. No work orders. Just clarity.</p>
-                        <ul class="feature-list">
-                            <li class="feature-item"><svg class="feature-icon" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor" stroke-width="3">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                </svg>Offline field capture </li>
-                            <li class="feature-item"><svg class="feature-icon" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor" stroke-width="3">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                </svg>Simple bulk import/export </li>
-                            <li class="feature-item"><svg class="feature-icon" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor" stroke-width="3">
-                                </svg>Plant-level visibility </li>
-                            <li class="feature-item"><svg class="feature-icon" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor" stroke-width="3">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                </svg>Secure Digital Signatures </li>
-                            <li class="feature-item"><svg class="feature-icon" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor" stroke-width="3">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                </svg>Simple and Easy to use </li>
-                        </ul>
-                    </div>
-                    <div class="solution-image-container animate-on-scroll animate-slide-right"><img
-                            src="assets/images/field-technician-tablet.png" alt="Technician with Tablet"
-                            class="solution-image"></div>
+    <section class="app-section" style="background-color: var(--bg-secondary);">
+        <div class="container">
+            <div class="solution-layout">
+                <div class="solution-content animate-on-scroll animate-slide-left"><span class="badge">The
+                        Solution</span>
+                    <h2 class="section-title">A System of Valve Truth</h2>
+                    <p class="section-intro">TheValve.app sits alongside your CMMS / VAMS to provide Valve
+                        Identity,
+                        Test History,
+                        and Contractor Handover Continuity. No work orders. Just clarity.</p>
+                    <ul class="feature-list">
+                        <li class="feature-item"><svg class="feature-icon" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>Offline field capture </li>
+                        <li class="feature-item"><svg class="feature-icon" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>Simple bulk import/export </li>
+                        <li class="feature-item"><svg class="feature-icon" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="3">
+                            </svg>Plant-level visibility </li>
+                        <li class="feature-item"><svg class="feature-icon" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>Secure Digital Signatures </li>
+                        <li class="feature-item"><svg class="feature-icon" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>Simple and Easy to use </li>
+                    </ul>
                 </div>
+                <div class="solution-image-container animate-on-scroll animate-slide-right"><img
+                        src="assets/images/field-technician-tablet.png" alt="Technician with Tablet"
+                        class="solution-image"></div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="app-section">
-            <div class="container">
-                <div class="section-header animate-on-scroll">
-                    <h2>Built for Reality</h2>
-                </div>
-                <div class="comparison-container animate-on-scroll animate-scale">
-                    <div class="comparison-card">
-                        <div class="comparison-half comparison-left">
-                            <span class="comparison-title">Traditional CMMS</span>
-                            <div class="comparison-items" style="color: var(--text-muted);">
-                                <div class="comparison-item">Governance & Cost</div>
+    <section class="app-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2>Built for Reality</h2>
+            </div>
+            <div class="comparison-container animate-on-scroll animate-scale">
+                <div class="comparison-card">
+                    <div class="comparison-half comparison-left">
+                        <span class="comparison-title">Traditional CMMS</span>
+                        <div class="comparison-items" style="color: var(--text-muted);">
+                            <div class="comparison-item">Governance & Cost</div>
 
-                                <div class="comparison-item">"Enterprise first"</div>
-                                <div class="comparison-item">Slow, governed</div>
-                                <div class="comparison-item">Planner, reliability engineer, auditor lead</div>
-                            </div>
-                        </div>
-                        <div class="comparison-half comparison-right">
-                            <span class="comparison-title" style="color: var(--accent-blue);">TheValve.app</span>
-                            <div class="comparison-items" style="color: var(--accent-blue);">
-                                <div class="comparison-item">Understanding & Condition</div>
-                                <div class="comparison-item">"Valve first"</div>
-                                <div class="comparison-item">Fast, operational</div>
-                                <div class="comparison-item">Valve engineer, inspector, technician lead</div>
-                            </div>
+                            <div class="comparison-item">"Enterprise first"</div>
+                            <div class="comparison-item">Slow, governed</div>
+                            <div class="comparison-item">Planner, reliability engineer, auditor lead</div>
                         </div>
                     </div>
-                    <div class="roi-stat animate-on-scroll">"Even a single avoided outage delay can pay for
-                        years of use."
+                    <div class="comparison-half comparison-right">
+                        <span class="comparison-title" style="color: var(--accent-blue);">TheValve.app</span>
+                        <div class="comparison-items" style="color: var(--accent-blue);">
+                            <div class="comparison-item">Understanding & Condition</div>
+                            <div class="comparison-item">"Valve first"</div>
+                            <div class="comparison-item">Fast, operational</div>
+                            <div class="comparison-item">Valve engineer, inspector, technician lead</div>
+                        </div>
                     </div>
+                </div>
+                <div class="roi-stat animate-on-scroll">"Even a single avoided outage delay can pay for
+                    years of use."
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="valve-app" class="valve-app-section">
-            <div class="container">
-                <div class="section-header animate-on-scroll"><span class="badge">Innovation</span>
-                    <h2>Bridging the Valve Reality Gap</h2>
-                    <p>Enterprise Governance vs. Operational Truth: A new approach to valve management.
-                    </p>
+    <section id="valve-app" class="valve-app-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll"><span class="badge">Innovation</span>
+                <h2>Bridging the Valve Reality Gap</h2>
+                <p>Enterprise Governance vs. Operational Truth: A new approach to valve management.
+                </p>
+            </div>
+            <div class="valve-app-container">
+                <div class="valve-app-image-wrapper animate-on-scroll animate-scale"><img
+                        src="assets/images/valve-reality-gap.png" alt="Bridging the Valve Reality Gap Infographic"
+                        class="valve-app-image">
                 </div>
-                <div class="valve-app-container">
-                    <div class="valve-app-image-wrapper animate-on-scroll animate-scale"><img
-                            src="assets/images/valve-reality-gap.png" alt="Bridging the Valve Reality Gap Infographic"
-                            class="valve-app-image">
-                    </div>
-                    <div class="valve-app-video-wrapper animate-on-scroll animate-scale"><iframe
-                            src="https://www.youtube.com/embed/hsv__U3VYuE?si=Ja3jjX2CZnUMX932"
-                            title="YouTube video player" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                    </div>
+                <div class="valve-app-video-wrapper animate-on-scroll animate-scale"><iframe
+                        src="https://www.youtube.com/embed/hsv__U3VYuE?si=Ja3jjX2CZnUMX932" title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <footer class="footer">
-            <div class="container">
-                <div class="footer-content">
-                    <div class="footer-logo">
-                        <div class="footer-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M7 6a5 5 0 0 1 10 0" />
-                                <path d="M6 6h12" />
-                                <path d="M12 6v9" />
-                                <path d="M4 19l8-4-8-4v8z" />
-                                <path d="M20 19l-8-4 8-4v8z" />
-                            </svg></div><span>thevalve.pro</span>
-                    </div>
-                    <div class="footer-copyright">&copy;
-                        2026 David Young. Valve Engineering Excellence. </div>
-                    <div class="footer-social"><a href="https://www.linkedin.com/in/david-young-thevalvepro"
-                            target="_blank" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path
-                                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                                <rect width="4" height="12" x="2" y="9" />
-                                <circle cx="4" cy="4" r="2" />
-                            </svg></a><a href="mailto:contact@thevalve.pro" aria-label="Email"><svg viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <rect width="20" height="16" x="2" y="4" rx="2" />
-                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                            </svg></a></div>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="footer-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M7 6a5 5 0 0 1 10 0" />
+                            <path d="M6 6h12" />
+                            <path d="M12 6v9" />
+                            <path d="M4 19l8-4-8-4v8z" />
+                            <path d="M20 19l-8-4 8-4v8z" />
+                        </svg></div><span>thevalve.pro</span>
                 </div>
+                <div class="footer-copyright">&copy;
+                    2026 David Young. Valve Engineering Excellence. </div>
+                <div class="footer-social"><a href="https://www.linkedin.com/in/david-young-thevalvepro" target="_blank"
+                        aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                            <rect width="4" height="12" x="2" y="9" />
+                            <circle cx="4" cy="4" r="2" />
+                        </svg></a><a href="mailto:contact@thevalve.pro" aria-label="Email"><svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <rect width="20" height="16" x="2" y="4" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                        </svg></a></div>
             </div>
-        </footer>
-        <script> // Intersection Observer for scroll animations
+        </div>
+    </footer>
+    <script> // Intersection Observer for scroll animations
 
-            document.addEventListener('DOMContentLoaded', function () {
-                const animatedElements = document.querySelectorAll('.animate-on-scroll, .animate-fade, .animate-slide-left, .animate-slide-right, .animate-scale');
+        document.addEventListener('DOMContentLoaded', function () {
+            const animatedElements = document.querySelectorAll('.animate-on-scroll, .animate-fade, .animate-slide-left, .animate-slide-right, .animate-scale');
 
-                const observerOptions = {
-                    root: null,
-                    rootMargin: '0px 0px -50px 0px',
-                    threshold: 0.1
-                }
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -50px 0px',
+                threshold: 0.1
+            }
 
-                    ;
+                ;
 
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('animate-in');
-                            // Optional: unobserve after animation
-                            // observer.unobserve(entry.target);
-                        }
-                    });
-                }
-
-                    , observerOptions);
-
-                animatedElements.forEach(element => {
-                    observer.observe(element);
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                        // Optional: unobserve after animation
+                        // observer.unobserve(entry.target);
+                    }
                 });
+            }
 
-                // Smooth scroll for anchor links (if any)
-                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                    anchor.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        const href = this.getAttribute('href');
-                        if (href === '#') {
-                            window.scrollTo({
-                                top: 0,
-                                behavior: 'smooth'
+                , observerOptions);
+
+            animatedElements.forEach(element => {
+                observer.observe(element);
+            });
+
+            // Smooth scroll for anchor links (if any)
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const href = this.getAttribute('href');
+                    if (href === '#') {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        const target = document.querySelector(href);
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
                             });
-                        } else {
-                            const target = document.querySelector(href);
-                            if (target) {
-                                target.scrollIntoView({
-                                    behavior: 'smooth',
-                                    block: 'start'
-                                });
-                            }
                         }
-                    });
+                    }
                 });
+            });
 
-                // Parallax effect for hero section - Disabled as no background image is currently set
-                // let ticking = false;
-                // window.addEventListener('scroll', function() {
-                //     if (!ticking) {
-                //         window.requestAnimationFrame(function() {
-                //             const scrolled = window.pageYOffset;
-                //             const hero = document.querySelector('.hero');
-                //             if (hero && scrolled < window.innerHeight) {
-                //                 hero.style.backgroundPosition = `center ${scrolled * 0.3}px`;
-                //             }
-                //             ticking = false;
-                //         });
-                //         ticking = true;
-                //     }
-                // });
+            // Parallax effect for hero section - Disabled as no background image is currently set
+            // let ticking = false;
+            // window.addEventListener('scroll', function() {
+            //     if (!ticking) {
+            //         window.requestAnimationFrame(function() {
+            //             const scrolled = window.pageYOffset;
+            //             const hero = document.querySelector('.hero');
+            //             if (hero && scrolled < window.innerHeight) {
+            //                 hero.style.backgroundPosition = `center ${scrolled * 0.3}px`;
+            //             }
+            //             ticking = false;
+            //         });
+            //         ticking = true;
+            //     }
+            // });
 
-                // Counter animation for stats
-                const statValues = document.querySelectorAll('.stat-value');
+            // Counter animation for stats
+            const statValues = document.querySelectorAll('.stat-value');
 
-                const statsObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const el = entry.target;
-                            const text = el.textContent;
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        const text = el.textContent;
 
-                            // Only animate numeric values
-                            if (text.includes('+') && !isNaN(parseInt(text))) {
-                                const num = parseInt(text);
-                                let current = 0;
-                                const increment = num / 30;
+                        // Only animate numeric values
+                        if (text.includes('+') && !isNaN(parseInt(text))) {
+                            const num = parseInt(text);
+                            let current = 0;
+                            const increment = num / 30;
 
-                                const timer = setInterval(() => {
-                                    current += increment;
+                            const timer = setInterval(() => {
+                                current += increment;
 
-                                    if (current >= num) {
-                                        el.textContent = text;
-                                        clearInterval(timer);
-                                    }
-
-                                    else {
-                                        el.textContent = Math.floor(current) + '+';
-                                    }
+                                if (current >= num) {
+                                    el.textContent = text;
+                                    clearInterval(timer);
                                 }
 
-                                    , 30);
+                                else {
+                                    el.textContent = Math.floor(current) + '+';
+                                }
                             }
 
-                            statsObserver.unobserve(el);
+                                , 30);
                         }
-                    });
-                }
 
-                    , {
-                        threshold: 0.5
-                    });
+                        statsObserver.unobserve(el);
+                    }
+                });
+            }
 
-                statValues.forEach(stat => statsObserver.observe(stat));
-            });
-        </script>
+                , {
+                    threshold: 0.5
+                });
+
+            statValues.forEach(stat => statsObserver.observe(stat));
+        });
+    </script>
 </body>
 
 </html>
