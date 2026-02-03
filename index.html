@@ -404,7 +404,75 @@
             color: var(--text-secondary);
             font-size: 16px;
             line-height: 1.7;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
+        }
+
+        /* Accordion Styles */
+        .about-accordion {
+            margin-top: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        details {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        details[open] {
+            border-color: var(--accent-blue);
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        summary {
+            padding: 20px 24px;
+            font-weight: 600;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-primary);
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: '+';
+            font-size: 20px;
+            color: var(--accent-blue);
+            font-weight: 400;
+            transition: transform 0.3s ease;
+        }
+
+        details[open] summary::after {
+            transform: rotate(45deg);
+        }
+
+        .accordion-content {
+            padding: 0 24px 24px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.7;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Expertise Section */
@@ -551,11 +619,153 @@
             align-items: start;
         }
 
-        .industries-left .badge {
-            background-color: rgba(59, 130, 246, 0.15);
-            color: var(--accent-blue);
-            border: 1px solid rgba(59, 130, 246, 0.3);
+        /* Career Timeline Styles */
+        .timeline-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 0;
         }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            top: 0;
+            overflow: hidden;
+        }
+
+        .timeline-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-blue);
+            transform: translateY(-100%);
+            transition: transform 1.5s ease-out;
+        }
+
+        .timeline-container.visible .timeline-line::after {
+            transform: translateY(0);
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: center;
+            padding-bottom: 60px;
+            position: relative;
+            width: 100%;
+            opacity: 0;
+            /* Hidden initially for intersection observer */
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-dot {
+            width: 16px;
+            height: 16px;
+            background: var(--bg-primary);
+            border: 2px solid var(--accent-blue);
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 24px;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover .timeline-dot {
+            background: var(--accent-blue);
+            box-shadow: 0 0 15px var(--accent-blue);
+        }
+
+        .timeline-content {
+            width: 45%;
+            background: var(--bg-card);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover .timeline-content {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .timeline-item.left .timeline-content {
+            margin-right: auto;
+            /* Push to left */
+            text-align: right;
+        }
+
+        .timeline-item.right .timeline-content {
+            margin-left: auto;
+            /* Push to right */
+            text-align: left;
+        }
+
+        .timeline-date {
+            font-size: 13px;
+            color: var(--accent-blue);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .timeline-content h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .timeline-content h4 {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .timeline-content p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-line {
+                left: 20px;
+            }
+
+            .timeline-dot {
+                left: 20px;
+            }
+
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+                margin-right: 0 !important;
+                text-align: left !important;
+            }
+        }
+
+
 
         .industries-left h2 {
             font-size: 40px;
@@ -1218,14 +1428,38 @@
                 <div class="about-right animate-on-scroll animate-slide-right">
                     <span class="badge">About</span>
                     <h2>Technical Expertise Backed by Global Leadership</h2>
-                    <p>With a Master’s degree in Mechanical Engineering and more than three decades of hands‑on and
-                        strategic experience, David Young brings a unique blend of technical authority and executive
-                        leadership to the global valve industry. His career spans major engineering and service
-                        organisations including Severn, Petrofac, and Celeros Flow Technology.</p>
-                    <p>David has led multi‑country service operations, engineered complex valve and rotating equipment
-                        solutions, and delivered commercial growth through innovative service models, preventative
-                        maintenance strategies, and digital performance tools. His background combines deep engineering
-                        pedigree with proven business acumen, making him a trusted partner for owners and end users</p>
+                    <p>David combines 30+ years of hands-on engineering with high-level strategic leadership. His
+                        approach is grounded in the reality of field operations but driven by commercial and safety
+                        objectives.</p>
+
+                    <div class="about-accordion">
+                        <details>
+                            <summary>Early Career & Foundations</summary>
+                            <div class="accordion-content">
+                                Starting as an apprentice at ClydeUnion Pumps, David built a rock-solid foundation in
+                                rotating equipment and valve engineering. This "shop floor to boardroom" journey ensures
+                                that his strategic advice is always technically sound and practically executable.
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>Leadership Philosophy</summary>
+                            <div class="accordion-content">
+                                Managing global teams at Celeros and Severn taught David that true reliability comes
+                                from people as much as process. He focuses on building competence, streamlining handover
+                                continuity, and fostering a culture of ownership within engineering teams.
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>Strategic Impact</summary>
+                            <div class="accordion-content">
+                                Focused on the intersection of technical integrity and commercial viability. Whether
+                                it's extending asset life or optimizing inventory for a multi-million dollar plant, the
+                                goal is always measurable value and reduced risk.
+                            </div>
+                        </details>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1387,30 +1621,52 @@
                 <h2>A Track Record of Excellence</h2>
                 <p>Building expertise through progressive leadership roles at industry-leading organizations.</p>
             </div>
-            <div class="career-grid">
-                <div class="career-card animate-on-scroll stagger-1">
-                    <span class="career-number">1</span>
-                    <h3>Celeros Flow Technology</h3>
-                    <h4>Aftermarket Service Development Director</h4>
-                    <p>Leading global valve aftermarket support and lifecycle services expansion</p>
+            <div class="timeline-container">
+                <!-- Timeline Line -->
+                <div class="timeline-line"></div>
+
+                <!-- Timeline Item 1 -->
+                <div class="timeline-item left animate-on-scroll">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">Current</span>
+                        <h3>Celeros Flow Technology</h3>
+                        <h4>Aftermarket Service Development Director</h4>
+                        <p>Leading global valve aftermarket support and lifecycle services expansion.</p>
+                    </div>
                 </div>
-                <div class="career-card animate-on-scroll stagger-2">
-                    <span class="career-number">2</span>
-                    <h3>Severn</h3>
-                    <h4>Senior Technical & Managerial Roles</h4>
-                    <p>Valve engineering excellence and operational leadership</p>
+
+                <!-- Timeline Item 2 -->
+                <div class="timeline-item right animate-on-scroll">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">Prior</span>
+                        <h3>Severn</h3>
+                        <h4>Senior Technical & Managerial Roles</h4>
+                        <p>Valve engineering excellence and operational leadership.</p>
+                    </div>
                 </div>
-                <div class="career-card animate-on-scroll stagger-3">
-                    <span class="career-number">3</span>
-                    <h3>Petrofac</h3>
-                    <h4>Engineering Leadership</h4>
-                    <p>International project delivery and technical management</p>
+
+                <!-- Timeline Item 3 -->
+                <div class="timeline-item left animate-on-scroll">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">Earlier</span>
+                        <h3>Petrofac</h3>
+                        <h4>Engineering Leadership</h4>
+                        <p>International project delivery and technical management.</p>
+                    </div>
                 </div>
-                <div class="career-card animate-on-scroll stagger-4">
-                    <span class="career-number">4</span>
-                    <h3>ClydeUnion Pumps</h3>
-                    <h4>From Apprentice to Principal Engineer</h4>
-                    <p>Foundation in rotating and static equipment engineering</p>
+
+                <!-- Timeline Item 4 -->
+                <div class="timeline-item right animate-on-scroll">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">Calculated Foundation</span>
+                        <h3>ClydeUnion Pumps</h3>
+                        <h4>Apprentice to Principal Engineer</h4>
+                        <p>Foundation in rotating and static equipment engineering.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1564,25 +1820,55 @@
                         if (text.includes('+') && !isNaN(parseInt(text))) {
                             const num = parseInt(text);
                             let current = 0;
-                            const increment = num / 30;
-                            const timer = setInterval(() => {
-                                current += increment;
-                                if (current >= num) {
-                                    el.textContent = text;
-                                    clearInterval(timer);
+                            const duration = 1000; // 1 second
+                            let startTime = null;
+
+                            const updateCount = (timestamp) => {
+                                if (!startTime) startTime = timestamp;
+                                const progress = (timestamp - startTime) / duration;
+
+                                if (progress < 1) {
+                                    current = Math.min(num, Math.floor(progress * num));
+                                    el.textContent = current + '+';
+                                    window.requestAnimationFrame(updateCount);
                                 } else {
-                                    el.textContent = Math.floor(current) + '+';
+                                    el.textContent = num + '+';
                                 }
-                            }, 30);
+                            };
+                            window.requestAnimationFrame(updateCount);
                         }
                         statsObserver.unobserve(el);
                     }
                 });
-            }, { threshold: 0.5 });
+            }, {
+                threshold: 0.5
+            });
 
-            statValues.forEach(stat => statsObserver.observe(stat));
+            statValues.forEach(el => statsObserver.observe(el));
+
+            // Timeline Animation Observer
+            const timelineObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        // Add visible class to parent container when items are visible to trigger line animation
+                        const container = entry.target.closest('.timeline-container');
+                        if (container) {
+                            container.classList.add('visible');
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.2
+            });
+
+            document.querySelectorAll('.timeline-item').forEach(item => {
+                timelineObserver.observe(item);
+            });
+
         });
     </script>
 </body>
 
 </html>
+```
