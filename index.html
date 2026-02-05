@@ -1744,36 +1744,32 @@
     <section id="contact" class="cta-section">
         <div class="container">
             <div class="cta-card animate-on-scroll animate-scale">
-                <h2>Let's Discuss Your Valve Challenges</h2>
-                <p>Whether you require support with valve repair, lifecycle management, service development, or
-                <div class="container animate-on-scroll">
-                    <div class="cta-card">
-                        <h2>Let's Work Together</h2>
-                        <p>Skip the email tag. Book a 15-minute engineering intro directly.</p>
+                <h2>Let's Work Together to Solve Your Valve Challenges</h2>
+                <p>Whether you require support with valve repair, lifecycle management, or service development, skip the
+                    email tag and book a 15-minute engineering intro directly.</p>
 
-                        <!-- Calendly Inline Widget -->
-                        <div class="calendly-inline-widget"
-                            data-url="https://calendly.com/david-young-reallysimpleapps/30min?hide_landing_page_details=1&hide_gdpr_banner=1&background_color=111827&text_color=ffffff&primary_color=3b82f6"
-                            style="min-width:320px;height:700px;">
-                        </div>
-                        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"
-                            async></script>
-
-                        <div style="margin-top: 40px;">
-                            <a href="https://www.linkedin.com/in/david-young-thevalvepro" target="_blank"
-                                style="color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 14px;">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path
-                                        d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                                    <rect width="4" height="12" x="2" y="9" />
-                                    <circle cx="4" cy="4" r="2" />
-                                </svg>
-                                Or find me on LinkedIn
-                            </a>
-                        </div>
-                    </div>
+                <!-- Calendly Inline Widget -->
+                <div class="calendly-inline-widget"
+                    data-url="https://calendly.com/david-young-reallysimpleapps/30min?hide_landing_page_details=1&hide_gdpr_banner=1&background_color=111827&text_color=ffffff&primary_color=3b82f6"
+                    style="min-width:320px;height:700px;">
                 </div>
+                <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"
+                    async></script>
+
+                <div style="margin-top: 40px;">
+                    <a href="https://www.linkedin.com/in/david-young-thevalvepro" target="_blank"
+                        style="color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 14px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                            <rect width="4" height="12" x="2" y="9" />
+                            <circle cx="4" cy="4" r="2" />
+                        </svg>
+                        Or find me on LinkedIn
+                    </a>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- Footer -->
@@ -1952,9 +1948,11 @@
         if (savedTheme) {
             rootElement.setAttribute('data-theme', savedTheme);
             updateIcons(savedTheme);
+            updateCalendlyTheme(savedTheme);
         } else {
-            // Default to dark mode (no attribute needed, but ensuring icons are right)
+            // Default to dark mode
             updateIcons('dark');
+            updateCalendlyTheme('dark');
         }
 
         function updateIcons(theme) {
@@ -1964,6 +1962,57 @@
             } else {
                 sunIcon.style.display = 'block';
                 moonIcon.style.display = 'none';
+            }
+        }
+
+        // Function to update Calendly widget colors based on theme
+        function updateCalendlyTheme(theme) {
+            const calendlyContainer = document.querySelector('.calendly-inline-widget');
+            if (!calendlyContainer) return;
+
+            let bgColor, textColor;
+
+            if (theme === 'light') {
+                // Light Mode Colors (matching --bg-card: #eff6ff and --text-primary: #0f172a)
+                bgColor = 'eff6ff';
+                textColor = '0f172a';
+            } else {
+                // Dark Mode Colors (matching --bg-card: #111827 and --text-primary: #ffffff)
+                bgColor = '111827';
+                textColor = 'ffffff';
+            }
+
+            // Get the base URL (without query params if we want to be safe, but replacing is easier)
+            let currentUrl = calendlyContainer.getAttribute('data-url');
+            if (!currentUrl) return;
+
+            // Helper to update or append query param
+            const updateQueryParam = (url, param, value) => {
+                const re = new RegExp("([?&])" + param + "=.*?(&|$)", "i");
+                const separator = url.indexOf('?') !== -1 ? "&" : "?";
+                if (url.match(re)) {
+                    return url.replace(re, '$1' + param + "=" + value + '$2');
+                } else {
+                    return url + separator + param + "=" + value;
+                }
+            };
+
+            currentUrl = updateQueryParam(currentUrl, 'background_color', bgColor);
+            currentUrl = updateQueryParam(currentUrl, 'text_color', textColor);
+
+            // Update the attribute
+            calendlyContainer.setAttribute('data-url', currentUrl);
+
+            // Force reload of the widget if the script has already run
+            // Calendly's widget.js doesn't expose a clean reload method, so we easiest way is to re-append the script or container.
+            // However, simply updating the src of the iframe inside is better if it exists.
+            const iframe = calendlyContainer.querySelector('iframe');
+            if (iframe) {
+                // Updating the src triggers a reload
+                let iframeSrc = iframe.src;
+                iframeSrc = updateQueryParam(iframeSrc, 'background_color', bgColor);
+                iframeSrc = updateQueryParam(iframeSrc, 'text_color', textColor);
+                iframe.src = iframeSrc;
             }
         }
 
@@ -1978,6 +2027,7 @@
             rootElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             updateIcons(newTheme);
+            updateCalendlyTheme(newTheme);
         });
     </script>
 </body>
