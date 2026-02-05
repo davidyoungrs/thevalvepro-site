@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Consultation | TheValve.pro</title>
+    <meta name="description" content="Schedule a consultation with our valve engineering experts.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Core Project Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0d1226;
+            --bg-card: #111827;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --accent-blue: #3b82f6;
+            --accent-blue-hover: #2563eb;
+            --border-color: #1f2937;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 18px;
+        }
+
+        /* Instructions Box */
+        .instructions {
+            margin: 40px auto;
+            max-width: 900px;
+            background-color: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .instructions h2 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: var(--accent-blue);
+        }
+
+        code {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #e5e7eb;
+        }
+
+        /* Calendly overrides to blend better if possible, 
+           but mostly we just containerize it */
+        .calendly-wrapper {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            min-height: 700px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Schedule a Meeting</h1>
+            <p>Book a time to discuss your valve engineering needs. Choose a slot below that works best for you.</p>
+        </header>
+
+        <main>
+            <!-- Calendly Inline Widget -->
+            <div class="calendly-wrapper">
+                <!-- 
+                     REPLACE THE URL BELOW WITH YOUR OWN CALENDLY LINK
+                     Example: data-url="https://calendly.com/your-name/30min"
+                -->
+                <div class="calendly-inline-widget"
+                    data-url="https://calendly.com/david-young-reallysimpleapps/30min"
+                    style="min-width:320px;height:700px;">
+                </div>
+                <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"
+                    async></script>
+            </div>
+
+            <div class="instructions">
+                <h2>⚠️ Action Required: Connect Your Account</h2>
+                <p>This is currently showing a demo link (or empty state if not valid). To make this work for you:</p>
+                <ol style="margin-left: 24px; margin-top: 12px; color: var(--text-secondary);">
+                    <li style="margin-bottom: 8px;">Create a free account at <a href="https://calendly.com"
+                            target="_blank" style="color: var(--accent-blue);">Calendly.com</a>.</li>
+                    <li style="margin-bottom: 8px;">Set up your first "Event Type" (e.g., 30 Minute Meeting).</li>
+                    <li style="margin-bottom: 8px;">Click "Share" on your event and "Copy Link".</li>
+                    <li style="margin-bottom: 8px;">Open this file (<code>booking-demo.html</code>) in your code editor.
+                    </li>
+                    <li style="margin-bottom: 8px;">Find <code>data-url="..."</code> around line 80.</li>
+                    <li>Replace the URL with your copied link.</li>
+                </ol>
+                <p style="margin-top: 16px; font-size: 14px; color: var(--text-secondary);">
+                    <strong>Pro Tip:</strong> You can customize colors in the URL to match your site perfectly!
+                    Add <code>?background_color=111827&text_color=ffffff&primary_color=3b82f6</code> to the end of your
+                    link.
+                </p>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

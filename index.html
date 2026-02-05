@@ -994,26 +994,7 @@
             margin: 0 auto 40px;
         }
 
-        .calendar-embed-placeholder {
-            max-width: 600px;
-            height: 400px;
-            margin: 0 auto;
-            background: rgba(10, 14, 26, 0.5);
-            border: 1px dashed var(--border-light);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-family: monospace;
-            position: relative;
-        }
 
-        .calendar-embed-placeholder::after {
-            content: 'Calendar Integration Ready';
-            font-size: 14px;
-            color: var(--accent-blue);
-        }
 
         /* Footer */
         .footer {
@@ -1415,7 +1396,7 @@
                 <path d="M4 19l8-4-8-4v8z" />
                 <path d="M20 19l-8-4 8-4v8z" />
             </svg>
-            <span style="">TheValvePro</span>
+            <span>TheValvePro</span>
         </a>
         <ul class="nav-links">
             <li><a href="#" class="nav-link">About</a></li>
@@ -1770,9 +1751,13 @@
                         <h2>Let's Work Together</h2>
                         <p>Skip the email tag. Book a 15-minute engineering intro directly.</p>
 
-                        <div class="calendar-embed-placeholder">
-                            <!-- This will be replaced by Cal.com or Calendly embed -->
+                        <!-- Calendly Inline Widget -->
+                        <div class="calendly-inline-widget"
+                            data-url="https://calendly.com/david-young-reallysimpleapps/30min?hide_landing_page_details=1&hide_gdpr_banner=1&background_color=111827&text_color=ffffff&primary_color=3b82f6"
+                            style="min-width:320px;height:700px;">
                         </div>
+                        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"
+                            async></script>
 
                         <div style="margin-top: 40px;">
                             <a href="https://www.linkedin.com/in/david-young-thevalvepro" target="_blank"

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar Integration Demo | TheValve.pro</title>
+    <meta name="description" content="Demo of Google Calendar integration for TheValve.pro website.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Core Project Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0d1226;
+            --bg-card: #111827;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --accent-blue: #3b82f6;
+            --accent-blue-hover: #2563eb;
+            --border-color: #1f2937;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        p {
+            color: var(--text-secondary);
+            max-width: 600px;
+        }
+
+        /* Calendar Styles */
+        .calendar-wrapper {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .calendar-container {
+            position: relative;
+            padding-bottom: 75%;
+            /* Aspect ratio 4:3 */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .calendar-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            border-radius: 8px;
+        }
+
+        /* Instructions Box */
+        .instructions {
+            margin-top: 40px;
+            background-color: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .instructions h2 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: var(--accent-blue);
+        }
+
+        code {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #e5e7eb;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Event Calendar</h1>
+            <p>Stay up to date with upcoming maintenance schedules, webinars, and valve training sessions. This is a
+                live demo using a public US Holidays calendar.</p>
+        </header>
+
+        <main>
+            <div class="calendar-wrapper">
+                <div class="calendar-container">
+                    <!-- Google Calendar Embed Code -->
+                    <iframe
+                        src="https://calendar.google.com/calendar/embed?height=600&wkst=1&bgcolor=%23ffffff&ctz=UTC&src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&color=%230B8043"
+                        style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <h2>How to Customize</h2>
+                <p>To use your own calendar:</p>
+                <ol style="margin-left: 24px; margin-top: 12px; color: var(--text-secondary);">
+                    <li style="margin-bottom: 8px;">Go to your Google Calendar settings on desktop.</li>
+                    <li style="margin-bottom: 8px;">Select the calendar you want to share from the left sidebar.</li>
+                    <li style="margin-bottom: 8px;">Scroll down to <strong>"Integrate calendar"</strong>.</li>
+                    <li style="margin-bottom: 8px;">Copy the <strong>"Embed code"</strong> provided by Google.</li>
+                    <li>Replace the <code>&lt;iframe&gt;</code> tag in this file with your copied code.</li>
+                </ol>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
