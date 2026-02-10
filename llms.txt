@@ -1,0 +1,23 @@
+# TheValve.pro | David Young - Valve Engineering Consultant
+
+## Overview
+TheValve.pro is the professional portfolio and consultancy hub for **David Young**, a senior valve engineer and industry leader with over 30 years of global experience in the energy, oil & gas, and process industries.
+
+## Principal Expert: David Young
+- **Expertise**: Senior Valve Engineering Consultant.
+- **Experience**: 30+ years in valve design, manufacturing, and global aftermarket services.
+- **Key Skills**: Valve asset management, lifecycle extension, emissions reduction, strategic operational leadership, and technical diagnostics.
+- **Career Highlights**: Previous global leadership roles at Celeros Flow Technology (ClydeUnion Pumps) and Severn. Apprenticeship-trained in Glasgow.
+
+## Key Services
+- **Valve Design & Manufacturing**: Expert knowledge in API, ASME, and ATEX-compliant systems.
+- **Aftermarket Services**: Global maintenance, repair, overhaul (MRO), and performance optimization.
+- **Strategic Consultancy**: Asset life extension, inventory optimization, and technical integrity audits.
+- **TheValve.app**: A proprietary digital ecosystem for valve diagnostics, asset tracking, and intelligent maintenance management.
+
+## Digital Platforms
+- **Main Site**: [thevalve.pro](https://www.thevalve.pro/)
+- **Software**: [TheValve.app](https://www.thevalve.pro/valve-app.html) - AI-driven valve asset management platform.
+
+## Contact & Booking
+Consultations can be booked via the "Book Intro" CTA on the homepage or through direct inquiry for technical consultancy.
