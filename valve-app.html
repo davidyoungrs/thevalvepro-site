@@ -175,6 +175,11 @@
         }
 
         /* Mobile Mobile Styles */
+        /* Default state for mobile overlay - hidden on desktop */
+        .mobile-menu-overlay {
+            display: none;
+        }
+
         @media (max-width: 767px) {
 
             /* Floating nav becomes just the hamburger container */
@@ -197,29 +202,63 @@
             }
 
             .nav-links {
+                display: none;
+                /* Hide desktop nav structure on mobile */
+            }
+
+            .mobile-menu-overlay {
                 position: fixed;
                 top: 0;
                 left: 0;
                 right: 0;
                 bottom: 0;
                 background-color: var(--bg-primary);
+                display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                gap: 24px;
+                gap: 32px;
                 padding: 2rem;
-                z-index: 1001;
-                /* Menu overlay */
+                z-index: 2000;
+                /* Highest level overlay */
                 transform: translateY(-100%);
                 transition: transform 0.3s ease-in-out;
                 opacity: 0;
                 pointer-events: none;
             }
 
-            .nav-links.active {
+            .mobile-menu-overlay.active {
                 transform: translateY(0);
                 opacity: 1;
                 pointer-events: auto;
+            }
+
+            .mobile-nav-links {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 24px;
+                align-items: center;
+            }
+
+            .mobile-nav-link {
+                color: var(--text-primary);
+                font-size: 24px;
+                font-weight: 600;
+                text-decoration: none;
+            }
+
+            .mobile-menu-close {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                background: none;
+                border: none;
+                color: var(--text-primary);
+                cursor: pointer;
+                padding: 8px;
             }
         }
 
@@ -1563,6 +1602,25 @@
         </svg>
         <span>TheValvePro</span>
     </a>
+
+    <!-- Mobile Menu Overlay (Detached from floating-nav) -->
+    <div class="mobile-menu-overlay">
+        <ul class="mobile-nav-links">
+            <li><a href="index.html" class="mobile-nav-link" onclick="toggleMobileMenu()">About</a></li>
+            <li><a href="index.html#expertise" class="mobile-nav-link" onclick="toggleMobileMenu()">Expertise</a></li>
+            <li><a href="index.html#industries" class="mobile-nav-link" onclick="toggleMobileMenu()">Industries</a></li>
+            <li><a href="index.html#career" class="mobile-nav-link" onclick="toggleMobileMenu()">Career</a></li>
+            <li><a href="#" class="mobile-nav-link nav-link-highlight">TheValve.app</a></li>
+        </ul>
+        <button class="mobile-menu-close" aria-label="Close Menu" onclick="toggleMobileMenu()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+
     <!-- Floating Navigation -->
     <nav class="floating-nav">
         <a href="index.html" class="nav-logo">
@@ -1957,27 +2015,22 @@
 
         // Mobile Menu Logic
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const navLinks = document.querySelector('.nav-links');
+        const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
 
-        if (mobileMenuBtn && navLinks) {
-            mobileMenuBtn.addEventListener('click', () => {
-                const isActive = navLinks.classList.contains('active');
-                if (isActive) {
-                    navLinks.classList.remove('active');
-                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
-                } else {
-                    navLinks.classList.add('active');
-                    mobileMenuBtn.setAttribute('aria-expanded', 'true');
-                }
-            });
+        function toggleMobileMenu() {
+            if (mobileMenuOverlay.classList.contains('active')) {
+                mobileMenuOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            } else {
+                mobileMenuOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                mobileMenuBtn.setAttribute('aria-expanded', 'true');
+            }
+        }
 
-            // Close menu when a link is clicked
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', () => {
-                    navLinks.classList.remove('active');
-                    if (mobileMenuBtn) mobileMenuBtn.setAttribute('aria-expanded', 'false');
-                });
-            });
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
         }
     </script>
 </body>
