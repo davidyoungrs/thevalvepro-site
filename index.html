@@ -109,6 +109,12 @@
             --accent-green: #10b981;
             --border-color: #1f2937;
             --border-light: #374151;
+
+            /* Typography */
+            --fs-h1: clamp(2.5rem, 5vw, 4.5rem);
+            --fs-h2: clamp(2rem, 4vw, 2.5rem);
+            --fs-h3: clamp(1.25rem, 3vw, 1.5rem);
+            --fs-body: clamp(1rem, 2vw, 1.125rem);
         }
 
         :root[data-theme="light"] {
@@ -125,23 +131,30 @@
             /* Update accents if needed for contrast, but defaults are usually okay */
         }
 
+        html,
+        body {
+            overflow-x: hidden;
+            /* Prevent horizontal scroll */
+        }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
+            font-size: var(--fs-body);
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
+            width: min(100% - 2rem, 1200px);
+            /* Responsive width with padding */
+            margin-inline: auto;
         }
 
         /* Floating Navigation */
         .floating-nav {
             position: fixed;
-            top: 32px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
@@ -150,11 +163,13 @@
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 100px;
-            padding: 8px 32px;
+            padding: 8px 24px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             display: flex;
             align-items: center;
-            gap: 32px;
+            justify-content: space-between;
+            width: min(90%, 800px);
+            /* Responsive width */
             transition: all 0.3s ease;
         }
 
@@ -191,6 +206,56 @@
             list-style: none;
             margin: 0;
             padding: 0;
+            /* Desktop styles */
+        }
+
+        /* Mobile Menu Triggers */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            z-index: 1002;
+        }
+
+        /* Mobile Mobile Styles */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: var(--bg-primary);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 24px;
+                padding: 2rem;
+                z-index: 1001;
+                /* Behind the button/nav bar z-index if needed, but nav is 1000. Let's fix stacking */
+                transform: translateY(-100%);
+                transition: transform 0.3s ease-in-out;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            /* Ensure floating nav stays on top */
+            .floating-nav {
+                /* z-index is 1000 */
+                justify-content: space-between;
+            }
         }
 
         .nav-link {
@@ -365,7 +430,7 @@
         }
 
         .hero h1 {
-            font-size: 72px;
+            font-size: var(--fs-h1);
             /* Neo-Grotesque Size */
             font-weight: 800;
             margin-bottom: 16px;
@@ -460,6 +525,8 @@
             margin-top: 48px;
             padding-top: 32px;
             border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            /* Allow wrapping on small screens */
         }
 
         .number-item {
@@ -1355,18 +1422,9 @@
             }
 
             .hero-image-wrapper {
-                max-width: 400px;
-            }
-
-            .stats-card {
-                position: relative;
-                bottom: 0;
-                margin-top: 24px;
-                width: 100%;
-            }
-
-            .hero h1 {
-                font-size: 42px;
+                max-width: 100%;
+                /* Allow full width */
+                width: min(100%, 400px);
             }
 
             .about-content,
@@ -1375,32 +1433,34 @@
                 gap: 40px;
             }
 
-            .expertise-grid {
-                grid-template-columns: 1fr;
+            .industries-right {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             }
 
-            .industries-right {
-                grid-template-columns: repeat(2, 1fr);
+            .expertise-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             }
 
             .career-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             }
         }
 
         @media (max-width: 768px) {
             .hero {
-                padding: 60px 0 40px;
+                padding: 100px 0 40px;
+                /* Adjust for fixed nav */
             }
 
             .hero h1 {
-                font-size: 36px;
+                font-size: var(--fs-h1);
+                /* Use fluid typography */
             }
 
             .section-header h2,
             .about-right h2,
             .industries-left h2 {
-                font-size: 32px;
+                font-size: var(--fs-h2);
             }
 
             .cta-card {
@@ -1411,11 +1471,6 @@
                 font-size: 28px;
             }
 
-            .career-grid,
-            .industries-right {
-                grid-template-columns: 1fr;
-            }
-
             .footer-content {
                 flex-direction: column;
                 gap: 20px;
@@ -1423,34 +1478,10 @@
             }
 
             .stats-card {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 16px 24px;
-                padding: 20px 24px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-buttons {
-                flex-direction: column;
-            }
-
-            .btn {
+                position: static;
+                /* Stack vertically on small screens if needed, or adjust grid */
                 width: 100%;
-                justify-content: center;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-            }
-
-            .cta-buttons .btn {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
+                margin-top: 20px;
             }
         }
     </style>
@@ -1471,6 +1502,16 @@
             </svg>
             <span>TheValvePro</span>
         </a>
+
+        <button class="mobile-menu-btn" aria-label="Toggle Menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+
         <ul class="nav-links">
             <li><a href="#" class="nav-link">About</a></li>
             <li><a href="#expertise" class="nav-link">Expertise</a></li>
@@ -2102,6 +2143,31 @@
             updateIcons(newTheme);
             updateCalendlyTheme(newTheme);
         });
+
+        // Mobile Menu Logic
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        if (mobileMenuBtn && navLinks) {
+            mobileMenuBtn.addEventListener('click', () => {
+                const isActive = navLinks.classList.contains('active');
+                if (isActive) {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                } else {
+                    navLinks.classList.add('active');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'true');
+                }
+            });
+
+            // Close menu when a link is clicked
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    if (mobileMenuBtn) mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                });
+            });
+        }
     </script>
 </body>
 
