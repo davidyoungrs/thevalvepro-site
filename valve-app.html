@@ -175,29 +175,7 @@
         }
 
         /* Mobile Mobile Styles */
-        /* Mobile Mobile Styles */
         @media (max-width: 767px) {
-
-            /* Separate Logo and Hamburger on Mobile */
-            .nav-logo {
-                position: fixed;
-                top: 20px;
-                left: 20px;
-                z-index: 1005;
-                background: rgba(10, 14, 26, 0.85);
-                backdrop-filter: blur(16px);
-                -webkit-backdrop-filter: blur(16px);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 100px;
-                padding: 8px 16px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            }
-
-            .nav-logo span {
-                display: inline;
-                /* Always show text on mobile per request */
-                font-size: 16px;
-            }
 
             /* Floating nav becomes just the hamburger container */
             .floating-nav {
@@ -293,6 +271,56 @@
         .nav-link-highlight:hover {
             background-color: var(--accent-blue-hover);
             opacity: 1;
+        }
+
+        /* Logic for dual logos */
+        .mobile-nav-logo {
+            display: none;
+            /* Hidden by default (Desktop) */
+        }
+
+        .nav-logo {
+            display: flex;
+            /* Visible by default (Desktop) */
+        }
+
+        @media (max-width: 767px) {
+            .mobile-nav-logo {
+                display: flex;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1005;
+                background: rgba(10, 14, 26, 0.85);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 100px;
+                padding: 8px 16px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+                align-items: center;
+                gap: 8px;
+                text-decoration: none;
+                color: var(--text-primary);
+                font-size: 16px;
+                font-weight: 700;
+            }
+
+            .nav-logo {
+                display: none;
+                /* Hide desktop logo inside nav on mobile */
+            }
+        }
+
+        /* Light mode support for mobile logo */
+        :root[data-theme="light"] .mobile-nav-logo {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-primary);
+        }
+
+        :root[data-theme="light"] .mobile-nav-logo svg path {
+            stroke: var(--text-primary);
         }
 
         /* Light Mode Navigation Overrides */
@@ -1523,6 +1551,18 @@
 </head>
 
 <body>
+    <!-- Mobile Logo (Outside floating nav to avoid containing block issues) -->
+    <a href="index.html" class="mobile-nav-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            <path d="M2 17L12 22L22 17" stroke="white" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            <path d="M2 12L12 17L22 12" stroke="white" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+        </svg>
+        <span>TheValvePro</span>
+    </a>
     <!-- Floating Navigation -->
     <nav class="floating-nav">
         <a href="index.html" class="nav-logo">
