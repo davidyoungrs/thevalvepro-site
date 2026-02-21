@@ -3,6 +3,11 @@
 
 <head>
   <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://plausible.io">
+  <link rel="dns-prefetch" href="https://unpkg.com">
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script defer data-domain="thevalve.pro" src="https://plausible.io/js/script.js"></script>
   <link rel="manifest" href="manifest.json">
@@ -15,10 +20,52 @@
       window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
     }
   </script>
-  <title>Steam Leakage Dashboard | FCI Seat Class</title>
+  <title>Steam Leakage & FCI Seat Class Analyzer | Free Tool | TheValve.pro</title>
+  <meta name="description"
+    content="Free industrial-grade steam leakage analyzer. Calculate valve leakage cost, CO₂ equivalent emissions, FCI seat classification, and financial impact. Powered by IAPWS-IF97 steam tables. Built by David Young, Valve Engineering Consultant.">
+  <meta property="og:title" content="Steam Leakage & FCI Seat Class Analyzer | TheValve.pro">
+  <meta property="og:description"
+    content="Quantify steam valve leakage in financial and environmental terms. Free, precise, and built on IAPWS-IF97 steam tables.">
+  <meta property="og:image" content="https://www.thevalve.pro/assets/images/expert-hero.png">
+  <meta property="og:url" content="https://www.thevalve.pro/new%20modern%20leakage.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Steam Leakage & FCI Analyzer | Free Engineering Tool">
+  <meta name="twitter:description"
+    content="Calculate the true cost and emissions of steam valve leakage. Built on IAPWS-IF97 steam tables by David Young.">
+  <meta name="twitter:image" content="https://www.thevalve.pro/assets/images/expert-hero.png">
+  <link rel="canonical" href="https://www.thevalve.pro/new%20modern%20leakage.html">
 
-  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <!-- Structured Data: SoftwareApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Steam Leakage & FCI Seat Class Analyzer",
+    "applicationCategory": "EngineeringApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://www.thevalve.pro/new%20modern%20leakage.html",
+    "author": { "@id": "https://www.thevalve.pro/#david-young" },
+    "description": "Free industrial-grade steam leakage analyzer using IAPWS-IF97 steam tables. Calculates valve seat leakage rate, annual steam loss, financial cost, CO₂ equivalent emissions, and FCI seat class classification for process valves.",
+    "featureList": [
+      "IAPWS-IF97 steam property calculations",
+      "FCI 70-2 seat leakage class classification",
+      "Annual leakage cost in USD/GBP/EUR",
+      "CO₂ equivalent emissions (Scope 1 & 2)",
+      "Exportable PDF and CSV reports",
+      "Shareable results via URL"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    }
+  }
+  </script>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <script charset="utf-8"

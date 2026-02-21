@@ -3,6 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://plausible.io">
+    <link rel="dns-prefetch" href="https://assets.calendly.com">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script defer data-domain="thevalve.pro" src="https://plausible.io/js/script.js"></script>
     <link rel="manifest" href="manifest.json">
@@ -15,10 +19,10 @@
             window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
         }
     </script>
-    <title>David Young | Valve Engineering Consultant & Expert</title>
+    <title>David Young | Valve Engineering Consultant & Lifecycle Expert | TheValve.pro</title>
     <meta name="description"
         content="David Young: Senior Valve Engineer and Consultant specializing in valve asset management, lifecycle extension, and emissions reduction. Creator of TheValve.app for intelligent asset tracking.">
-    <meta property="og:title" content="David Young | Valve Engineering Expert & Consultant">
+    <meta property="og:title" content="David Young | Valve Engineering Consultant & Lifecycle Expert">
     <meta property="og:description"
         content="Expert consultancy for valve asset management and engineering challenges. 30+ years of global leadership.">
     <meta property="og:image" content="https://www.thevalve.pro/assets/images/david-young-hero.png">
@@ -30,71 +34,65 @@
     <meta name="twitter:image" content="https://www.thevalve.pro/assets/images/david-young-hero.png">
     <link rel="canonical" href="https://www.thevalve.pro/">
 
-    <!-- Agentic SEO & Structured Data -->
+    <!-- Structured Data: Person + ProfessionalService -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "David Young",
-      "jobTitle": "Senior Valve Engineering Consultant",
-      "worksFor": {
-        "@type": "Organization",
-        "name": "TheValvePro",
-        "url": "https://www.thevalve.pro"
-      },
-      "url": "https://www.thevalve.pro",
-      "image": "https://www.thevalve.pro/assets/images/david-young-hero.png",
-      "sameAs": [
-        "https://www.linkedin.com/in/david-young-valve-pro"
-      ],
-      "description": "David Young is a Senior Valve Engineer and Consultant with 30+ years of global experience in valve asset management, lifecycle extension, and emissions reduction.",
-      "hasOccupation": {
-        "@type": "Occupation",
-        "name": "Valve Engineering Consultant",
-        "description": "Providing technical consulting, global operations leadership, and digital asset management solutions."
-      }
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "serviceType": "Valve Engineering Consultancy",
-      "provider": {
-        "@type": "Person",
-        "name": "David Young"
-      },
-      "areaServed": "Global",
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Valve Services",
-        "itemListElement": [
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Valve Design & Manufacturing",
-              "description": "Expert knowledge in API, ASME, and ATEX-compliant systems."
-            }
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://www.thevalve.pro/#david-young",
+          "name": "David Young",
+          "jobTitle": "Senior Valve Engineering Consultant",
+          "worksFor": {
+            "@type": "Organization",
+            "name": "TheValvePro",
+            "url": "https://www.thevalve.pro"
           },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Aftermarket Services",
-              "description": "Global maintenance, repair, overhaul, and diagnostics."
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "TheValve.app Asset Management",
-              "description": "Digital ecosystem for valve diagnostics and intelligent maintenance."
-            }
+          "url": "https://www.thevalve.pro",
+          "image": "https://www.thevalve.pro/assets/images/david-young-hero.png",
+          "sameAs": [
+            "https://www.linkedin.com/in/david-young-thevalvepro"
+          ],
+          "description": "David Young is a Senior Valve Engineer and Consultant with 30+ years of global experience in valve asset management, lifecycle extension, and emissions reduction for oil, gas, power, and industrial facilities worldwide.",
+          "knowsAbout": [
+            "Valve Engineering", "Valve Asset Management", "Steam Leakage Analysis",
+            "FCI Seat Classification", "Emissions Reduction", "API Standards",
+            "ASME Standards", "Valve Lifecycle Management", "Process Safety"
+          ],
+          "hasOccupation": {
+            "@type": "Occupation",
+            "name": "Valve Engineering Consultant",
+            "description": "Technical consulting, global operations leadership, and digital asset management solutions for valves."
           }
-        ]
-      }
+        },
+        {
+          "@type": "ProfessionalService",
+          "@id": "https://www.thevalve.pro/#service",
+          "name": "David Young – Valve Engineering Consultancy",
+          "url": "https://www.thevalve.pro",
+          "description": "Independent valve engineering consultancy offering lifecycle management, steam loss analysis, emissions compliance, and digital asset management for industrial clients worldwide.",
+          "provider": { "@id": "https://www.thevalve.pro/#david-young" },
+          "areaServed": "Global",
+          "serviceType": "Valve Engineering Consultancy",
+          "availableChannel": {
+            "@type": "ServiceChannel",
+            "serviceUrl": "https://calendly.com/david-young-reallysimpleapps/30min",
+            "serviceType": "Book a free 15-minute engineering intro"
+          },
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Valve Engineering Services",
+            "itemListElement": [
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Valve Design & Manufacturing Advisory", "description": "Expert guidance on API, ASME, and ATEX-compliant valve selection and design." } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Valve Lifecycle Management", "description": "End-to-end lifecycle planning, condition assessment, and maintenance strategy." } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Steam Leakage & Emissions Analysis", "description": "Quantify valve leakage losses, CO₂ equivalent emissions, and financial impact." } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Aftermarket & Overhaul Services", "description": "Global maintenance, repair, overhaul, and diagnostics for critical valve infrastructure." } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Digital Valve Asset Management (TheValve.app)", "description": "Cloud platform for digital valve identity, test history, and intelligent maintenance workflows." } }
+            ]
+          }
+        }
+      ]
     }
     </script>
     <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
