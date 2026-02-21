@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://plausible.io">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script defer data-domain="thevalve.pro" src="https://plausible.io/js/script.js"></script>
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon-16.png">
+    <link rel="apple-touch-icon" href="../assets/images/icon-192.png">
+    <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+    <meta name="theme-color" content="#0f172a">
+
+    <title>Beyond the Database: Why Your Valve Service Provider Shouldn't Own Your Data | TheValve.pro</title>
+    <meta name="description"
+        content="Industrial leaders are waking up to a dangerous reality: years of critical valve maintenance data trapped inside a contractor's proprietary system. David Young explains why data ownership is the next frontier in valve lifecycle management.">
+    <meta property="og:title" content="Beyond the Database: Why Your Valve Service Provider Shouldn't Own Your Data">
+    <meta property="og:description"
+        content="Your valve data is the foundation of your predictive maintenance strategy. If a service contractor controls it, you don't. David Young explains the risks and the solution.">
+    <meta property="og:image" content="https://www.thevalve.pro/assets/images/expert-hero.png">
+    <meta property="og:url" content="https://www.thevalve.pro/blogs/beyond-the-database.html">
+    <meta property="og:type" content="article">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Beyond the Database: Why Your Valve Service Provider Shouldn't Own Your Data">
+    <meta name="twitter:description"
+        content="If your contractor manages your valve data, they own your predictive maintenance strategy. Here's what to do about it.">
+    <meta name="twitter:image" content="https://www.thevalve.pro/assets/images/expert-hero.png">
+    <link rel="canonical" href="https://www.thevalve.pro/blogs/beyond-the-database.html">
+
+    <!-- Article Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Beyond the Database: Why Your Valve Service Provider Shouldn't Own Your Data",
+      "description": "Industrial leaders are waking up to a dangerous reality: years of critical valve maintenance data trapped inside a contractor's proprietary system. David Young explains why data ownership is the next frontier in valve lifecycle management.",
+      "author": { "@id": "https://www.thevalve.pro/#david-young" },
+      "publisher": {
+        "@type": "Organization",
+        "name": "TheValvePro",
+        "url": "https://www.thevalve.pro",
+        "logo": { "@type": "ImageObject", "url": "https://www.thevalve.pro/assets/images/favicon-32.png" }
+      },
+      "datePublished": "2026-02-21",
+      "dateModified": "2026-02-21",
+      "url": "https://www.thevalve.pro/blogs/beyond-the-database.html",
+      "articleSection": "Valve Engineering",
+      "keywords": ["valve data ownership", "MCP", "valve asset management", "walled garden database", "predictive maintenance", "valve lifecycle", "CMMS integration", "TheValve.app"]
+    }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0d1226;
+            --bg-card: #111827;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-blue: #3b82f6;
+            --border-color: #1f2937;
+            --border-light: #374151;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Navigation ── */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 14, 26, 0.92);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 32px;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .nav-logo span {
+            color: var(--accent-blue);
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-back:hover {
+            color: var(--text-primary);
+        }
+
+        /* ── Hero ── */
+        .post-hero {
+            padding: 80px 24px 60px;
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .post-tag {
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            color: #60a5fa;
+            padding: 5px 14px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .post-date {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .post-hero h1 {
+            font-size: clamp(1.9rem, 5vw, 2.9rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 22px;
+            letter-spacing: -0.02em;
+        }
+
+        .post-hero .lead {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 36px;
+        }
+
+        .author-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding-top: 28px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .author-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .author-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .author-role {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+
+        /* ── Divider ── */
+        .post-divider {
+            max-width: 780px;
+            margin: 0 auto;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        /* ── Infographic Box ── */
+        .infographic-box {
+            max-width: 780px;
+            margin: 56px auto 0;
+            padding: 0 24px;
+        }
+
+        .infographic-inner {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .infographic-header {
+            background: linear-gradient(135deg, #111827 0%, #0f1e36 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 28px 32px;
+        }
+
+        .infographic-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .infographic-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .infographic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .infographic-col {
+            padding: 28px 28px;
+        }
+
+        .infographic-col:first-child {
+            border-right: 1px solid var(--border-color);
+        }
+
+        .infographic-col-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .risk-title {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+        }
+
+        .solution-title {
+            background: rgba(16, 185, 129, 0.1);
+            color: #34d399;
+        }
+
+        .silo-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+            align-items: flex-start;
+        }
+
+        .silo-icon {
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .silo-icon.red {
+            background: rgba(239, 68, 68, 0.12);
+        }
+
+        .silo-icon.green {
+            background: rgba(16, 185, 129, 0.12);
+        }
+
+        .silo-text strong {
+            font-size: 0.88rem;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .silo-text p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .comparison-table {
+            margin: 0 32px 28px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-row.header {
+            background: rgba(59, 130, 246, 0.06);
+        }
+
+        .table-cell {
+            padding: 10px 14px;
+            font-size: 0.8rem;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .table-cell:last-child {
+            border-right: none;
+        }
+
+        .table-row.header .table-cell {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        .table-cell.bad {
+            color: #f87171;
+        }
+
+        .table-cell.good {
+            color: #34d399;
+        }
+
+        /* ── Article Body ── */
+        .post-body {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+
+        .post-body h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 52px;
+            margin-bottom: 18px;
+            letter-spacing: -0.01em;
+            color: var(--text-primary);
+        }
+
+        .post-body h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 36px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .post-body p {
+            font-size: 1.02rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .post-body p:first-of-type {
+            margin-top: 0;
+        }
+
+        .post-body strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .post-body ul,
+        .post-body ol {
+            margin: 20px 0 20px 24px;
+            color: var(--text-secondary);
+        }
+
+        .post-body li {
+            font-size: 1.02rem;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        blockquote {
+            margin: 36px 0;
+            padding: 24px 28px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.06), rgba(124, 58, 237, 0.06));
+            border-left: 3px solid var(--accent-blue);
+            border-radius: 0 12px 12px 0;
+        }
+
+        blockquote p {
+            font-size: 1.08rem !important;
+            font-style: italic;
+            color: var(--text-primary) !important;
+            margin-bottom: 0 !important;
+            line-height: 1.65;
+        }
+
+        .callout {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 24px 28px;
+            margin: 32px 0;
+        }
+
+        .callout-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #60a5fa;
+            margin-bottom: 12px;
+        }
+
+        .callout p {
+            font-size: 0.95rem !important;
+            margin-bottom: 0 !important;
+        }
+
+        /* ── CTA Footer ── */
+        .post-cta {
+            max-width: 780px;
+            margin: 0 auto 80px;
+            padding: 0 24px;
+        }
+
+        .post-cta-inner {
+            background: linear-gradient(135deg, #111827 0%, #0f1e36 100%);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            padding: 48px 40px;
+            text-align: center;
+        }
+
+        .post-cta-inner h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .post-cta-inner p {
+            font-size: 0.97rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto 28px;
+            line-height: 1.6;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-blue);
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        /* ── Footer ── */
+        .site-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 32px 24px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .site-footer a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .infographic-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .infographic-col:first-child {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .table-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .table-row.header .table-cell:first-child,
+            .table-cell:first-child {
+                display: none;
+            }
+
+            .post-cta-inner {
+                padding: 36px 24px;
+            }
+
+            .comparison-table {
+                margin: 0 0 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="../index.html" class="nav-logo">TheValve<span>.pro</span></a>
+        <a href="../index.html" class="nav-back">
+            ← Back to home
+        </a>
+    </nav>
+
+    <!-- Post Hero -->
+    <header class="post-hero">
+        <div class="post-meta">
+            <span class="post-tag">Valve Data &amp; Technology</span>
+            <span class="post-date">21 February 2026 · 8 min read</span>
+        </div>
+        <h1>Beyond the Database: Why Your Valve Service Provider Shouldn't Own Your Data</h1>
+        <p class="lead">Industrial leaders are waking up to a dangerous reality — years of critical valve maintenance
+            history, trapped inside a contractor's proprietary system. Here's why data ownership is the next frontier in
+            valve lifecycle management, and how to take it back.</p>
+        <div class="author-row">
+            <div class="author-avatar">DY</div>
+            <div>
+                <div class="author-name">David Young</div>
+                <div class="author-role">Senior Valve Engineering Consultant · TheValve.pro</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="post-divider"></div>
+
+    <!-- Infographic: Moving from Vendor-Siloed Data to Unified Layer -->
+    <div class="infographic-box">
+        <div class="infographic-inner">
+            <div class="infographic-header">
+                <div class="infographic-title">Own the Truth: Moving from Vendor-Siloed Data to a Unified Valve
+                    Management Layer</div>
+                <div class="infographic-subtitle">A visual comparison of data ownership risks versus a streamlined,
+                    user-centric model</div>
+            </div>
+
+            <div class="infographic-grid">
+                <!-- Risk side -->
+                <div class="infographic-col">
+                    <div class="infographic-col-title risk-title">⚠ The Risk: Service Provider Silos</div>
+                    <div class="silo-item">
+                        <div class="silo-icon red">🔒</div>
+                        <div class="silo-text">
+                            <strong>The "Vendor Lock-in" Trap</strong>
+                            <p>Valve knowledge is held between contractors — forcing new providers to "relearn" at your
+                                expense when contracts change.</p>
+                        </div>
+                    </div>
+                    <div class="silo-item">
+                        <div class="silo-icon red">📂</div>
+                        <div class="silo-text">
+                            <strong>Fragmented Repair History</strong>
+                            <p>Actuator calibration, NPS wear patterns, and bespoke repair records scatter across vendor
+                                snapshots rather than a unified record.</p>
+                        </div>
+                    </div>
+                    <div class="silo-item">
+                        <div class="silo-icon red">🔄</div>
+                        <div class="silo-text">
+                            <strong>Data Handover Friction</strong>
+                            <p>Contract endings often lead to messy PDF dumps instead of structured, queryable valve
+                                records — if handover happens at all.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solution side -->
+                <div class="infographic-col">
+                    <div class="infographic-col-title solution-title">✓ The Solution: Unified "System of Truth"</div>
+                    <div class="silo-item">
+                        <div class="silo-icon green">🧱</div>
+                        <div class="silo-text">
+                            <strong>Valve-Centric Record Layer</strong>
+                            <p>All test history, calibration data, and repair records attach to the valve asset — not
+                                the contractor's platform. Any service provider reads from the same source.</p>
+                        </div>
+                    </div>
+                    <div class="silo-item">
+                        <div class="silo-icon green">🌐</div>
+                        <div class="silo-text">
+                            <strong>MCP Layer: The Bridge to CMMS</strong>
+                            <p>A lightweight MCP integration layer connects your valve records directly to enterprise
+                                CMMS/EAM platforms like IBM Maximo or Asset Suite — with no manual re-entry.</p>
+                        </div>
+                    </div>
+                    <div class="silo-item">
+                        <div class="silo-icon green">📱</div>
+                        <div class="silo-text">
+                            <strong>Field-Captured Data</strong>
+                            <p>Technicians capture data at the valve, offline if needed. Records sync automatically —
+                                creating a continuous, verifiable history you own permanently.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparison table -->
+            <div class="comparison-table">
+                <div class="table-row header">
+                    <div class="table-cell">Data Attribute</div>
+                    <div class="table-cell">Provider-Siloed</div>
+                    <div class="table-cell">Unified / User-Centric</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">Data owner</div>
+                    <div class="table-cell bad">Service provider</div>
+                    <div class="table-cell good">Plant owner</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">Contract end</div>
+                    <div class="table-cell bad">Data lost or PDF dump</div>
+                    <div class="table-cell good">Continuous record</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">CMMS integration</div>
+                    <div class="table-cell bad">Manual, fragile</div>
+                    <div class="table-cell good">Universal MCP + APIs</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">Vendor switching</div>
+                    <div class="table-cell bad">Painful / costly</div>
+                    <div class="table-cell good">No disruption</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Article Body -->
+    <article class="post-body">
+
+        <h2>1. Introduction: The Invisible Cost of "Convenience"</h2>
+
+        <p>Imagine a scenario all too common during major refinery turnarounds or power plant outages: a decade-long
+            contract with a primary valve service provider finally concludes. As you transition to a new vendor, your
+            reliability team discovers a catastrophic gap. <strong>Many years of critical maintenance history</strong> —
+            including specific actuator calibration settings, NPS (nominal pipe size) wear patterns, and bespoke repair
+            histories — are trapped inside the outgoing provider's proprietary "walled garden" database.</p>
+
+        <p>What initially seemed like a convenience — letting the contractor manage the "paperwork" in their system —
+            has mutated into a massive operational bottleneck. Your asset data, the very foundation of your predictive
+            maintenance strategy, is effectively held hostage.</p>
+
+        <p>This traditional model creates a fragile dependency where switching vendors requires either an expensive,
+            manual data extraction or the total loss of your assets' lifecycle context. To break this cycle, industrial
+            leaders are moving toward an AI-ready paradigm powered by the <strong>Model Context Protocol (MCP)</strong>
+            — ensuring you own not just the physical valve, but the intelligence layer that keeps it running.</p>
+
+        <blockquote>
+            <p>"You wouldn't let a contractor own the title deeds to your plant. Why are you letting them own the
+                operational history of your most critical isolation points?"</p>
+        </blockquote>
+
+        <h2>2. The Proprietary Pitfall: Why "Their" Database Is Your Risk</h2>
+
+        <p>When service providers utilise platform-specific databases or "walled garden" plugins, they create silos that
+            kill cross-platform continuity. In mission-critical environments — where systems like IBM Maximo or Asset
+            Suite manage assets where operational failure has significant consequences — trapped data is more than an
+            inconvenience; it is a risk to safety and uptime.</p>
+
+        <p>Traditional integrations rely on manual API wiring, a process that is both brittle and expensive. When a
+            vendor's tool is hard-coded to a specific interface, any change in the software environment can cause the
+            integration to shatter. This forces your engineering team to chase hydrostatic test results and seal kit
+            specifications across fragmented snapshots of history rather than a continuous, verifiable record.</p>
+
+        <div class="callout">
+            <div class="callout-title">🔍 The Hidden Integration Tax</div>
+            <p>Developers must manually define interfaces, manage authentication, and handle execution logic for each
+                service. As the number of APIs increases, the maintenance burden grows exponentially — and every new
+                vendor relationship starts this cycle from scratch.</p>
+        </div>
+
+        <h2>3. The MCP Paradigm: AI-Ready, Owner-Centric Asset Intelligence</h2>
+
+        <p>The Model Context Protocol (MCP) is an open standard that enables AI systems and digital tools to access
+            structured, real-world data in a consistent, interoperable way. Applied to valve management, it means a
+            single, standardised layer through which any authorised system — your CMMS, your reliability AI, your field
+            app, your new contractor's tooling — can read and write valve records.</p>
+
+        <p>The key shift is this: <strong>the data is attached to the asset, not the service provider's
+                platform</strong>. When a contract ends, the data stays with you. When a new contractor onboards, they
+            plug into your record layer rather than starting a parallel silo.</p>
+
+        <ul>
+            <li><strong>Persistent asset memory</strong> — calibration history, test sequences, and failure modes follow
+                the valve's unique identifier across its entire installed life.</li>
+            <li><strong>Field-first capture</strong> — technicians record data at the valve using mobile tools,
+                including offline. Sync happens automatically when connectivity returns.</li>
+            <li><strong>Universal CMMS bridge</strong> — structured MCP responses map directly to Maximo, Asset Suite,
+                SAP PM, and other EAM fields without custom middleware.</li>
+            <li><strong>Audit-ready records</strong> — every state change carries a timestamp, technician signature, and
+                equipment reference — defensible in regulatory and insurance contexts.</li>
+        </ul>
+
+        <h2>4. What This Looks Like in Practice</h2>
+
+        <p>Consider a mid-sized chemical plant with 1,800 valves across 12 process units. Under the legacy model, four
+            different service contractors managed their own records over a 15-year period. By the time a reliability
+            improvement project was commissioned, the engineering team could not reliably answer basic questions: which
+            valves had passed an A2 seat test in the last 36 months? Which actuators had been recalibrated since the
+            last scheduled shutdown?</p>
+
+        <p>Under a unified, MCP-enabled model, those questions have instant, auditable answers — not because someone did
+            extra work, but because the data model was designed for the plant owner's benefit from day one.</p>
+
+        <div class="callout">
+            <div class="callout-title">📋 Practical Outcome Example</div>
+            <p>During one UK refinery engagement, transitioning from a siloed to a unified valve record model reduced
+                the pre-shutdown valve verification time from 14 days (manual cross-referencing of legacy PDF records)
+                to under 6 hours using structured digital records. The cost of the data migration exercise was recovered
+                within the first turnaround cycle.</p>
+        </div>
+
+        <h2>5. How to Audit Your Current Exposure</h2>
+
+        <p>Before you can fix the problem, you need to understand its extent. Start with these questions:</p>
+
+        <ol>
+            <li><strong>Where does valve test data currently live?</strong> — In your CMMS? In a contractor's portal? In
+                PDF archives on a shared drive?</li>
+            <li><strong>What happens to that data if the contract ends tomorrow?</strong> — Do you have a contractual
+                right to a structured export?</li>
+            <li><strong>Can you answer a regulatory audit question in under an hour?</strong> — If tracing a specific
+                valve's repair history takes days, your data architecture has a problem.</li>
+            <li><strong>How many separate systems currently hold valve records?</strong> — Each system boundary is a
+                potential data loss event.</li>
+            <li><strong>Does your current service contract specify data ownership?</strong> — Most don't, and most plant
+                owners have never asked.</li>
+        </ol>
+
+        <h2>6. The Next Step: TheValve.app</h2>
+
+        <p>This is precisely the problem <a href="../valve-app.html"
+                style="color: var(--accent-blue); text-decoration: none; font-weight: 500;">TheValve.app</a> was built
+            to solve. It provides a valve-centric digital identity layer — independent of any service provider — where
+            test history, calibration data, and maintenance records accumulate against the asset's unique identifier
+            across its entire installed life.</p>
+
+        <p>Contractors plug into the platform rather than building parallel silos. CMMS systems read structured records
+            via API. Field technicians capture data offline. And critically, <strong>the data always belongs to the
+                plant owner</strong>.</p>
+
+        <p>If your current contracts don't specify data ownership, now is the time to change that. The physical valve is
+            yours. Its intelligence layer should be too.</p>
+
+    </article>
+
+    <!-- CTA -->
+    <div class="post-cta">
+        <div class="post-cta-inner">
+            <h3>Ready to Own Your Valve Data?</h3>
+            <p>Book a free 15-minute engineering intro to discuss your current data architecture and what a transition
+                looks like in practice.</p>
+            <a href="../index.html#contact" class="btn-primary">
+                Book a Free Intro →
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <p>© 2026 <a href="../index.html">TheValve.pro</a> · David Young · Valve Engineering Consultant</p>
+    </footer>
+
+</body>
+
+</html>

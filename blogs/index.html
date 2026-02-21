@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://plausible.io">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script defer data-domain="thevalve.pro" src="https://plausible.io/js/script.js"></script>
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon-32.png">
+    <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+    <meta name="theme-color" content="#0f172a">
+    <title>Blog | Valve Engineering Insights | TheValve.pro</title>
+    <meta name="description"
+        content="Practical insights on valve engineering, data ownership, lifecycle management, and industrial AI — from David Young, Senior Valve Engineering Consultant.">
+    <meta property="og:title" content="Blog | Valve Engineering Insights | TheValve.pro">
+    <meta property="og:description"
+        content="Practical insights on valve engineering, data ownership, lifecycle management, and industrial AI.">
+    <meta property="og:url" content="https://www.thevalve.pro/blogs/">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://www.thevalve.pro/blogs/">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0d1226;
+            --bg-card: #111827;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-blue: #3b82f6;
+            --border-color: #1f2937;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 14, 26, 0.92);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 32px;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .nav-logo span {
+            color: var(--accent-blue);
+        }
+
+        .nav-back {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-back:hover {
+            color: var(--text-primary);
+        }
+
+        .hero {
+            padding: 80px 24px 60px;
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            color: #60a5fa;
+            padding: 5px 14px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 560px;
+            line-height: 1.7;
+        }
+
+        .posts-grid {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 24px 100px;
+            display: grid;
+            gap: 24px;
+        }
+
+        .post-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 36px;
+            text-decoration: none;
+            color: inherit;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 24px;
+            align-items: center;
+            transition: border-color 0.25s, transform 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .post-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-blue), #7c3aed);
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .post-card:hover {
+            border-color: #374151;
+            transform: translateY(-4px);
+        }
+
+        .post-card:hover::before {
+            opacity: 1;
+        }
+
+        .post-tag {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            padding: 3px 11px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            margin-bottom: 14px;
+        }
+
+        .post-card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.35;
+            margin-bottom: 10px;
+        }
+
+        .post-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
+
+        .post-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 16px;
+        }
+
+        .post-arrow {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .post-card:hover .post-arrow {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .site-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 32px 24px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .site-footer a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+
+        @media (max-width: 560px) {
+            .post-card {
+                grid-template-columns: 1fr;
+            }
+
+            .post-arrow {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="nav">
+        <a href="../index.html" class="nav-logo">TheValve<span>.pro</span></a>
+        <a href="../index.html" class="nav-back">← Back to home</a>
+    </nav>
+
+    <div class="hero">
+        <div class="hero-badge">Engineering Insights</div>
+        <h1>Blog</h1>
+        <p>Practical thinking on valve engineering, data ownership, lifecycle strategy, and industrial AI — written for
+            engineers and plant owners who deal with these challenges daily.</p>
+    </div>
+
+    <div class="posts-grid">
+        <a href="beyond-the-database.html" class="post-card">
+            <div>
+                <div class="post-tag">Valve Data &amp; Technology</div>
+                <h2>Beyond the Database: Why Your Valve Service Provider Shouldn't Own Your Data</h2>
+                <p>Years of critical valve maintenance history, trapped inside a contractor's proprietary system. Here's
+                    why data ownership is the next frontier in valve lifecycle management — and how to take it back.</p>
+                <div class="post-meta">21 February 2026 · 8 min read · David Young</div>
+            </div>
+            <div class="post-arrow">→</div>
+        </a>
+    </div>
+
+    <footer class="site-footer">
+        <p>© 2026 <a href="../index.html">TheValve.pro</a> · David Young · Valve Engineering Consultant</p>
+    </footer>
+</body>
+
+</html>
