@@ -2,17 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.thevalve.pro/</loc>
-    <lastmod>2026-02-10</lastmod>
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.thevalve.pro/valve-app.html</loc>
-    <lastmod>2026-02-10</lastmod>
-    <priority>0.8</priority>
+    <loc>https://www.thevalve.pro/expert-apps.html</loc>
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.thevalve.pro/booking-demo.html</loc>
-    <lastmod>2026-02-10</lastmod>
-    <priority>0.5</priority>
+    <loc>https://www.thevalve.pro/new%20modern%20leakage.html</loc>
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.thevalve.pro/valve-app.html</loc>
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>
