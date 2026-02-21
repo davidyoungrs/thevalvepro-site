@@ -58,12 +58,12 @@
       max-width: 1600px;
       margin: 0 auto;
       padding: 32px 48px;
-      /* Consistent margins at the screen edges */
       display: flex;
       flex-direction: column;
       gap: 24px;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100svh;
+      /* Better Safari mobile support */
+      overflow-y: auto;
       box-sizing: border-box;
     }
 
@@ -273,6 +273,18 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 16px;
       margin-bottom: 16px;
+    }
+
+    @media (max-width: 1200px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .kpi-card {
@@ -536,6 +548,62 @@
       background: var(--danger-bg);
       border: 1px solid rgba(239, 68, 68, 0.3);
       color: #fca5a5;
+    }
+
+    /* Mobile Responsive Adjustments */
+    @media (max-width: 768px) {
+      .dashboard-container {
+        padding: 16px;
+        gap: 16px;
+      }
+
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .header h1 {
+        font-size: 20px;
+      }
+
+      .kpi-value {
+        font-size: 20px;
+      }
+
+      .chart-container {
+        padding: 12px;
+      }
+
+      .chart-header {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .bar-label {
+        font-size: 11px;
+      }
+
+      .bar-val {
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-actions {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .header-actions .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .badge {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
 </head>
