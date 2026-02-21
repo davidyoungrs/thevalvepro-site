@@ -1,0 +1,1054 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Steam Leakage Dashboard | FCI Seat Class</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script charset="utf-8"
+    src="https://cdn.jsdelivr.net/npm/neutriumjs.thermo.iapws97@1.2.2/dist/neutriumJS.thermo.IAPWS97.min.js"></script>
+
+  <style>
+    :root {
+      /* Modern Slate Dark Theme */
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --panel-hover: #334155;
+      --border: #334155;
+      --border-light: #475569;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #60a5fa;
+      --accent-bg: rgba(59, 130, 246, 0.15);
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.15);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.15);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.15);
+
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
+
+      --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Layout */
+    .dashboard-container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 32px 48px;
+      /* Consistent margins at the screen edges */
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      height: 100vh;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .header p {
+      margin: 4px 0 0;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 24px;
+      align-items: stretch;
+      /* Stretch to fill height */
+      flex: 1;
+      min-height: 0;
+      /* Important for inner scroll */
+    }
+
+    @media (max-width: 1100px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+      }
+    }
+
+    /* Cards & Panels */
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Tabs */
+    .tab-container {
+      display: flex;
+      gap: 4px;
+      background: var(--bg);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+    }
+
+    .tab:hover {
+      color: var(--text-main);
+      background: var(--panel-hover);
+    }
+
+    .tab.active {
+      background: var(--panel);
+      color: var(--text-main);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Inputs */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 100px;
+      gap: 12px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: var(--sans);
+      font-size: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-bg);
+    }
+
+    input:disabled,
+    select:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .help-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    /* Toggle Buttons */
+    .toggle-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .toggle-btn {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-muted);
+      font-size: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
+    }
+
+    .toggle-btn:hover {
+      border-color: var(--border-light);
+      color: var(--text-main);
+    }
+
+    .toggle-btn.active {
+      background: var(--accent-bg);
+      border-color: var(--accent);
+      color: var(--accent-hover);
+      font-weight: 500;
+    }
+
+    /* Action Buttons */
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* KPI Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .kpi-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .kpi-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-main);
+      font-family: var(--mono);
+    }
+
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Visual Chart Elements */
+    .chart-container {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 0;
+      flex-shrink: 0;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 24px;
+    }
+
+    .chart-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin: 0;
+    }
+
+    .chart-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .chart-wrapper {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      height: 160px;
+      padding-bottom: 30px;
+      position: relative;
+      border-bottom: 1px solid var(--border-light);
+      margin-top: 10px;
+    }
+
+    .bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      height: 100%;
+      position: relative;
+    }
+
+    .bar {
+      width: 100%;
+      max-width: 80px;
+      border-radius: 6px 6px 0 0;
+      transition: height 0.4s ease-out, background 0.3s;
+      position: relative;
+      border: 1px solid transparent;
+      border-bottom: none;
+    }
+
+    .bar.neutral {
+      background: var(--panel-hover);
+      border-color: var(--border-light);
+    }
+
+    .bar.pass {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: var(--success);
+    }
+
+    .bar.fail {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: var(--danger);
+    }
+
+    .bar-label {
+      position: absolute;
+      bottom: -24px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .bar-val {
+      position: absolute;
+      top: -22px;
+      font-size: 12px;
+      font-family: var(--mono);
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+
+    /* Table */
+    .table-container {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: auto;
+      background: var(--bg);
+      flex: 1;
+      min-height: 0;
+    }
+
+    table {
+      width: 100%;
+      min-width: 1000px;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th:last-child,
+    td:last-child {
+      border-right: none;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    thead th {
+      background: var(--panel);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      font-weight: 600;
+      color: var(--text-main);
+      border-bottom: 2px solid var(--border);
+    }
+
+    thead th:first-child {
+      left: 0;
+      z-index: 11;
+    }
+
+    tbody th {
+      position: sticky;
+      left: 0;
+      background: var(--panel);
+      z-index: 9;
+      font-weight: 500;
+      width: 260px;
+    }
+
+    tbody tr:hover td {
+      background: var(--panel-hover);
+    }
+
+    .cell-val {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    .cell-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* Status Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: var(--mono);
+    }
+
+    .badge.good {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge.warn {
+      background: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge.bad {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot.good {
+      background: var(--success);
+    }
+
+    .dot.warn {
+      background: var(--warning);
+    }
+
+    .dot.bad {
+      background: var(--danger);
+    }
+
+    /* Alerts */
+    .alert {
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .alert-danger {
+      background: var(--danger-bg);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useMemo, useState } = React;
+
+    /** ------------------ Utilities ------------------ **/
+    const isNum = (v) => Number.isFinite(v) && !Number.isNaN(v);
+    const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+    const psiToPa = (psi) => psi * 6894.757293168;
+    const barToPa = (bar) => bar * 100000;
+    const mmToIn = (mm) => mm / 25.4;
+    const inToMm = (inch) => inch * 25.4;
+    const cToK = (c) => c + 273.15;
+    const fToK = (f) => (f - 32) * 5 / 9 + 273.15;
+
+    const tempToK = (value, unit) => {
+      const v = Number(value);
+      if (!isNum(v)) return NaN;
+      if (unit === "C") return cToK(v);
+      if (unit === "F") return fToK(v);
+      if (unit === "K") return v;
+      return NaN;
+    };
+
+    function toAbsolutePressure(value, unit) {
+      const v = Number(value);
+      if (!isNum(v)) return NaN;
+      switch (unit) {
+        case "bara": return v;
+        case "barg": return v + 1.01325;
+        case "kPaa": return v / 100;
+        case "kPag": return (v + 101.325) / 100;
+        case "psia": return v * 0.06894757293168;
+        case "psig": return (v + 14.6959) * 0.06894757293168;
+        default: return NaN;
+      }
+    }
+
+    function absPa(value, unit) {
+      const bara = toAbsolutePressure(value, unit);
+      if (!isNum(bara)) return NaN;
+      return barToPa(bara);
+    }
+
+    const fmt = (x, d = 3) => (!isNum(x) ? "—" : x.toLocaleString(undefined, { maximumFractionDigits: d }));
+    const fmtMoney = (x, d = 0) => (!isNum(x) ? "—" : x.toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: d }));
+    const fmtSci = (x, d = 3) => (!isNum(x) ? "—" : x.toExponential(d));
+    const lbPerKg = 2.2046226218;
+
+    /** ------------------ FCI leakage definitions ------------------ **/
+    const CLASS_META = [
+      { cls: "II", desc: "0.5% of rated capacity" },
+      { cls: "III", desc: "0.1% of rated capacity" },
+      { cls: "IV", desc: "0.01% of rated capacity" },
+      { cls: "V", desc: "0.0005 mL/min water/in/psi" },
+      { cls: "VI", desc: "mL/min air/N₂ by diameter" },
+    ];
+    const FRACTIONS = { II: 0.005, III: 0.001, IV: 0.0001 };
+    const CLASS_VI_TABLE_IN_MLPM = [
+      { in: 1.0, mlpm: 0.15 }, { in: 1.5, mlpm: 0.30 }, { in: 2.0, mlpm: 0.45 },
+      { in: 2.5, mlpm: 0.60 }, { in: 3.0, mlpm: 0.90 }, { in: 4.0, mlpm: 1.70 },
+      { in: 6.0, mlpm: 4.00 }, { in: 8.0, mlpm: 6.75 }, { in: 10.0, mlpm: 9.00 }, { in: 12.0, mlpm: 11.50 },
+    ];
+
+    function interpTable(table, x) {
+      if (!isNum(x)) return NaN;
+      const t = [...table].sort((a, b) => a.in - b.in);
+      if (x <= t[0].in) return t[0].mlpm;
+      if (x >= t[t.length - 1].in) return t[t.length - 1].mlpm;
+      for (let i = 0; i < t.length - 1; i++) {
+        const a = t[i], b = t[i + 1];
+        if (x >= a.in && x <= b.in) {
+          const f = (x - a.in) / (b.in - a.in);
+          return a.mlpm + f * (b.mlpm - a.mlpm);
+        }
+      }
+      return NaN;
+    }
+
+    /** ------------------ IAPWS Region 4 Tsat(P) ------------------ **/
+    function if97_Tsat_P(P_MPa) {
+      const p = Number(P_MPa);
+      if (!isNum(p) || p <= 0) return NaN;
+      const n1 = 0.11670521452767e4, n2 = -0.72421316703206e6, n3 = -0.17073846940092e2;
+      const n4 = 0.12020824702470e5, n5 = -0.32325550322333e7, n6 = 0.14915108613530e2;
+      const n7 = -0.48232657361591e4, n8 = 0.40511340542057e6, n9 = -0.23855557567849, n10 = 0.65017534844798e3;
+      const beta = Math.pow(p, 0.25);
+      const E = beta * beta + n3 * beta + n6;
+      const F = n1 * beta * beta + n4 * beta + n7;
+      const G = n2 * beta * beta + n5 * beta + n8;
+      const D = (2 * G) / (-F - Math.sqrt(F * F - 4 * E * G));
+      return (n10 + D - Math.sqrt((n10 + D) * (n10 + D) - 4 * (n9 + n10 * D))) / 2;
+    }
+
+    /** ------------------ Flow/Area models ------------------ **/
+    function areaFromIncompressibleQ(Q_m3s, dP_Pa, rho = 998, Cd = 0.62) {
+      if (!(isNum(Q_m3s) && isNum(dP_Pa) && dP_Pa > 0 && isNum(rho) && rho > 0 && isNum(Cd) && Cd > 0)) return NaN;
+      return Q_m3s / (Cd * Math.sqrt(2 * dP_Pa / rho));
+    }
+    function isChoked(P0, P2, gamma) { return (P2 / P0) <= Math.pow(2 / (gamma + 1), gamma / (gamma - 1)); }
+    function mdotChoked(Cd, A, P0, T0, gamma, R) {
+      const crit = Math.pow(2 / (gamma + 1), (gamma + 1) / (2 * (gamma - 1)));
+      return Cd * A * P0 * Math.sqrt(gamma / (R * T0)) * crit;
+    }
+    function mdotSubcritical(Cd, A, P0, P2, T0, gamma, R) {
+      const Pr = P2 / P0;
+      const term = Math.pow(Pr, 2 / gamma) - Math.pow(Pr, (gamma + 1) / gamma);
+      return term <= 0 ? 0 : Cd * A * P0 * Math.sqrt((2 * gamma / (R * T0 * (gamma - 1))) * term);
+    }
+    function steamCostPerTonneUSD(fuel, btu, eff, markup) {
+      if (!(isNum(fuel) && fuel > 0 && isNum(btu) && btu > 0 && isNum(eff) && eff > 0)) return NaN;
+      return ((fuel / 1e6) * 1000 * btu / eff) / 1000 * 2204.62 * (1 + (isNum(markup) ? markup : 0));
+    }
+    function btuToKWh(btu) { return btu / 3412.141633; }
+    function ratedAirFlow_scfh(Cv, P1, P2, T_R, SG = 1.0) {
+      if (!(isNum(Cv) && Cv > 0 && isNum(P1) && P1 > 0 && isNum(P2) && P2 > 0 && isNum(T_R) && T_R > 0)) return NaN;
+      return (P1 >= 2 * P2) ? Cv * 816 * P1 / Math.sqrt(SG * T_R) : 962 * Cv * Math.sqrt(P1 * P1 - P2 * P2) / Math.sqrt(SG * T_R);
+    }
+
+    /** ------------------ App ------------------ **/
+    function App() {
+      // UI State
+      const [activeTab, setActiveTab] = useState("valve");
+
+      // Inputs
+      const [cv, setCv] = useState(120);
+      const [seatDia, setSeatDia] = useState(50);
+      const [seatDiaUnit, setSeatDiaUnit] = useState("mm");
+      const [p1, setP1] = useState(20);
+      const [p1Unit, setP1Unit] = useState("barg");
+      const [p2, setP2] = useState(0.2);
+      const [p2Unit, setP2Unit] = useState("bara");
+      const [t1, setT1] = useState(450);
+      const [t1Unit, setT1Unit] = useState("C");
+      const [steamMode, setSteamMode] = useState("auto");
+      const [actualLeak, setActualLeak] = useState(0);
+      const [actualLeakUnit, setActualLeakUnit] = useState("kg/h");
+      const [testMedium_II_IV, setTestMedium_II_IV] = useState("water");
+      const [useFciDefaultTestDP, setUseFciDefaultTestDP] = useState(true);
+      const [testDPpsiManual, setTestDPpsiManual] = useState(50);
+      const [uptimeHours, setUptimeHours] = useState(8760);
+      const [closedFrac, setClosedFrac] = useState(0.75);
+      const [Cd, setCd] = useState(0.62);
+      const [enableFlashing, setEnableFlashing] = useState(true);
+      const [tpCap, setTpCap] = useState(2.5);
+      const [tpExpo, setTpExpo] = useState(0.5);
+      const [steamCostMode, setSteamCostMode] = useState("calc");
+      const [steamCostDirect, setSteamCostDirect] = useState(15);
+      const [fuelPrice, setFuelPrice] = useState(4.40);
+      const [btuPerLb, setBtuPerLb] = useState(1073);
+      const [boilerEff, setBoilerEff] = useState(0.857);
+      const [markup, setMarkup] = useState(0.30);
+      const [co2Mode, setCo2Mode] = useState("scope1");
+      const [efScope1, setEfScope1] = useState(0.18296);
+      const [efScope2, setEfScope2] = useState(0.19553);
+
+      const hasIapws = (typeof window !== "undefined") && window.NeutriumJS?.thermo?.IAPWS97;
+
+      // Derivations
+      const derived = useMemo(() => {
+        const seatDiaIn = seatDiaUnit === "mm" ? mmToIn(Number(seatDia)) : Number(seatDia);
+        const seatDiaMm = seatDiaUnit === "mm" ? Number(seatDia) : inToMm(Number(seatDia));
+        const P1absPa = absPa(p1, p1Unit);
+        const P2absPa = absPa(p2, p2Unit);
+        const validPress = isNum(P1absPa) && isNum(P2absPa) && P1absPa > 0 && P2absPa > 0 && (P1absPa > P2absPa);
+        const dPabsPa = validPress ? (P1absPa - P2absPa) : NaN;
+        const dPpsi = isNum(dPabsPa) ? dPabsPa / 6894.757293168 : NaN;
+        const testDPpsi = (useFciDefaultTestDP && isNum(dPpsi)) ? Math.min(50, dPpsi) : Number(testDPpsiManual);
+        const testDP_Pa = psiToPa(testDPpsi);
+
+        let actual_kg_s = NaN;
+        const a = Number(actualLeak);
+        if (isNum(a)) {
+          if (actualLeakUnit === "kg/h") actual_kg_s = a / 3600;
+          if (actualLeakUnit === "lb/h") actual_kg_s = (a / 3600) / lbPerKg;
+          if (actualLeakUnit === "kg/s") actual_kg_s = a;
+          if (actualLeakUnit === "lb/s") actual_kg_s = a / lbPerKg;
+        }
+
+        const calcCost = steamCostPerTonneUSD(Number(fuelPrice), Number(btuPerLb), Number(boilerEff), Number(markup));
+        const steamCostPerTonne = (steamCostMode === "calc") ? calcCost : Number(steamCostDirect);
+        const kWh_per_kg_fuel = btuToKWh(Number(btuPerLb)) / Number(boilerEff) * lbPerKg;
+
+        let thermo = { ok: false, Tsat1K: NaN, Tsat2K: NaN, up: null, down: null, h1: NaN, s1: NaN, cp1: NaN, cv1: NaN, gamma1: NaN, R: NaN, T1K: NaN, rho1: NaN, downState: "—", quality: NaN, T2K: NaN, rho2: NaN, v2: NaN };
+        const T1K_input = tempToK(t1, t1Unit);
+        const P1_MPa = isNum(P1absPa) ? (P1absPa / 1e6) : NaN;
+        const P2_MPa = isNum(P2absPa) ? (P2absPa / 1e6) : NaN;
+
+        if (hasIapws && validPress && isNum(P1_MPa) && isNum(P2_MPa)) {
+          try {
+            const eps = 1e-3;
+            const Tsat1K = if97_Tsat_P(P1_MPa);
+            const Tsat2K = if97_Tsat_P(P2_MPa);
+            let T1K = T1K_input;
+            if (steamMode === "saturated") { T1K = Tsat1K + eps; }
+            else if (steamMode === "auto") {
+              if (!isNum(T1K_input)) T1K = Tsat1K + eps;
+              else if (T1K_input <= Tsat1K + 0.05) T1K = Tsat1K + eps;
+            }
+
+            const up = window.NeutriumJS.thermo.IAPWS97.PT.solve(P1_MPa, T1K);
+            const h1 = up.h, s1 = up.s, cp1 = up.cp, cv1 = up.cv, gamma1 = cp1 / cv1, R = (cp1 - cv1) * 1000, rho1 = up.rho;
+
+            const satL = window.NeutriumJS.thermo.IAPWS97.PT.solve(P2_MPa, Tsat2K - eps);
+            const satV = window.NeutriumJS.thermo.IAPWS97.PT.solve(P2_MPa, Tsat2K + eps);
+            const hf2 = satL.h, hg2 = satV.h, vf2 = satL.v, vg2 = satV.v;
+
+            let downState = "superheated", quality = NaN, T2K = NaN, rho2 = NaN, v2 = NaN;
+            if (h1 < hf2) {
+              downState = "compressed liquid";
+              const down = window.NeutriumJS.thermo.IAPWS97.PH.solve(P2_MPa, h1);
+              T2K = down.t; rho2 = down.rho; v2 = down.v;
+            } else if (h1 <= hg2) {
+              downState = "wet (two-phase)";
+              quality = clamp((h1 - hf2) / (hg2 - hf2), 0, 1);
+              T2K = Tsat2K; v2 = (1 - quality) * vf2 + quality * vg2; rho2 = 1 / v2;
+            } else {
+              downState = "superheated";
+              const down = window.NeutriumJS.thermo.IAPWS97.PH.solve(P2_MPa, h1);
+              T2K = down.t; rho2 = down.rho; v2 = down.v;
+            }
+            thermo = { ok: true, Tsat1K, Tsat2K, up, down: null, h1, s1, cp1, cv1, gamma1, R, T1K, rho1, downState, quality, T2K, rho2, v2 };
+          } catch (e) { thermo.ok = false; }
+        }
+
+        const results = CLASS_META.map(meta => {
+          const cls = meta.cls;
+          let Qtest_m3s = NaN, Qtest_mlpm = NaN, basis = "";
+
+          if (["II", "III", "IV"].includes(cls)) {
+            const Cv = Number(cv);
+            if (isNum(Cv) && Cv > 0 && isNum(testDPpsi) && testDPpsi > 0) {
+              if (testMedium_II_IV === "water") {
+                const Qrated_gpm = Cv * Math.sqrt(testDPpsi / 1.0);
+                Qtest_m3s = (FRACTIONS[cls] * Qrated_gpm) * 0.0037854 / 60.0;
+                basis = `Water ΔP=${fmt(testDPpsi, 1)} psi`;
+              } else {
+                const Qrated_scfh = ratedAirFlow_scfh(Cv, 64.6959, 14.6959, 520, 1.0);
+                Qtest_m3s = (FRACTIONS[cls] * Qrated_scfh * 0.0283168) / 3600.0;
+                basis = `Air est. @ 50 psig`;
+              }
+            } else basis = `Need Cv & ΔPtest`;
+          }
+          if (cls === "V") {
+            if (isNum(seatDiaIn) && seatDiaIn > 0 && isNum(testDPpsi) && testDPpsi > 0) {
+              Qtest_mlpm = 0.0005 * seatDiaIn * testDPpsi;
+              Qtest_m3s = (Qtest_mlpm * 1e-6) / 60.0;
+              basis = `Water ΔP=${fmt(testDPpsi, 1)} psi`;
+            } else basis = `Need Dia & ΔPtest`;
+          }
+          if (cls === "VI") {
+            if (isNum(seatDiaIn) && seatDiaIn > 0) {
+              Qtest_mlpm = interpTable(CLASS_VI_TABLE_IN_MLPM, seatDiaIn);
+              Qtest_m3s = (Qtest_mlpm * 1e-6) / 60.0;
+              basis = `Air table`;
+            } else basis = `Need Dia`;
+          }
+
+          let Aeff = NaN;
+          if (["II", "III", "IV", "V"].includes(cls)) {
+            if (["II", "III", "IV"].includes(cls) && testMedium_II_IV === "air") {
+              const fact = (Number(Cd) * 446074 * Math.sqrt(1.4 / (287.05 * 288.7)) * 0.52828);
+              Aeff = (1.225 * Qtest_m3s) / fact;
+            } else {
+              Aeff = areaFromIncompressibleQ(Qtest_m3s, testDP_Pa, 998, Number(Cd));
+            }
+          }
+          if (cls === "VI") {
+            const fact = (Number(Cd) * 446074 * Math.sqrt(1.4 / (287.05 * 288.7)) * 0.52828);
+            Aeff = (1.225 * Qtest_m3s) / fact;
+          }
+
+          let mdotSteam = NaN, mdotSteamAdj = NaN, choked = false, tpMult = 1.0;
+          if (validPress && thermo.ok && isNum(Aeff) && Aeff > 0) {
+            choked = isChoked(P1absPa, P2absPa, thermo.gamma1);
+            mdotSteam = choked ? mdotChoked(Number(Cd), Aeff, P1absPa, thermo.T1K, thermo.gamma1, thermo.R) : mdotSubcritical(Number(Cd), Aeff, P1absPa, P2absPa, thermo.T1K, thermo.gamma1, thermo.R);
+            if (enableFlashing && thermo.downState.includes("wet") && isNum(thermo.quality)) {
+              tpMult = clamp(Math.pow(1 / Math.sqrt(clamp(thermo.quality, 0.001, 1)), Number(tpExpo)), 1.0, Number(tpCap));
+            }
+            mdotSteamAdj = mdotSteam * tpMult;
+          }
+
+          const Qsteam_m3s = (isNum(mdotSteamAdj) && isNum(thermo.rho1) && thermo.rho1 > 0) ? (mdotSteamAdj / thermo.rho1) : NaN;
+          const annualSeconds = (isNum(uptimeHours) && isNum(closedFrac)) ? uptimeHours * closedFrac * 3600 : NaN;
+          const steamLost_kg = isNum(mdotSteamAdj) && isNum(annualSeconds) ? mdotSteamAdj * annualSeconds : NaN;
+          const steamLost_tonnes = isNum(steamLost_kg) ? steamLost_kg / 1000 : NaN;
+          const costLost = isNum(steamLost_tonnes) && isNum(steamCostPerTonne) ? steamLost_tonnes * steamCostPerTonne : NaN;
+          const kWhFuel = isNum(steamLost_kg) && isNum(kWh_per_kg_fuel) ? steamLost_kg * kWh_per_kg_fuel : NaN;
+          const co2_kg = isNum(kWhFuel) ? kWhFuel * (co2Mode === "scope1" ? Number(efScope1) : Number(efScope2)) : NaN;
+
+          const allowable_kg_h = isNum(mdotSteamAdj) ? mdotSteamAdj * 3600 : NaN;
+          const actual_kg_h_val = isNum(actual_kg_s) ? actual_kg_s * 3600 : NaN;
+          const delta_kg_h = (isNum(actual_kg_h_val) && isNum(allowable_kg_h)) ? (actual_kg_h_val - allowable_kg_h) : NaN;
+
+          let status = "warn";
+          if (isNum(delta_kg_h)) {
+            if (delta_kg_h <= 0) status = "good";
+            else if (delta_kg_h <= 0.10 * allowable_kg_h) status = "warn";
+            else status = "bad";
+          }
+
+          return { cls, desc: meta.desc, basis, Qtest_m3s, Qtest_mlpm, Aeff, mdotSteamAdj, Qsteam_m3s, choked, tpMult, allowable_kg_h, annualSeconds, steamLost_tonnes, costLost, kWhFuel, co2_kg, actual_kg_h: actual_kg_h_val, delta_kg_h, status };
+        });
+
+        let tightestMet = "—", loosestMet = "—";
+        if (results.some(r => isNum(r.delta_kg_h))) {
+          for (const c of ["VI", "V", "IV", "III", "II"]) {
+            if (results.find(x => x.cls === c)?.delta_kg_h <= 0) { tightestMet = c; break; }
+          }
+          for (const c of ["II", "III", "IV", "V", "VI"]) {
+            if (results.find(x => x.cls === c)?.delta_kg_h <= 0) { loosestMet = c; break; }
+          }
+        }
+
+        return { seatDiaIn, seatDiaMm, validPress, dPpsi, testDPpsi, steamCostPerTonne, thermo, results, tightestMet, loosestMet, globalActual: results[0]?.actual_kg_h };
+      }, [cv, seatDia, seatDiaUnit, p1, p1Unit, p2, p2Unit, t1, t1Unit, steamMode, actualLeak, actualLeakUnit, testMedium_II_IV, useFciDefaultTestDP, testDPpsiManual, uptimeHours, closedFrac, Cd, enableFlashing, tpCap, tpExpo, steamCostMode, steamCostDirect, fuelPrice, btuPerLb, boilerEff, markup, co2Mode, efScope1, efScope2, hasIapws]);
+
+      // Setup table rows
+      const criteria = [
+        { label: "FCI Allowable (Test Basis)", render: (r) => <><div className="cell-val">{isNum(r.Qtest_m3s) ? `${fmt(r.Qtest_m3s * 3600, 4)} m³/h` : "—"}</div><div className="cell-sub">{isNum(r.Qtest_mlpm) ? `${fmt(r.Qtest_mlpm, 2)} mL/min • ` : ""}{r.basis}</div></> },
+        { label: "Effective Area (Aeff)", render: (r) => <><div className="cell-val">{isNum(r.Aeff) ? `${fmtSci(r.Aeff, 3)} m²` : "—"}</div></> },
+        { label: "Operating Steam Leak (Mass)", render: (r) => <><div className="cell-val">{isNum(r.mdotSteamAdj) ? `${fmt(r.mdotSteamAdj * 3600, 4)} kg/h` : "—"}</div><div className="cell-sub">{r.choked ? "Choked" : "Subcritical"}{r.tpMult > 1 ? ` • 2-phase ×${fmt(r.tpMult, 2)}` : ""}</div></> },
+        { label: "Annual Steam Lost", render: (r) => <><div className="cell-val">{isNum(r.steamLost_tonnes) ? `${fmt(r.steamLost_tonnes, 1)} t/yr` : "—"}</div></> },
+        { label: "Financial Impact (Loss/yr)", render: (r) => <><div className="cell-val" style={{ color: 'var(--danger)' }}>{isNum(r.costLost) ? `${fmtMoney(r.costLost, 0)}` : "—"}</div></> },
+        { label: "CO₂ Impact", render: (r) => <><div className="cell-val" style={{ color: 'var(--warning)' }}>{isNum(r.co2_kg) ? `${fmt(r.co2_kg / 1000, 1)} tCO₂e/yr` : "—"}</div></> },
+        { label: "Actual vs Allowable", render: (r) => <><div className="cell-val" style={{ marginBottom: 8 }}>{isNum(r.delta_kg_h) ? `${fmt(r.delta_kg_h, 4)} kg/h` : "—"}</div><span className={`badge ${r.status}`}><span className={`dot ${r.status}`}></span>{r.status === "good" ? "PASS" : r.status === "warn" ? "MARGINAL" : "FAIL"}</span></> }
+      ];
+
+      const exportCSV = () => {
+        if (!derived || !derived.results) return;
+        const escape = (str) => `"${String(str).replace(/"/g, '""')}"`;
+        const headers = ["Criteria", ...derived.results.map(r => `Class ${r.cls}`)];
+        const rows = [
+          ["FCI Allowable (m3/h)", ...derived.results.map(r => isNum(r.Qtest_m3s) ? r.Qtest_m3s * 3600 : "")],
+          ["Effective Area (m2)", ...derived.results.map(r => isNum(r.Aeff) ? r.Aeff : "")],
+          ["Operating Steam Leak (kg/h)", ...derived.results.map(r => isNum(r.mdotSteamAdj) ? r.mdotSteamAdj * 3600 : "")],
+          ["Annual Steam Lost (t/yr)", ...derived.results.map(r => isNum(r.steamLost_tonnes) ? r.steamLost_tonnes : "")],
+          ["Financial Impact (USD/yr)", ...derived.results.map(r => isNum(r.costLost) ? r.costLost : "")],
+          ["CO2 Impact (kgCO2e/yr)", ...derived.results.map(r => isNum(r.co2_kg) ? r.co2_kg : "")],
+          ["Delta - Actual vs Allowable (kg/h)", ...derived.results.map(r => isNum(r.delta_kg_h) ? r.delta_kg_h : "")],
+          ["Status", ...derived.results.map(r => r.status)]
+        ];
+        const csvContent = [headers.map(escape).join(","), ...rows.map(row => row.map(escape).join(","))].join("\n");
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }));
+        link.download = "steam_leakage_results.csv";
+        link.click();
+      };
+
+      const getActiveTabContent = () => {
+        switch (activeTab) {
+          case "valve": return (
+            <>
+              <div className="form-group"><label>Rated Cv (Required for II–IV)</label><input type="number" value={cv} onChange={e => setCv(e.target.value)} /></div>
+              <div className="form-row"><div><label>Seat Diameter</label><input type="number" value={seatDia} onChange={e => setSeatDia(e.target.value)} /></div><div><label>Unit</label><select value={seatDiaUnit} onChange={e => setSeatDiaUnit(e.target.value)}><option value="mm">mm</option><option value="in">in</option></select></div></div>
+              <div className="form-row"><div><label>Measured Leakage (Mass)</label><input type="number" value={actualLeak} onChange={e => setActualLeak(e.target.value)} /></div><div><label>Unit</label><select value={actualLeakUnit} onChange={e => setActualLeakUnit(e.target.value)}><option value="kg/h">kg/h</option><option value="lb/h">lb/h</option></select></div></div>
+            </>
+          );
+          case "process": return (
+            <>
+              <div className="form-row"><div><label>Upstream Pressure (P1)</label><input type="number" value={p1} onChange={e => setP1(e.target.value)} /></div><div><label>Unit</label><select value={p1Unit} onChange={e => setP1Unit(e.target.value)}><option value="barg">barg</option><option value="bara">bara</option><option value="psig">psig</option><option value="psia">psia</option></select></div></div>
+              <div className="form-row"><div><label>Downstream Pressure (P2)</label><input type="number" value={p2} onChange={e => setP2(e.target.value)} /></div><div><label>Unit</label><select value={p2Unit} onChange={e => setP2Unit(e.target.value)}><option value="bara">bara</option><option value="barg">barg</option><option value="psia">psia</option><option value="psig">psig</option></select></div></div>
+              <label>Steam State</label>
+              <div className="toggle-group"><div className={`toggle-btn ${steamMode === "auto" ? "active" : ""}`} onClick={() => setSteamMode("auto")}>Auto (via Tsat)</div><div className={`toggle-btn ${steamMode === "saturated" ? "active" : ""}`} onClick={() => setSteamMode("saturated")}>Saturated</div><div className={`toggle-btn ${steamMode === "superheated" ? "active" : ""}`} onClick={() => setSteamMode("superheated")}>Superheated</div></div>
+              <div className="form-row" style={{ marginTop: 12 }}><div><label>Upstream Temp (T1)</label><input type="number" value={t1} disabled={steamMode === "saturated"} onChange={e => setT1(e.target.value)} /></div><div><label>Unit</label><select value={t1Unit} disabled={steamMode === "saturated"} onChange={e => setT1Unit(e.target.value)}><option value="C">°C</option><option value="F">°F</option></select></div></div>
+            </>
+          );
+          case "financial": return (
+            <>
+              <div className="form-row"><div><label>Plant Hours/Yr</label><input type="number" value={uptimeHours} onChange={e => setUptimeHours(e.target.value)} /></div><div><label>Closed %</label><input type="number" value={closedFrac} step="0.05" onChange={e => setClosedFrac(e.target.value)} /></div></div>
+              <label>Cost Calculation Mode</label>
+              <div className="toggle-group"><div className={`toggle-btn ${steamCostMode === "calc" ? "active" : ""}`} onClick={() => setSteamCostMode("calc")}>Fuel Method</div><div className={`toggle-btn ${steamCostMode === "direct" ? "active" : ""}`} onClick={() => setSteamCostMode("direct")}>Direct $/tonne</div></div>
+              {steamCostMode === "direct" ? <div className="form-group"><label>Steam Cost ($/tonne)</label><input type="number" value={steamCostDirect} onChange={e => setSteamCostDirect(e.target.value)} /></div> : <div className="form-row" style={{ gridTemplateColumns: '1fr 1fr' }}><div><label>Fuel ($/MMBtu)</label><input type="number" value={fuelPrice} step="0.1" onChange={e => setFuelPrice(e.target.value)} /></div><div><label>Boiler Eff</label><input type="number" value={boilerEff} step="0.01" onChange={e => setBoilerEff(e.target.value)} /></div></div>}
+              <label>CO₂e Scope Mode</label>
+              <div className="toggle-group"><div className={`toggle-btn ${co2Mode === "scope1" ? "active" : ""}`} onClick={() => setCo2Mode("scope1")}>Scope 1 (Fuel)</div><div className={`toggle-btn ${co2Mode === "scope2" ? "active" : ""}`} onClick={() => setCo2Mode("scope2")}>Scope 2 (Grid)</div></div>
+            </>
+          );
+          case "tuning": return (
+            <>
+              <label>FCI Medium (II-IV)</label><div className="toggle-group"><div className={`toggle-btn ${testMedium_II_IV === "water" ? "active" : ""}`} onClick={() => setTestMedium_II_IV("water")}>Water</div><div className={`toggle-btn ${testMedium_II_IV === "air" ? "active" : ""}`} onClick={() => setTestMedium_II_IV("air")}>Air (Est.)</div></div>
+              <div className="form-group"><label>Discharge Coeff (Cd)</label><input type="number" value={Cd} step="0.01" onChange={e => setCd(e.target.value)} /></div>
+              <label>Flashing handling</label><div className="toggle-group"><div className={`toggle-btn ${enableFlashing ? "active" : ""}`} onClick={() => setEnableFlashing(true)}>Enabled</div><div className={`toggle-btn ${!enableFlashing ? "active" : ""}`} onClick={() => setEnableFlashing(false)}>Disabled</div></div>
+              {enableFlashing && <div className="form-row" style={{ gridTemplateColumns: '1fr 1fr' }}><div><label>Mult Cap</label><input type="number" value={tpCap} step="0.1" onChange={e => setTpCap(e.target.value)} /></div><div><label>Exponent</label><input type="number" value={tpExpo} step="0.05" onChange={e => setTpExpo(e.target.value)} /></div></div>}
+            </>
+          );
+        }
+      };
+
+      // --- Chart Component Generation ---
+      const currentTightest = derived.results.find(r => r.cls === derived.tightestMet);
+      const chartVals = derived.results.map(r => r.allowable_kg_h).filter(isNum);
+      const validActual = isNum(derived.globalActual) && derived.globalActual > 0;
+      const maxChartVal = Math.max(...chartVals, validActual ? derived.globalActual : 0);
+
+      // Custom Log base 10 scaler
+      const safeLog = (v) => Math.log10(Math.max(v, 1e-6));
+      const maxLog = safeLog(maxChartVal);
+      const minLog = Math.min(...chartVals.map(safeLog), validActual ? safeLog(derived.globalActual) : maxLog) - 1.5;
+      const logRange = maxLog - minLog || 1;
+      const getChartHeight = (v) => `${Math.max(2, ((safeLog(v) - minLog) / logRange) * 100)}%`;
+
+      return (
+        <div className="dashboard-container">
+          <div className="header">
+            <div><h1>Steam Leakage Analyzer</h1><p>FCI Seat Class compliance using precise IAPWS-IF97 thermodynamics</p></div>
+            <div className="header-actions">
+              {!hasIapws && <div className="badge bad">IAPWS Library Offline</div>}
+              {hasIapws && <div className="badge good">Thermodynamics Active</div>}
+              <button className="btn" onClick={exportCSV}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16L7 11H10V4H14V11H17L12 16ZM4 18H20V20H4V18Z" /></svg>Export to CSV</button>
+            </div>
+          </div>
+
+          {!derived.validPress && <div className="alert alert-danger"><strong>Pressure Error:</strong> Please ensure P1(abs) &gt; P2(abs) and both are &gt; 0.</div>}
+
+          <div className="main-grid">
+            {/* Left column: Control Panel */}
+            <div className="panel">
+              <div className="tab-container">
+                <div className={`tab ${activeTab === "valve" ? "active" : ""}`} onClick={() => setActiveTab("valve")}>Valve</div>
+                <div className={`tab ${activeTab === "process" ? "active" : ""}`} onClick={() => setActiveTab("process")}>Process</div>
+                <div className={`tab ${activeTab === "financial" ? "active" : ""}`} onClick={() => setActiveTab("financial")}>Fin/Eco</div>
+                <div className={`tab ${activeTab === "tuning" ? "active" : ""}`} onClick={() => setActiveTab("tuning")}>Tuning</div>
+              </div>
+              {getActiveTabContent()}
+
+              <div style={{ marginTop: 24, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
+                <div className="help-text">
+                  Seat Dia: <span style={{ color: 'var(--text-main)', fontFamily: 'var(--mono)' }}>{fmt(derived.seatDiaMm, 1)}mm</span> <br />
+                  Cost Basis: <span style={{ color: 'var(--text-main)', fontFamily: 'var(--mono)' }}>{fmtMoney(derived.steamCostPerTonne, 2)}/t</span> <br />
+                  ΔP Actual: <span style={{ color: 'var(--text-main)', fontFamily: 'var(--mono)' }}>{fmt(derived.dPpsi, 1)} psi</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right column: Data & Visuals */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24, minHeight: 0, flex: 1 }}>
+              <div className="kpi-grid">
+                <div className="kpi-card"><span className="kpi-label">Tightest Class Met</span><span className="kpi-value" style={{ color: derived.tightestMet !== "—" ? 'var(--success)' : 'var(--text-main)' }}>{derived.tightestMet !== "—" ? `Class ${derived.tightestMet}` : "None"}</span><span className="kpi-sub">Actual: {actualLeak} {actualLeakUnit}</span></div>
+                <div className="kpi-card"><span className="kpi-label">Downstream State</span><span className="kpi-value" style={{ fontSize: '18px' }}>{derived.thermo.ok ? derived.thermo.downState : "—"}</span><span className="kpi-sub">{derived.thermo.ok && isNum(derived.thermo.quality) ? `Quality (x) = ${fmt(derived.thermo.quality, 3)}` : "Superheated/Liquid"}</span></div>
+                <div className="kpi-card"><span className="kpi-label">Leakage Cost (Target)</span><span className="kpi-value" style={{ color: 'var(--danger)' }}>{currentTightest?.costLost ? fmtMoney(currentTightest.costLost, 0) : "—"}</span><span className="kpi-sub">If at Class {derived.tightestMet !== "—" ? derived.tightestMet : "limit"}</span></div>
+                <div className="kpi-card"><span className="kpi-label">CO₂ Impact</span><span className="kpi-value" style={{ color: 'var(--warning)' }}>{currentTightest?.co2_kg ? fmt(currentTightest.co2_kg / 1000, 1) : "—"} <span style={{ fontSize: 14 }}>t</span></span><span className="kpi-sub">Scope {co2Mode === 'scope1' ? '1' : '2'} Equivalent</span></div>
+              </div>
+
+              {/* New Visual Chart Section */}
+              {maxChartVal > 0 && (
+                <div className="chart-container">
+                  <div className="chart-header">
+                    <h3 className="chart-title">Leakage Comparison: Allowable vs Actual <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(kg/h)</span></h3>
+                    <span className="chart-subtitle">Logarithmic Scale</span>
+                  </div>
+                  <div className="chart-wrapper">
+                    {/* Horizontal trendline for "Actual" leak */}
+                    {validActual && (
+                      <div style={{ position: 'absolute', bottom: getChartHeight(derived.globalActual), left: 0, right: 0, borderTop: '2px dashed var(--accent)', zIndex: 0 }}>
+                        <span style={{ position: 'absolute', right: 0, top: '-22px', fontSize: '12px', color: 'var(--accent)', fontFamily: 'var(--mono)', fontWeight: 600 }}>Actual: {fmt(derived.globalActual, 4)}</span>
+                      </div>
+                    )}
+
+                    {/* Bars for each class limit */}
+                    {derived.results.map(r => {
+                      if (!isNum(r.allowable_kg_h)) return <div key={r.cls} className="bar-col"></div>;
+
+                      const isMet = validActual && derived.globalActual <= r.allowable_kg_h;
+                      let barClass = "bar " + (validActual ? (isMet ? "pass" : "fail") : "neutral");
+
+                      return (
+                        <div key={r.cls} className="bar-col" style={{ zIndex: 1 }}>
+                          <div className="bar-val">{fmt(r.allowable_kg_h, 4)}</div>
+                          <div className={barClass} style={{ height: getChartHeight(r.allowable_kg_h) }}></div>
+                          <div className="bar-label">Cls {r.cls}</div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
+              <div className="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Criteria</th>
+                      {derived.results.map(r => (
+                        <th key={r.cls}>
+                          <div>Class {r.cls}</div>
+                          <div className="cell-sub" style={{ color: 'var(--text-muted)', fontWeight: 400 }}>{r.desc}</div>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {criteria.map((row, i) => (
+                      <tr key={i}>
+                        <th>{row.label}</th>
+                        {derived.results.map(r => (<td key={r.cls}>{row.render(r)}</td>))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+
+</html>

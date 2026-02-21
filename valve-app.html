@@ -248,6 +248,7 @@
                 font-size: 24px;
                 font-weight: 600;
                 text-decoration: none;
+                white-space: nowrap;
             }
 
             .mobile-menu-close {
@@ -294,6 +295,7 @@
             transition: all 0.2s ease;
             padding: 8px 16px;
             border-radius: 20px;
+            white-space: nowrap;
         }
 
         .nav-link:hover,
@@ -1610,7 +1612,9 @@
             <li><a href="index.html#expertise" class="mobile-nav-link" onclick="toggleMobileMenu()">Expertise</a></li>
             <li><a href="index.html#industries" class="mobile-nav-link" onclick="toggleMobileMenu()">Industries</a></li>
             <li><a href="index.html#career" class="mobile-nav-link" onclick="toggleMobileMenu()">Career</a></li>
-            <li><a href="#" class="mobile-nav-link nav-link-highlight">TheValve.app</a></li>
+            <li><a href="#" class="mobile-nav-link nav-link-highlight" onclick="toggleMobileMenu()">TheValve.app</a>
+            </li>
+            <li><a href="expert-apps.html" class="mobile-nav-link" onclick="toggleMobileMenu()">Expert Apps</a></li>
         </ul>
         <button class="mobile-menu-close" aria-label="Close Menu" onclick="toggleMobileMenu()">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -1624,15 +1628,15 @@
     <!-- Floating Navigation -->
     <nav class="floating-nav">
         <a href="index.html" class="nav-logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                <path d="M2 17L12 22L22 17" stroke="white" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                <path d="M2 12L12 17L22 12" stroke="white" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 6a5 5 0 0 1 10 0" />
+                <path d="M6 6h12" />
+                <path d="M12 6v9" />
+                <path d="M4 19l8-4-8-4v8z" />
+                <path d="M20 19l-8-4 8-4v8z" />
             </svg>
-            <span>TheValve.Pro</span>
+            <span>TheValvePro</span>
         </a>
 
         <button class="mobile-menu-btn" aria-label="Toggle Menu">
@@ -1650,6 +1654,7 @@
             <li><a href="index.html#industries" class="nav-link">Industries</a></li>
             <li><a href="index.html#career" class="nav-link">Career</a></li>
             <li><a href="#" class="nav-link nav-link-highlight">TheValve.app</a></li>
+            <li><a href="expert-apps.html" class="nav-link">Expert Apps</a></li>
             <li>
                 <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
                     <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"

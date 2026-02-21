@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Apps | Engineering Tools & Calculators | TheValve.pro</title>
+    <meta name="description"
+        content="Actionable engineering dashboards for valve performance. Quantify steam leakage, financial impact, and ESG compliance with precision tools.">
+    <meta property="og:title" content="Expert Apps | Engineering Precision & Commercial Clarity">
+    <meta property="og:description"
+        content="Stop guessing about valve performance. Translate complex process data into financial and environmental insights.">
+    <meta property="og:image" content="assets/images/expert-hero.png">
+    <meta property="og:url" content="https://www.thevalve.pro/expert-apps.html">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://www.thevalve.pro/expert-apps.html">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0d1226;
+            --bg-card: #111827;
+            --bg-card-hover: #1a2235;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-blue: #3b82f6;
+            --accent-blue-hover: #2563eb;
+            --accent-orange: #f59e0b;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --border-color: #1f2937;
+            --border-light: #374151;
+
+            /* Typography */
+            --fs-h1: clamp(2.5rem, 5vw, 4.5rem);
+            --fs-h2: clamp(2rem, 4vw, 2.5rem);
+            --fs-h3: clamp(1.25rem, 3vw, 1.5rem);
+            --fs-body: clamp(1rem, 2vw, 1.125rem);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: var(--fs-body);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: min(100% - 2rem, 1200px);
+            margin-inline: auto;
+        }
+
+        /* Floating Navigation */
+        .floating-nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            padding: 8px 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: min(90%, 800px);
+            /* Responsive width */
+            transition: all 0.3s ease;
+        }
+
+        .floating-nav:hover {
+            background: rgba(10, 14, 26, 0.95);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .nav-logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 16px;
+        }
+
+        .nav-logo span {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .nav-logo span {
+                display: inline;
+            }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            /* Desktop styles */
+        }
+
+        /* Mobile Menu Triggers */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            z-index: 1002;
+        }
+
+        /* Mobile Mobile Styles */
+        /* Default state for mobile overlay - hidden on desktop */
+        .mobile-menu-overlay {
+            display: none;
+        }
+
+        @media (max-width: 767px) {
+
+            /* Floating nav becomes just the hamburger container */
+            .floating-nav {
+                top: 20px;
+                left: auto;
+                right: 20px;
+                transform: none;
+                width: auto;
+                padding: 12px;
+                border-radius: 50%;
+                background: rgba(10, 14, 26, 0.85);
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                width: 24px;
+                height: 24px;
+                padding: 0;
+            }
+
+            .nav-links {
+                display: none;
+                /* Hide desktop nav structure on mobile */
+            }
+
+            .mobile-menu-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: var(--bg-primary);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 32px;
+                padding: 2rem;
+                z-index: 2000;
+                /* Highest level overlay */
+                transform: translateY(-100%);
+                transition: transform 0.3s ease-in-out;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .mobile-menu-overlay.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .mobile-nav-links {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 24px;
+                align-items: center;
+            }
+
+            .mobile-nav-link {
+                color: var(--text-primary);
+                font-size: 24px;
+                font-weight: 600;
+                text-decoration: none;
+                white-space: nowrap;
+            }
+
+            .mobile-menu-close {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                background: none;
+                border: none;
+                color: var(--text-primary);
+                cursor: pointer;
+                padding: 8px;
+            }
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            padding: 8px 16px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        :root[data-theme="light"] .nav-link:hover,
+        :root[data-theme="light"] .nav-link.active {
+            background: rgba(15, 23, 42, 0.05);
+            /* Slate-900 at 5% */
+            color: var(--text-primary);
+        }
+
+        .nav-link-highlight {
+            background-color: var(--accent-blue);
+            color: white !important;
+        }
+
+        .nav-link-highlight:hover {
+            background-color: var(--accent-blue-hover);
+            opacity: 1;
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: none;
+            /* Hidden per user request, was display: flex */
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            width: 36px;
+            height: 36px;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        :root[data-theme="light"] .theme-toggle {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: var(--border-color);
+        }
+
+        :root[data-theme="light"] .theme-toggle:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Logic for dual logos */
+        .mobile-nav-logo {
+            display: none;
+            /* Hidden by default (Desktop) */
+        }
+
+        .nav-logo {
+            display: flex;
+            /* Visible by default (Desktop) */
+        }
+
+        @media (max-width: 767px) {
+            .mobile-nav-logo {
+                display: flex;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1005;
+                background: rgba(10, 14, 26, 0.85);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 100px;
+                padding: 8px 16px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+                align-items: center;
+                gap: 8px;
+                text-decoration: none;
+                color: var(--text-primary);
+                font-size: 16px;
+                font-weight: 700;
+            }
+
+            .nav-logo {
+                display: none;
+                /* Hide desktop logo inside nav on mobile */
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            padding: 140px 0 80px;
+            /* Reduced height */
+            text-align: center;
+            overflow: hidden;
+            background-color: #0a0e1a;
+            /* Fallback */
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: var(--fs-h1);
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            color: #60a5fa;
+            /* Brighter blue for contrast */
+            font-weight: 600;
+            margin-bottom: 0;
+            max-width: 800px;
+            margin-inline: auto;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Intro Quote Section */
+        .intro-quote {
+            padding: 80px 0;
+            background: var(--bg-primary);
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .quote-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .quote-text {
+            font-size: 20px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-style: italic;
+            position: relative;
+        }
+
+        .quote-text::before {
+            content: '“';
+            position: absolute;
+            left: -40px;
+            top: -20px;
+            font-size: 80px;
+            color: var(--accent-blue);
+            opacity: 0.2;
+            font-family: serif;
+        }
+
+        .hero-image-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 0.45;
+            /* Dialed in for readability */
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom,
+                    rgba(10, 14, 26, 0.9) 0%,
+                    rgba(10, 14, 26, 0.7) 40%,
+                    rgba(10, 14, 26, 0.9) 100%);
+            z-index: 2;
+        }
+
+        /* Tool Section */
+        .section {
+            padding: 100px 0;
+            position: relative;
+            z-index: 5;
+            background-color: var(--bg-primary);
+        }
+
+        .tool-header {
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .tool-header h2 {
+            font-size: var(--fs-h2);
+            margin-bottom: 16px;
+        }
+
+        .tool-header p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Grid for Crop Shots */
+        .crop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .crop-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .crop-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--border-light);
+        }
+
+        .crop-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .crop-content {
+            padding: 20px;
+        }
+
+        .crop-content h3 {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Why It Matters Table */
+        .table-section {
+            background: var(--bg-secondary);
+            padding: 80px 0;
+            border-radius: 32px;
+            margin: 40px 0;
+        }
+
+        .impact-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 40px;
+        }
+
+        .impact-table th,
+        .impact-table td {
+            text-align: left;
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .impact-table th {
+            color: var(--accent-blue);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        .impact-table td .feature {
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .impact-table td .value {
+            color: var(--text-secondary);
+        }
+
+        /* Future Tools */
+        .teaser-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .teaser-card {
+            padding: 32px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed var(--border-color);
+        }
+
+        .teaser-card h3 {
+            margin-bottom: 12px;
+            color: var(--text-muted);
+        }
+
+        .teaser-card .status {
+            font-size: 12px;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* CTA */
+        .cta-section {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .cta-box {
+            background: linear-gradient(145deg, var(--bg-card), var(--bg-primary));
+            padding: 80px 40px;
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-large {
+            padding: 20px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            margin: 10px;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+            .hero-subtitle {
+                font-size: 20px;
+            }
+
+            .floating-nav {
+                width: 95%;
+                padding: 8px 16px;
+            }
+
+            .nav-link {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+        }
+
+        /* Mobile Styles */
+        .mobile-nav-logo {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 1001;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: 700;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-primary);
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            text-align: center;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 24px;
+            transition: color 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-nav-logo {
+                display: flex;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding-top: 120px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Logo -->
+    <a href="index.html" class="mobile-nav-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 10l5 5 5-5" />
+            <path d="M12 15V3" />
+        </svg>
+        <span>TheValvePro</span>
+    </a>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay">
+        <ul class="mobile-nav-links">
+            <li><a href="index.html" class="mobile-nav-link" onclick="toggleMobileMenu()">About</a></li>
+            <li><a href="index.html#expertise" class="mobile-nav-link" onclick="toggleMobileMenu()">Expertise</a></li>
+            <li><a href="index.html#industries" class="mobile-nav-link" onclick="toggleMobileMenu()">Industries</a></li>
+            <li><a href="index.html#career" class="mobile-nav-link" onclick="toggleMobileMenu()">Career</a></li>
+            <li><a href="valve-app.html" class="mobile-nav-link nav-link-highlight"
+                    onclick="toggleMobileMenu()">TheValve.app</a></li>
+            <li><a href="expert-apps.html" class="mobile-nav-link" onclick="toggleMobileMenu()">Expert Apps</a></li>
+        </ul>
+        <button class="mobile-menu-close" aria-label="Close Menu" onclick="toggleMobileMenu()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+    <!-- Mobile Logo (Outside floating nav to avoid containing block issues) -->
+    <a href="index.html" class="mobile-nav-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            <path d="M2 17L12 22L22 17" stroke="white" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            <path d="M2 12L12 17L22 12" stroke="white" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+        </svg>
+        <span>TheValvePro</span>
+    </a>
+    <nav class="floating-nav">
+        <a href="index.html" class="nav-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 6a5 5 0 0 1 10 0" />
+                <path d="M6 6h12" />
+                <path d="M12 6v9" />
+                <path d="M4 19l8-4-8-4v8z" />
+                <path d="M20 19l-8-4 8-4v8z" />
+            </svg>
+            <span>TheValvePro</span>
+        </a>
+        <button class="mobile-menu-btn" aria-label="Toggle Menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">About</a></li>
+            <li><a href="index.html#expertise" class="nav-link">Expertise</a></li>
+            <li><a href="index.html#industries" class="nav-link">Industries</a></li>
+            <li><a href="index.html#career" class="nav-link">Career</a></li>
+            <li><a href="valve-app.html" class="nav-link nav-link-highlight">TheValve.app</a></li>
+            <li><a href="expert-apps.html" class="nav-link active">Expert Apps</a></li>
+            <li>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" style="display: none;">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-image-wrapper">
+            <div class="hero-overlay"></div>
+            <img src="assets/images/expert-hero.png" alt="Steam Leakage Dashboard Background" class="hero-image">
+        </div>
+        <div class="hero-content container">
+            <h1>Engineering Precision.<br>Commercial Clarity.</h1>
+            <p class="hero-subtitle">Stop guessing about valve performance. Our interactive engineering calculators
+                translate
+                complex operational data into actionable financial and environmental insights.</p>
+        </div>
+    </header>
+
+    <section class="intro-quote">
+        <div class="container">
+            <div class="quote-container">
+                <p class="quote-text">
+                    Over 30 years in global valve engineering has taught me one universal truth: if you can't quantify a
+                    problem, you can't justify the solution. I’ve developed a suite of interactive tools designed for
+                    plant
+                    managers, reliability engineers, and operational leaders. These tools take your raw process data and
+                    instantly calculate compliance, efficiency loss, and bottom-line impact.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section container">
+        <div class="tool-header">
+            <span
+                style="color: var(--accent-orange); font-weight: 600; font-size: 14px; text-transform: uppercase; margin-bottom: 8px; display: block;">Now
+                Available</span>
+            <h2>Featured Tool: Steam Leakage & FCI Seat Class Analyzer</h2>
+            <p>Assess your valve's operational integrity with our rigorous thermodynamic dashboard. By inputting your
+                process variables and measured leakage, this tool cross-references against FCI 70-2 Seat Class limits to
+                give you an immediate pass/fail diagnostic, backed by precision IAPWS-IF97 steam tables.</p>
+            <div style="margin-top: 32px;">
+                <a href="new modern leakage.html" target="_blank" class="btn btn-large btn-primary">Launch the Steam
+                    Leakage
+                    Analyzer</a>
+            </div>
+        </div>
+
+        <div class="crop-grid">
+            <div class="crop-card">
+                <img src="assets/images/crop-finance.png" alt="Financial Impact Badge" class="crop-img">
+                <div class="crop-content">
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                        Financial Impact Engine
+                    </h3>
+                </div>
+            </div>
+            <div class="crop-card">
+                <img src="assets/images/crop-chart.png" alt="Logarithmic Performance Chart" class="crop-img">
+                <div class="crop-content">
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v18h18"></path>
+                            <path d="M18 9l-5 5-2-2-4 4"></path>
+                        </svg>
+                        FCI Seat Class Benchmarking
+                    </h3>
+                </div>
+            </div>
+            <div class="crop-card">
+                <img src="assets/images/crop-thermo.png" alt="Thermodynamics Active Badge" class="crop-img">
+                <div class="crop-content">
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z">
+                            </path>
+                        </svg>
+                        IAPWS-IF97 Thermodynamics
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="table-section">
+            <div style="text-align: center;">
+                <h3 style="font-size: 24px;">The &ldquo;Why It Matters&rdquo; Table</h3>
+            </div>
+            <table class="impact-table">
+                <thead>
+                    <tr>
+                        <th>System Feature</th>
+                        <th>Owner / Operator Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="feature">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path
+                                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                                    </path>
+                                </svg>
+                                IAPWS-IF97 Thermodynamics
+                            </div>
+                        </td>
+                        <td>
+                            <div class="value">Ensures mathematically flawless phase-state and flow calculations.</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="feature">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                FCI Seat Class Benchmarking
+                            </div>
+                        </td>
+                        <td>
+                            <div class="value">Instantly verifies if your valve meets Class II through VI leakage
+                                tolerances.</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="feature">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                                Financial Impact Engine
+                            </div>
+                        </td>
+                        <td>
+                            <div class="value">Converts lost steam mass into annualized financial losses (USD/yr) based
+                                on your specific fuel and boiler efficiency.</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="feature">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                    <path d="M2 17l10 5 10-5"></path>
+                                    <path d="M2 12l10 5 10-5"></path>
+                                </svg>
+                                CO₂ Equivalent Tracking
+                            </div>
+                        </td>
+                        <td>
+                            <div class="value">Calculates the Scope 1 or Scope 2 emissions penalty of the leakage,
+                                supporting your site's ESG compliance goals.</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="section container">
+        <div class="tool-header">
+            <h2>A Growing Toolkit for Valve Lifecycle Management</h2>
+        </div>
+        <div class="teaser-grid">
+            <div class="teaser-card">
+                <span class="status">Coming Soon</span>
+                <h3>Cavitation & Flashing Predictor</h3>
+                <p style="color: var(--text-muted); font-size: 14px;">Anticipate trim damage before it happens with
+                    physics-based severity tracking.</p>
+            </div>
+            <div class="teaser-card">
+                <span class="status">Coming Soon</span>
+                <h3>Total Cost of Ownership (TCO)</h3>
+                <p style="color: var(--text-muted); font-size: 14px;">Compare repair vs. replace strategies with hard
+                    data on lifecycle costs.</p>
+            </div>
+            <div class="teaser-card" style="border-style: solid; border-color: var(--accent-blue);">
+                <span class="status" style="color: var(--text-primary);">Custom Tooling</span>
+                <h3>Custom Plant Dashboards</h3>
+                <p style="color: var(--text-muted); font-size: 14px;">Have a specific calculation challenge? Let’s build
+                    a custom dashboard for your plant.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section container" id="book">
+        <div class="cta-box">
+            <h2>Ready to quantify your performance?</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 40px; font-size: 20px;">Use the industrial-grade
+                calculators for free or book a consultation for complex mitigation strategies.</p>
+            <a href="new modern leakage.html" target="_blank" class="btn btn-large btn-primary">Launch the Steam Leakage
+                Analyzer</a>
+            <a href="https://calendly.com/davidyoung-valvepro" class="btn btn-large btn-outline">Book a 15-Minute
+                Engineering Intro</a>
+        </div>
+    </section>
+
+    <footer
+        style="padding: 100px 0 40px; background-color: var(--bg-primary); border-top: 1px solid var(--border-color); text-align: center;">
+        <div class="container">
+            <p style="color: var(--text-muted); font-size: 14px;">&copy; 2026 David Young | TheValve.pro. All rights
+                reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+        const rootElement = document.documentElement;
+
+        // Check for saved user preference, if any, on load of the website
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            rootElement.setAttribute('data-theme', savedTheme);
+            updateIcons(savedTheme);
+        } else {
+            // Default to dark mode
+            updateIcons('dark');
+        }
+
+        function updateIcons(theme) {
+            if (theme === 'light') {
+                if (sunIcon) sunIcon.style.display = 'none';
+                if (moonIcon) moonIcon.style.display = 'block';
+            } else {
+                if (sunIcon) sunIcon.style.display = 'block';
+                if (moonIcon) moonIcon.style.display = 'none';
+            }
+        }
+
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', () => {
+                const currentTheme = rootElement.getAttribute('data-theme');
+                let newTheme = 'dark'; // Default
+
+                if (currentTheme !== 'light') {
+                    newTheme = 'light';
+                }
+
+                rootElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateIcons(newTheme);
+            });
+        }
+
+        // Mobile Menu Logic
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+
+        function toggleMobileMenu() {
+            if (mobileMenuOverlay.classList.contains('active')) {
+                mobileMenuOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+                if (mobileMenuBtn) mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            } else {
+                mobileMenuOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                if (mobileMenuBtn) mobileMenuBtn.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+        }
+    </script>
+</body>
+
+</html>

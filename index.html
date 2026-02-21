@@ -293,6 +293,7 @@
                 font-size: 24px;
                 font-weight: 600;
                 text-decoration: none;
+                white-space: nowrap;
             }
 
             .mobile-menu-close {
@@ -315,6 +316,7 @@
             transition: all 0.2s ease;
             padding: 8px 16px;
             border-radius: 20px;
+            white-space: nowrap;
         }
 
         .nav-link:hover,
@@ -1609,7 +1611,9 @@
             <li><a href="#expertise" class="mobile-nav-link" onclick="toggleMobileMenu()">Expertise</a></li>
             <li><a href="#industries" class="mobile-nav-link" onclick="toggleMobileMenu()">Industries</a></li>
             <li><a href="#career" class="mobile-nav-link" onclick="toggleMobileMenu()">Career</a></li>
-            <li><a href="valve-app.html" class="mobile-nav-link nav-link-highlight">TheValve.app</a></li>
+            <li><a href="valve-app.html" class="mobile-nav-link nav-link-highlight"
+                    onclick="toggleMobileMenu()">TheValve.app</a></li>
+            <li><a href="expert-apps.html" class="mobile-nav-link" onclick="toggleMobileMenu()">Expert Apps</a></li>
         </ul>
         <button class="mobile-menu-close" aria-label="Close Menu" onclick="toggleMobileMenu()">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -1649,6 +1653,7 @@
             <li><a href="#industries" class="nav-link">Industries</a></li>
             <li><a href="#career" class="nav-link">Career</a></li>
             <li><a href="valve-app.html" class="nav-link nav-link-highlight">TheValve.app</a></li>
+            <li><a href="expert-apps.html" class="nav-link">Expert Apps</a></li>
             <li>
                 <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
                     <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
