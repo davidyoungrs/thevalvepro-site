@@ -613,6 +613,44 @@
       }
     }
 
+    /* -------- Disclaimer -------- */
+    .disclaimer {
+      margin-top: 24px;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 11px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    .disclaimer strong {
+      color: var(--text-primary);
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    @media print {
+      .disclaimer {
+        display: block !important;
+        border: 1px solid #ccc !important;
+        color: #444 !important;
+        background: #f9f9f9 !important;
+        font-size: 8pt !important;
+        margin-top: 24px;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      .disclaimer strong {
+        color: black !important;
+      }
+    }
+
     /* -------- Formula Tooltips -------- */
     .tip-wrap {
       display: inline-flex;
@@ -1476,6 +1514,10 @@
                 </table>
               </div>
             </div>
+          </div>
+          <div className="disclaimer">
+            <strong>Disclaimer</strong>
+            This calculator is provided for general informational purposes only and should be used with caution. While we strive to provide useful and accurate tools, we make no warranties or representations of any kind regarding the accuracy, reliability, or completeness of the calculations. By using this web app, you agree that we accept no liability for any direct, indirect, or consequential damages, losses, or costs arising from its use or from any decisions made based on its outputs. All results are estimates and should be independently verified by a qualified professional before being relied upon for operational, financial, or engineering decisions. Use at your own risk.
           </div>
         </div>
       );
