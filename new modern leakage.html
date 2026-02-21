@@ -613,6 +613,95 @@
       }
     }
 
+    /* -------- Formula Tooltips -------- */
+    .tip-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+    }
+
+    .tip-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      opacity: 0.75;
+      transition: opacity 0.15s;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .tip-icon:hover,
+    .tip-icon:focus {
+      opacity: 1;
+    }
+
+    .tip-popup {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 260px;
+      background: #1e2a3a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      z-index: 1000;
+      pointer-events: none;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .tip-popup strong {
+      display: block;
+      color: var(--text-primary);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .tip-popup::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: #1e2a3a;
+    }
+
+    .tip-wrap:hover .tip-popup,
+    .tip-wrap.open .tip-popup {
+      display: block;
+    }
+
+    /* On very small screens, keep popup within viewport */
+    @media (max-width: 400px) {
+      .tip-popup {
+        left: 0;
+        transform: translateX(-10%);
+        width: 220px;
+      }
+    }
+
+    /* Print: hide all tooltip icons */
+    @media print {
+      .tip-icon {
+        display: none !important;
+      }
+    }
+
     /* Print Styling */
     @page {
       /* 'landscape' with no fixed size adapts to user's default paper (A4 or Letter) */
@@ -743,7 +832,41 @@
       }
     }
   </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Steam Leakage & FCI Seat Class Analyzer",
+    "description": "Interactive engineering dashboard that quantifies steam valve leakage against ANSI/FCI 70-2 seat classes (II–VI). Calculates real leakage mass flow using IAPWS-IF97 thermodynamics, financial cost in USD or your currency, and Scope 1/2 CO₂ equivalent emissions.",
+    "applicationCategory": "EngineeringApplication",
+    "applicationSubCategory": "Industrial Process Control",
+    "operatingSystem": "Web Browser",
+    "url": "https://www.thevalve.pro/new%20modern%20leakage.html",
+    "screenshot": "https://www.thevalve.pro/assets/images/expert-hero.png",
+    "featureList": [
+      "IAPWS-IF97 steam thermodynamics",
+      "FCI Seat Class II–VI leakage standards",
+      "Financial impact calculation in USD",
+      "Scope 1 and Scope 2 CO₂ emissions quantification",
+      "Shareable URL encoding of all inputs",
+      "Landscape PDF report generation"
+    ],
+    "author": {
+      "@type": "Person",
+      "name": "David Young",
+      "jobTitle": "Valve Engineering Consultant",
+      "url": "https://www.thevalve.pro"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "keywords": "steam leakage calculator, FCI 70-2 seat class, valve leakage, IAPWS-IF97, steam trap, process valve, CO2 emissions"
+  }
+  </script>
 </head>
+
 
 <body>
   <div id="root"></div>
@@ -866,6 +989,40 @@
     }
 
     /** ------------------ App ------------------ **/
+
+    /** Reusable Formula Tooltip component **/
+    function Tooltip({ label, title, children }) {
+      const [open, setOpen] = React.useState(false);
+      const toggle = React.useCallback((e) => {
+        e.stopPropagation();
+        setOpen(o => !o);
+      }, []);
+      // Close on outside click
+      React.useEffect(() => {
+        if (!open) return;
+        const close = () => setOpen(false);
+        document.addEventListener('click', close);
+        return () => document.removeEventListener('click', close);
+      }, [open]);
+      return (
+        React.createElement('span', { className: `tip-wrap${open ? ' open' : ''}` },
+          label,
+          React.createElement('span', {
+            className: 'tip-icon',
+            onClick: toggle,
+            title: title,
+            role: 'button',
+            tabIndex: 0,
+            onKeyDown: (e) => (e.key === 'Enter' || e.key === ' ') && toggle(e),
+          }, 'i'),
+          React.createElement('span', { className: 'tip-popup' },
+            React.createElement('strong', null, title),
+            children
+          )
+        )
+      );
+    }
+
     function App() {
       // UI State
       const [activeTab, setActiveTab] = useState("valve");
@@ -1173,14 +1330,14 @@
               <label>Cost Calculation Mode</label>
               <div className="toggle-group"><div className={`toggle-btn ${steamCostMode === "calc" ? "active" : ""}`} onClick={() => setSteamCostMode("calc")}>Fuel Method</div><div className={`toggle-btn ${steamCostMode === "direct" ? "active" : ""}`} onClick={() => setSteamCostMode("direct")}>Direct $/tonne</div></div>
               {steamCostMode === "direct" ? <div className="form-group"><label>Steam Cost ($/tonne)</label><input type="number" value={steamCostDirect} onChange={e => setSteamCostDirect(e.target.value)} /></div> : <div className="form-row" style={{ gridTemplateColumns: '1fr 1fr' }}><div><label>Fuel ($/MMBtu)</label><input type="number" value={fuelPrice} step="0.1" onChange={e => setFuelPrice(e.target.value)} /></div><div><label>Boiler Eff</label><input type="number" value={boilerEff} step="0.01" onChange={e => setBoilerEff(e.target.value)} /></div></div>}
-              <label>CO₂e Scope Mode</label>
+              <label><Tooltip label="CO₂e Scope Mode" title="GHG Protocol Scope">Scope 1: direct emissions from fuel burnt in your boiler (kg CO₂ per kWh fuel). Scope 2: indirect emissions from purchased electricity or grid-supplied heat. Use Scope 1 for on-site steam generation.</Tooltip></label>
               <div className="toggle-group"><div className={`toggle-btn ${co2Mode === "scope1" ? "active" : ""}`} onClick={() => setCo2Mode("scope1")}>Scope 1 (Fuel)</div><div className={`toggle-btn ${co2Mode === "scope2" ? "active" : ""}`} onClick={() => setCo2Mode("scope2")}>Scope 2 (Grid)</div></div>
             </>
           );
           case "tuning": return (
             <>
               <label>FCI Medium (II-IV)</label><div className="toggle-group"><div className={`toggle-btn ${testMedium_II_IV === "water" ? "active" : ""}`} onClick={() => setTestMedium_II_IV("water")}>Water</div><div className={`toggle-btn ${testMedium_II_IV === "air" ? "active" : ""}`} onClick={() => setTestMedium_II_IV("air")}>Air (Est.)</div></div>
-              <div className="form-group"><label>Discharge Coeff (Cd)</label><input type="number" value={Cd} step="0.01" onChange={e => setCd(e.target.value)} /></div>
+              <div className="form-group"><label><Tooltip label="Discharge Coeff (Cd)" title="Discharge Coefficient (Cd)">Ratio of actual flow to theoretical ideal flow through the seat. 0.62 = sharp-edged orifice (ISO default). Higher = more rounded entry. Appears in: ṁ = Cd · A · √(2ρΔP)</Tooltip></label><input type="number" value={Cd} step="0.01" onChange={e => setCd(e.target.value)} /></div>
               <label>Flashing handling</label><div className="toggle-group"><div className={`toggle-btn ${enableFlashing ? "active" : ""}`} onClick={() => setEnableFlashing(true)}>Enabled</div><div className={`toggle-btn ${!enableFlashing ? "active" : ""}`} onClick={() => setEnableFlashing(false)}>Disabled</div></div>
               {enableFlashing && <div className="form-row" style={{ gridTemplateColumns: '1fr 1fr' }}><div><label>Mult Cap</label><input type="number" value={tpCap} step="0.1" onChange={e => setTpCap(e.target.value)} /></div><div><label>Exponent</label><input type="number" value={tpExpo} step="0.05" onChange={e => setTpExpo(e.target.value)} /></div></div>}
             </>
@@ -1204,7 +1361,7 @@
       return (
         <div className="dashboard-container">
           <div className="header">
-            <div><h1>Steam Leakage Analyzer</h1><p>FCI Seat Class compliance using precise IAPWS-IF97 thermodynamics</p></div>
+            <div><h1>Steam Leakage Analyzer</h1><p>FCI Seat Class compliance using precise <Tooltip label="IAPWS-IF97" title="IAPWS-IF97 Steam Tables">International standard for steam/water properties. Given pressure & temperature, it returns density, enthalpy, and quality using the 1997 IAPWS release — the same tables used in power-station simulations.</Tooltip> thermodynamics</p></div>
             <div className="header-actions">
               {!hasIapws && <div className="badge bad">IAPWS Library Offline</div>}
               {hasIapws && <div className="badge good">Thermodynamics Active</div>}
