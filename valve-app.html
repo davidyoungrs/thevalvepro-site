@@ -4,6 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+        }
+    </script>
     <title>TheValve.app | Digital Valve Asset Management System</title>
     <meta name="description"
         content="TheValve.app: Smart valve asset management. Digital identity, test history, and intelligent diagnostics to bridge the gap between CMMS and reality.">

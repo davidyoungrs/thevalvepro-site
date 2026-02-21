@@ -1,0 +1,27 @@
+{
+    "name": "TheValvePro Engineering Suite",
+    "short_name": "TheValvePro",
+    "description": "Professional valve engineering calculators and tools for plant managers and reliability engineers.",
+    "start_url": "/expert-apps.html",
+    "display": "standalone",
+    "background_color": "#0f172a",
+    "theme_color": "#0f172a",
+    "icons": [
+        {
+            "src": "assets/images/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/images/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/images/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
