@@ -457,6 +457,210 @@
             margin: 0 auto;
         }
 
+        /* Quick Estimate Card */
+        .quick-estimate-card {
+            background: linear-gradient(135deg, #111827 0%, #0f1e36 100%);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-radius: 20px;
+            margin-bottom: 48px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.08), 0 8px 32px rgba(0, 0, 0, 0.4);
+            transition: border-color 0.3s;
+        }
+
+        .quick-estimate-card:hover {
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .qe-header {
+            padding: 28px 32px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .qe-pill {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 12px;
+            letter-spacing: 0.04em;
+            margin-bottom: 12px;
+        }
+
+        .qe-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+
+        .qe-header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .qe-body {
+            padding: 24px 32px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .qe-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .qe-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 8px;
+        }
+
+        .qe-input-group {
+            display: flex;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.04);
+            transition: border-color 0.2s;
+        }
+
+        .qe-input-group:focus-within {
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .qe-input-group input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 12px 14px;
+            font-family: inherit;
+            min-width: 0;
+        }
+
+        .qe-input-group select {
+            background: rgba(255, 255, 255, 0.07);
+            border: none;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            outline: none;
+            color: #9ca3af;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 12px 10px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .qe-results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .qe-result-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 12px;
+            padding: 14px 16px;
+            transition: background 0.2s;
+        }
+
+        .qe-result-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+
+        .qe-result-value {
+            display: block;
+            font-size: 15px;
+            font-weight: 700;
+            color: #e2e8f0;
+            line-height: 1.2;
+        }
+
+        .qe-state-superheated {
+            color: #f59e0b !important;
+        }
+
+        .qe-state-saturated {
+            color: #10b981 !important;
+        }
+
+        .qe-state-subcooled {
+            color: #60a5fa !important;
+        }
+
+        .qe-footer {
+            padding: 20px 32px 28px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .qe-footnote {
+            font-size: 11px;
+            color: var(--text-muted);
+            flex: 1;
+            min-width: 200px;
+            margin: 0;
+        }
+
+        .qe-launch {
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 700px) {
+            .qe-body {
+                grid-template-columns: 1fr;
+            }
+
+            .qe-header,
+            .qe-body,
+            .qe-footer {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .qe-results {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .qe-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .qe-launch {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
         /* Grid for Crop Shots */
         .crop-grid {
             display: grid;
@@ -879,6 +1083,69 @@
             </div>
         </div>
 
+        <!-- Quick Estimate Teaser -->
+        <div class="quick-estimate-card" id="quick-estimate">
+            <div class="qe-header">
+                <span class="qe-pill">⚡ Live Preview</span>
+                <h3>Quick Steam Estimate</h3>
+                <p>Enter two process values and see the maths — then launch the full dashboard for a complete analysis.
+                </p>
+            </div>
+            <div class="qe-body">
+                <div class="qe-inputs">
+                    <div class="qe-field">
+                        <label for="qe-pressure">Upstream Pressure</label>
+                        <div class="qe-input-group">
+                            <input type="number" id="qe-pressure" value="10" min="0.1" max="200" step="0.5">
+                            <select id="qe-punit">
+                                <option value="barg">barg</option>
+                                <option value="bara">bara</option>
+                                <option value="psia">psia</option>
+                                <option value="psig">psig</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="qe-field">
+                        <label for="qe-temp">Steam Temperature</label>
+                        <div class="qe-input-group">
+                            <input type="number" id="qe-temp" value="200" min="0" max="600" step="5">
+                            <select id="qe-tunit">
+                                <option value="C">°C</option>
+                                <option value="F">°F</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="qe-results" id="qe-results">
+                    <div class="qe-result-item" id="qe-state">
+                        <span class="qe-result-label">Steam State</span>
+                        <span class="qe-result-value" id="qe-state-val">—</span>
+                    </div>
+                    <div class="qe-result-item">
+                        <span class="qe-result-label">Tₛₐₜ at P</span>
+                        <span class="qe-result-value" id="qe-tsat-val">—</span>
+                    </div>
+                    <div class="qe-result-item">
+                        <span class="qe-result-label">Approx. Density</span>
+                        <span class="qe-result-value" id="qe-rho-val">—</span>
+                    </div>
+                    <div class="qe-result-item">
+                        <span class="qe-result-label">Est. Annual Leak Cost¹</span>
+                        <span class="qe-result-value" id="qe-cost-val">—</span>
+                    </div>
+                </div>
+            </div>
+            <div class="qe-footer">
+                <p class="qe-footnote">¹ Estimate for a 25 mm Class-III seat orifice at 8,760 hrs/yr, steam @ $18/tonne.
+                    For precision analysis with your exact valve data, use the full tool.</p>
+                <a id="qe-launch-btn" href="new modern leakage.html" target="_blank"
+                    class="btn btn-large btn-primary qe-launch">
+                    Launch Full Analyzer →
+                </a>
+            </div>
+        </div>
+        <!-- End Quick Estimate -->
+
         <div class="crop-grid">
             <div class="crop-card">
                 <img src="assets/images/crop-finance.png" alt="Financial Impact Badge" class="crop-img">
@@ -1112,6 +1379,136 @@
         if (mobileMenuBtn) {
             mobileMenuBtn.addEventListener('click', toggleMobileMenu);
         }
+    </script>
+
+    <!-- Quick Estimate JS -->
+    <script>
+        (function () {
+            // ---------- Unit converters ----------
+            function toAbsBar(val, unit) {
+                var v = parseFloat(val);
+                if (!isFinite(v)) return NaN;
+                if (unit === 'barg') return v + 1.01325;
+                if (unit === 'bara') return v;
+                if (unit === 'psia') return v * 0.0689476;
+                if (unit === 'psig') return v * 0.0689476 + 1.01325;
+                return NaN;
+            }
+            function toC(val, unit) {
+                var v = parseFloat(val);
+                if (!isFinite(v)) return NaN;
+                return unit === 'F' ? (v - 32) * 5 / 9 : v;
+            }
+
+            // ---------- Tsat approximation (Antoine, valid ~1–220 bara) ----------
+            // Returns Tsat in °C for P in bara
+            // Coefficients from NIST Antoine equation log10(P_bar) = A - B/(C+T_C)
+            // Region: 60–150 °C  A=5.40221 B=1838.675 C=230.170
+            // Region: 99–374 °C  A=5.20389 B=1733.926 C=231.232 (good enough for 1-200 bar)
+            function tsatC(p_bara) {
+                if (p_bara <= 0) return NaN;
+                var logP = Math.log10(p_bara);
+                // Iterative Newton solve: log10(P) = A - B/(C+T) → T = B/(A - log10P) - C
+                var A = 5.20389, B = 1733.926, C = 231.232;
+                var T = B / (A - logP) - C;
+                // One Newton refinement step
+                var f = A - B / (C + T) - logP;
+                var fp = B / Math.pow(C + T, 2);
+                T = T - f / fp;
+                return T;
+            }
+
+            // ---------- Approximate steam density (kg/m³) ----------
+            // Superheated: ideal gas with compressibility correction
+            // ρ = P / (Z · R_steam · T_K), R_steam = 461.5 J/(kg·K)
+            // Z ≈ 1 - a·ρ approximation; iterate once.
+            function rhoSteam(p_bara, T_C) {
+                var R = 461.5; // J/(kg·K)
+                var T_K = T_C + 273.15;
+                var P_Pa = p_bara * 1e5;
+                // First guess: ideal gas
+                var rho = P_Pa / (R * T_K);
+                // van der Waals correction (simple): a = 0.5536 Pa·m⁶/kg², b = 1.69e-3 m³/kg
+                var a = 0.5536, b = 0.00169;
+                // iterate twice
+                for (var i = 0; i < 2; i++) {
+                    var P_calc = rho * R * T_K - a * rho * rho + a * b * rho * rho * rho / (R * T_K);
+                    var dP_drho = R * T_K - 2 * a * rho + 3 * a * b * rho * rho / (R * T_K);
+                    rho = rho - (P_calc - P_Pa) / dP_drho;
+                }
+                return Math.max(rho, 0.01);
+            }
+
+            // ---------- Annual leakage cost estimate ----------
+            // Reference seat: 25 mm diameter orifice, Class III (0.1 % of Cv)
+            // Simplified orifice: mdot_kg_s = Cd · A · sqrt(2 · rho · deltaP)
+            function annualCost(p_bara, rho, steamCostPerTonne) {
+                var Cd = 0.6;
+                var D = 0.025; // 25 mm
+                var A = Math.PI / 4 * D * D;
+                var P2_bara = 1.01325; // atmospheric downstream
+                var dP_Pa = (p_bara - P2_bara) * 1e5;
+                if (dP_Pa <= 0) return 0;
+                var mdot_kg_s = Cd * A * Math.sqrt(2 * rho * dP_Pa);
+                var mdot_kg_yr = mdot_kg_s * 3600 * 8760;
+                var cost = (mdot_kg_yr / 1000) * steamCostPerTonne;
+                return cost;
+            }
+
+            // ---------- DOM wiring ----------
+            var pInput = document.getElementById('qe-pressure');
+            var pUnit = document.getElementById('qe-punit');
+            var tInput = document.getElementById('qe-temp');
+            var tUnit = document.getElementById('qe-tunit');
+            var stateEl = document.getElementById('qe-state-val');
+            var tsatEl = document.getElementById('qe-tsat-val');
+            var rhoEl = document.getElementById('qe-rho-val');
+            var costEl = document.getElementById('qe-cost-val');
+            var launchBtn = document.getElementById('qe-launch-btn');
+
+            function update() {
+                var p_bara = toAbsBar(pInput.value, pUnit.value);
+                var T_C = toC(tInput.value, tUnit.value);
+                if (!isFinite(p_bara) || !isFinite(T_C) || p_bara <= 0) {
+                    stateEl.textContent = '—'; tsatEl.textContent = '—';
+                    rhoEl.textContent = '—'; costEl.textContent = '—';
+                    return;
+                }
+                var tsat = tsatC(p_bara);
+                var margin = T_C - tsat;
+                var state, stateClass;
+                if (margin > 2) {
+                    state = 'Superheated';
+                    stateClass = 'qe-state-superheated';
+                } else if (margin >= -2) {
+                    state = 'Saturated Steam';
+                    stateClass = 'qe-state-saturated';
+                } else {
+                    state = 'Subcooled';
+                    stateClass = 'qe-state-subcooled';
+                }
+                stateEl.textContent = state;
+                stateEl.className = 'qe-result-value ' + stateClass;
+                tsatEl.textContent = tsat.toFixed(1) + ' °C';
+                var rho = rhoSteam(p_bara, T_C);
+                rhoEl.textContent = rho.toFixed(2) + ' kg/m³';
+                var cost = annualCost(p_bara, rho, 18); // $18/tonne default
+                costEl.textContent = cost < 1
+                    ? '< $1 / yr'
+                    : '$' + Math.round(cost).toLocaleString() + ' / yr';
+
+                // Update launch link with pre-filled state in hash
+                var hash = 'p1=' + encodeURIComponent(p_bara.toFixed(2)) + '&p1Unit=bara'
+                    + '&t1=' + encodeURIComponent(T_C.toFixed(1)) + '&t1Unit=C';
+                launchBtn.href = 'new modern leakage.html#' + hash;
+            }
+
+            [pInput, pUnit, tInput, tUnit].forEach(function (el) {
+                el.addEventListener('input', update);
+                el.addEventListener('change', update);
+            });
+            update(); // run on load
+        })();
     </script>
 
     <!-- Back to Top Button -->
