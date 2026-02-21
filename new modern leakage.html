@@ -719,6 +719,19 @@
       border-top-color: #1e2a3a;
     }
 
+    /* Downward variant — for tooltips near the top of the page */
+    .tip-popup--down {
+      bottom: auto;
+      top: calc(100% + 8px);
+    }
+
+    .tip-popup--down::after {
+      top: auto;
+      bottom: 100%;
+      border-top-color: transparent;
+      border-bottom-color: #1e2a3a;
+    }
+
     .tip-wrap:hover .tip-popup,
     .tip-wrap.open .tip-popup {
       display: block;
@@ -1029,7 +1042,7 @@
     /** ------------------ App ------------------ **/
 
     /** Reusable Formula Tooltip component **/
-    function Tooltip({ label, title, children }) {
+    function Tooltip({ label, title, children, direction }) {
       const [open, setOpen] = React.useState(false);
       const toggle = React.useCallback((e) => {
         e.stopPropagation();
@@ -1042,6 +1055,7 @@
         document.addEventListener('click', close);
         return () => document.removeEventListener('click', close);
       }, [open]);
+      const popupClass = `tip-popup${direction === 'down' ? ' tip-popup--down' : ''}`;
       return (
         React.createElement('span', { className: `tip-wrap${open ? ' open' : ''}` },
           label,
@@ -1053,7 +1067,7 @@
             tabIndex: 0,
             onKeyDown: (e) => (e.key === 'Enter' || e.key === ' ') && toggle(e),
           }, 'i'),
-          React.createElement('span', { className: 'tip-popup' },
+          React.createElement('span', { className: popupClass },
             React.createElement('strong', null, title),
             children
           )
@@ -1399,7 +1413,7 @@
       return (
         <div className="dashboard-container">
           <div className="header">
-            <div><h1>Steam Leakage Analyzer</h1><p>FCI Seat Class compliance using precise <Tooltip label="IAPWS-IF97" title="IAPWS-IF97 Steam Tables">International standard for steam/water properties. Given pressure & temperature, it returns density, enthalpy, and quality using the 1997 IAPWS release — the same tables used in power-station simulations.</Tooltip> thermodynamics</p></div>
+            <div><h1>Steam Leakage Analyzer</h1><p>FCI Seat Class compliance using precise <Tooltip label="IAPWS-IF97" title="IAPWS-IF97 Steam Tables" direction="down">International standard for steam/water properties. Given pressure & temperature, it returns density, enthalpy, and quality using the 1997 IAPWS release — the same tables used in power-station simulations.</Tooltip> thermodynamics</p></div>
             <div className="header-actions">
               {!hasIapws && <div className="badge bad">IAPWS Library Offline</div>}
               {hasIapws && <div className="badge good">Thermodynamics Active</div>}
