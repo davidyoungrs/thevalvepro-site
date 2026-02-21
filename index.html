@@ -1206,6 +1206,123 @@
             line-height: 1.6;
         }
 
+        /* Results in Practice */
+        .results-section {
+            padding: 100px 0;
+            background: var(--bg-primary);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 60px;
+        }
+
+        .result-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 36px 32px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), #7c3aed);
+        }
+
+        .result-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-light);
+        }
+
+        .result-card.accent-green::before {
+            background: linear-gradient(90deg, #10b981, #059669);
+        }
+
+        .result-card.accent-amber::before {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+
+        .result-stat {
+            font-size: clamp(2.2rem, 5vw, 3rem);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #fff 60%, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-card.accent-green .result-stat {
+            background: linear-gradient(135deg, #10b981, #6ee7b7);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .result-card.accent-amber .result-stat {
+            background: linear-gradient(135deg, #f59e0b, #fcd34d);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .result-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .result-detail {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .result-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 100px;
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #60a5fa;
+            letter-spacing: 0.04em;
+        }
+
+        .result-badge.green {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+
+        .result-badge.amber {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        .results-disclaimer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
         /* CTA Section / Modern Footer */
         .cta-section {
             padding: 100px 0;
@@ -1999,7 +2116,59 @@
         </div>
     </section>
 
+    <!-- Results in Practice -->
+    <section class="results-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-badge">Results in Practice</span>
+                <h2>What the Numbers Look Like in the Real World</h2>
+                <p>Anonymised outcomes from client engagements — the kind of clarity that's hard to get without the
+                    right tools.</p>
+            </div>
+
+            <div class="results-grid">
+
+                <div class="result-card accent-green animate-on-scroll stagger-1">
+                    <div class="result-stat">£42k</div>
+                    <div class="result-label">Annual steam loss identified — UK refinery</div>
+                    <div class="result-detail">
+                        A single control valve running at Class II leakage on 12 bar saturated steam.
+                        The steam leakage analyzer flagged it in under 10 minutes.
+                        Seat repair cost: £1,200.
+                    </div>
+                    <span class="result-badge green">⚡ Steam Leakage Analyzer</span>
+                </div>
+
+                <div class="result-card animate-on-scroll stagger-2">
+                    <div class="result-stat">6 → IV</div>
+                    <div class="result-label">Seat class reclassified — petrochemical shutdown</div>
+                    <div class="result-detail">
+                        18 critical isolation valves re-classified from unverified Class VI
+                        to a properly documented Class IV during a planned turnaround,
+                        removing a compliance gap before an insurance audit.
+                    </div>
+                    <span class="result-badge">📋 FCI Classification Tool</span>
+                </div>
+
+                <div class="result-card accent-amber animate-on-scroll stagger-3">
+                    <div class="result-stat">340 t</div>
+                    <div class="result-label">CO₂-eq avoided — European power station</div>
+                    <div class="result-detail">
+                        Valve remediation programme across 4 steam headers.
+                        Emissions equivalent modelled and presented to ESG reporting team,
+                        supporting Scope 1 reduction targets.
+                    </div>
+                    <span class="result-badge amber">🌍 Emissions Modelling</span>
+                </div>
+
+            </div>
+
+            <p class="results-disclaimer">All figures are indicative. Client details anonymised.</p>
+        </div>
+    </section>
+
     <!-- CTA Section -->
+
     <section id="contact" class="cta-section">
         <div class="container">
             <div class="cta-card animate-on-scroll animate-scale">
