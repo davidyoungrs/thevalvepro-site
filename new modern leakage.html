@@ -1162,6 +1162,26 @@
       const [efScope1, setEfScope1] = useState(0.18296);
       const [efScope2, setEfScope2] = useState(0.19553);
       const [linkCopied, setLinkCopied] = useState(false);
+      const [massFlowUnit, setMassFlowUnit] = useState("kg/h");   // "kg/h" | "lb/h"
+      const [fciTestUnit, setFciTestUnit] = useState("SI");        // "SI" | "Imperial"
+
+      // --- Unit conversion constants & helpers ---
+      const kgHToLbH     = (v) => v * lbPerKg;
+      const m3HToFt3H    = (v) => v * 35.3146667215;
+      const mlMinToGalMin = (v) => v / 3785.41;
+      const mlMinToScfh  = (v) => v * 60e-6 * 35.3146667215;
+
+      // --- Display unit helpers ---
+      const fciIsImp = fciTestUnit === "Imperial";
+      const dispMass   = (kg_h) => isNum(kg_h) ? (massFlowUnit === "lb/h" ? kgHToLbH(kg_h) : kg_h) : NaN;
+      const dispFciVol = (m3_h) => isNum(m3_h) ? (fciIsImp ? m3HToFt3H(m3_h) : m3_h) : NaN;
+      const fciVolUnit = fciIsImp ? "ft³/h" : "m³/h";
+      const dispFciSub = (mlpm, basis) => {
+        if (!isNum(mlpm)) return "";
+        const isAir = basis && (basis.startsWith("Air"));
+        if (isAir) return fciIsImp ? `${fmt(mlMinToScfh(mlpm), 4)} scfh` : `${fmt(mlpm, 2)} mL/min`;
+        return fciIsImp ? `${fmt(mlMinToGalMin(mlpm), 4)} gal/min` : `${fmt(mlpm, 2)} mL/min`;
+      };
 
       // Restore state from URL hash on mount
       useEffect(() => {
@@ -1188,16 +1208,18 @@
           if (params.fuelPrice !== undefined) setFuelPrice(params.fuelPrice);
           if (params.boilerEff !== undefined) setBoilerEff(params.boilerEff);
           if (params.co2Mode) setCo2Mode(params.co2Mode);
+          if (params.massFlowUnit) setMassFlowUnit(params.massFlowUnit);
+          if (params.fciTestUnit) setFciTestUnit(params.fciTestUnit);
         } catch (e) { /* ignore bad hash */ }
       }, []);
 
       // Sync state to URL hash whenever inputs change
       useEffect(() => {
-        const params = { cv, seatDia, seatDiaUnit, p1, p1Unit, p2, p2Unit, t1, t1Unit, steamMode, actualLeak, actualLeakUnit, uptimeHours, closedFrac, steamCostMode, steamCostDirect, fuelPrice, boilerEff, co2Mode };
+        const params = { cv, seatDia, seatDiaUnit, p1, p1Unit, p2, p2Unit, t1, t1Unit, steamMode, actualLeak, actualLeakUnit, uptimeHours, closedFrac, steamCostMode, steamCostDirect, fuelPrice, boilerEff, co2Mode, massFlowUnit, fciTestUnit };
         window.history.replaceState(null, '', '#' + encodeURIComponent(JSON.stringify(params)));
         const container = document.querySelector('.dashboard-container');
         if (container) container.setAttribute('data-timestamp', new Date().toLocaleString());
-      }, [cv, seatDia, seatDiaUnit, p1, p1Unit, p2, p2Unit, t1, t1Unit, steamMode, actualLeak, actualLeakUnit, uptimeHours, closedFrac, steamCostMode, steamCostDirect, fuelPrice, boilerEff, co2Mode]);
+      }, [cv, seatDia, seatDiaUnit, p1, p1Unit, p2, p2Unit, t1, t1Unit, steamMode, actualLeak, actualLeakUnit, uptimeHours, closedFrac, steamCostMode, steamCostDirect, fuelPrice, boilerEff, co2Mode, massFlowUnit, fciTestUnit]);
 
       const copyShareLink = useCallback(() => {
         navigator.clipboard.writeText(window.location.href).then(() => {
@@ -1379,27 +1401,28 @@
 
       // Setup table rows
       const criteria = [
-        { label: "FCI Allowable (Test Basis)", render: (r) => <><div className="cell-val">{isNum(r.Qtest_m3s) ? `${fmt(r.Qtest_m3s * 3600, 4)} m³/h` : "—"}</div><div className="cell-sub">{isNum(r.Qtest_mlpm) ? `${fmt(r.Qtest_mlpm, 2)} mL/min • ` : ""}{r.basis}</div></> },
+        { label: "FCI Allowable (Test Basis)", render: (r) => <><div className="cell-val">{isNum(r.Qtest_m3s) ? `${fmt(dispFciVol(r.Qtest_m3s * 3600), 4)} ${fciVolUnit}` : "—"}</div><div className="cell-sub">{isNum(r.Qtest_mlpm) ? `${dispFciSub(r.Qtest_mlpm, r.basis)} • ` : ""}{r.basis}</div></> },
         { label: "Effective Area (Aeff)", render: (r) => <><div className="cell-val">{isNum(r.Aeff) ? `${fmtSci(r.Aeff, 3)} m²` : "—"}</div></> },
-        { label: "Operating Steam Leak (Mass)", render: (r) => <><div className="cell-val">{isNum(r.mdotSteamAdj) ? `${fmt(r.mdotSteamAdj * 3600, 4)} kg/h` : "—"}</div><div className="cell-sub">{r.choked ? "Choked" : "Subcritical"}{r.tpMult > 1 ? ` • 2-phase ×${fmt(r.tpMult, 2)}` : ""}</div></> },
+        { label: "Operating Steam Leak (Mass)", render: (r) => <><div className="cell-val">{isNum(r.mdotSteamAdj) ? `${fmt(dispMass(r.mdotSteamAdj * 3600), 4)} ${massFlowUnit}` : "—"}</div><div className="cell-sub">{r.choked ? "Choked" : "Subcritical"}{r.tpMult > 1 ? ` • 2-phase ×${fmt(r.tpMult, 2)}` : ""}</div></> },
         { label: "Annual Steam Lost", render: (r) => <><div className="cell-val">{isNum(r.steamLost_tonnes) ? `${fmt(r.steamLost_tonnes, 1)} t/yr` : "—"}</div></> },
         { label: "Financial Impact (Loss/yr)", render: (r) => <><div className="cell-val" style={{ color: 'var(--danger)' }}>{isNum(r.costLost) ? `${fmtMoney(r.costLost, 0)}` : "—"}</div></> },
         { label: "CO₂ Impact", render: (r) => <><div className="cell-val" style={{ color: 'var(--warning)' }}>{isNum(r.co2_kg) ? `${fmt(r.co2_kg / 1000, 1)} tCO₂e/yr` : "—"}</div></> },
-        { label: "Actual vs Allowable", render: (r) => <><div className="cell-val" style={{ marginBottom: 8 }}>{isNum(r.delta_kg_h) ? `${fmt(r.delta_kg_h, 4)} kg/h` : "—"}</div><span className={`badge ${r.status}`}><span className={`dot ${r.status}`}></span>{r.status === "good" ? "PASS" : r.status === "warn" ? "MARGINAL" : "FAIL"}</span></> }
+        { label: "Actual vs Allowable", render: (r) => <><div className="cell-val" style={{ marginBottom: 8 }}>{isNum(r.delta_kg_h) ? `${fmt(dispMass(r.delta_kg_h), 4)} ${massFlowUnit}` : "—"}</div><span className={`badge ${r.status}`}><span className={`dot ${r.status}`}></span>{r.status === "good" ? "PASS" : r.status === "warn" ? "MARGINAL" : "FAIL"}</span></> }
       ];
 
       const exportCSV = () => {
         if (!derived || !derived.results) return;
         const escape = (str) => `"${String(str).replace(/"/g, '""')}"`;
         const headers = ["Criteria", ...derived.results.map(r => `Class ${r.cls}`)];
+        const fciIsImpCSV = fciTestUnit === "Imperial";
         const rows = [
-          ["FCI Allowable (m3/h)", ...derived.results.map(r => isNum(r.Qtest_m3s) ? r.Qtest_m3s * 3600 : "")],
+          [`FCI Allowable (${fciIsImpCSV ? "ft3/h" : "m3/h"})`, ...derived.results.map(r => isNum(r.Qtest_m3s) ? (fciIsImpCSV ? m3HToFt3H(r.Qtest_m3s * 3600) : r.Qtest_m3s * 3600) : "")],
           ["Effective Area (m2)", ...derived.results.map(r => isNum(r.Aeff) ? r.Aeff : "")],
-          ["Operating Steam Leak (kg/h)", ...derived.results.map(r => isNum(r.mdotSteamAdj) ? r.mdotSteamAdj * 3600 : "")],
+          [`Operating Steam Leak (${massFlowUnit})`, ...derived.results.map(r => isNum(r.mdotSteamAdj) ? (massFlowUnit === "lb/h" ? kgHToLbH(r.mdotSteamAdj * 3600) : r.mdotSteamAdj * 3600) : "")],
           ["Annual Steam Lost (t/yr)", ...derived.results.map(r => isNum(r.steamLost_tonnes) ? r.steamLost_tonnes : "")],
           ["Financial Impact (USD/yr)", ...derived.results.map(r => isNum(r.costLost) ? r.costLost : "")],
           ["CO2 Impact (kgCO2e/yr)", ...derived.results.map(r => isNum(r.co2_kg) ? r.co2_kg : "")],
-          ["Delta - Actual vs Allowable (kg/h)", ...derived.results.map(r => isNum(r.delta_kg_h) ? r.delta_kg_h : "")],
+          [`Delta - Actual vs Allowable (${massFlowUnit})`, ...derived.results.map(r => isNum(r.delta_kg_h) ? (massFlowUnit === "lb/h" ? kgHToLbH(r.delta_kg_h) : r.delta_kg_h) : "")],
           ["Status", ...derived.results.map(r => r.status)]
         ];
         const csvContent = [headers.map(escape).join(","), ...rows.map(row => row.map(escape).join(","))].join("\n");
@@ -1416,6 +1439,18 @@
               <div className="form-group"><label>Rated Cv (Required for II–IV)</label><input type="number" value={cv} onChange={e => setCv(e.target.value)} /></div>
               <div className="form-row"><div><label>Seat Diameter</label><input type="number" value={seatDia} onChange={e => setSeatDia(e.target.value)} /></div><div><label>Unit</label><select value={seatDiaUnit} onChange={e => setSeatDiaUnit(e.target.value)}><option value="mm">mm</option><option value="in">in</option></select></div></div>
               <div className="form-row"><div><label>Measured Leakage (Mass)</label><input type="number" value={actualLeak} onChange={e => setActualLeak(e.target.value)} /></div><div><label>Unit</label><select value={actualLeakUnit} onChange={e => setActualLeakUnit(e.target.value)}><option value="kg/h">kg/h</option><option value="lb/h">lb/h</option></select></div></div>
+              <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--border)' }}>
+                <label>Results: Mass Flow Display</label>
+                <div className="toggle-group">
+                  <div className={`toggle-btn ${massFlowUnit === "kg/h" ? "active" : ""}`} onClick={() => setMassFlowUnit("kg/h")}>kg/h</div>
+                  <div className={`toggle-btn ${massFlowUnit === "lb/h" ? "active" : ""}`} onClick={() => setMassFlowUnit("lb/h")}>lb/h</div>
+                </div>
+                <label style={{ marginTop: 10 }}>FCI Test Volume Display</label>
+                <div className="toggle-group">
+                  <div className={`toggle-btn ${fciTestUnit === "SI" ? "active" : ""}`} onClick={() => setFciTestUnit("SI")}>SI (m³/h · mL/min)</div>
+                  <div className={`toggle-btn ${fciTestUnit === "Imperial" ? "active" : ""}`} onClick={() => setFciTestUnit("Imperial")}>Imperial (ft³/h · gal/min)</div>
+                </div>
+              </div>
             </>
           );
           case "process": return (
@@ -1525,14 +1560,14 @@
               {maxChartVal > 0 && (
                 <div className="chart-container">
                   <div className="chart-header">
-                    <h3 className="chart-title">Leakage Comparison: Allowable vs Actual <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(kg/h)</span></h3>
+                    <h3 className="chart-title">Leakage Comparison: Allowable vs Actual <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>({massFlowUnit})</span></h3>
                     <span className="chart-subtitle">Logarithmic Scale</span>
                   </div>
                   <div className="chart-wrapper">
                     {/* Horizontal trendline for "Actual" leak */}
                     {validActual && (
                       <div style={{ position: 'absolute', bottom: getChartHeight(derived.globalActual), left: 0, right: 0, borderTop: '2px dashed var(--accent)', zIndex: 0 }}>
-                        <span style={{ position: 'absolute', right: 0, top: '-22px', fontSize: '12px', color: 'var(--accent)', fontFamily: 'var(--mono)', fontWeight: 600 }}>Actual: {fmt(derived.globalActual, 4)}</span>
+                        <span style={{ position: 'absolute', right: 0, top: '-22px', fontSize: '12px', color: 'var(--accent)', fontFamily: 'var(--mono)', fontWeight: 600 }}>Actual: {fmt(dispMass(derived.globalActual), 4)} {massFlowUnit}</span>
                       </div>
                     )}
 
@@ -1545,7 +1580,7 @@
 
                       return (
                         <div key={r.cls} className="bar-col" style={{ zIndex: 1 }}>
-                          <div className="bar-val">{fmt(r.allowable_kg_h, 4)}</div>
+                          <div className="bar-val">{fmt(dispMass(r.allowable_kg_h), 4)}</div>
                           <div className={barClass} style={{ height: getChartHeight(r.allowable_kg_h) }}></div>
                           <div className="bar-label">Cls {r.cls}</div>
                         </div>
