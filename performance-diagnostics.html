@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script defer data-domain="thevalve.pro" src="https://plausible.io/js/script.js"></script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <link rel="apple-touch-icon" href="assets/images/icon-192.png">
+    <meta name="theme-color" content="#0f172a">
+    <title>Performance Diagnostics | TheValve.app — Predictive APM Dashboard</title>
+    <meta name="description"
+        content="TheValve.app's Predictive Analytics Dashboard: real-time Asset Health Index, ML-powered fault detection and digital twin performance curves — built by valve experts.">
+    <meta property="og:title" content="Performance Diagnostics | TheValve.app APM Dashboard">
+    <meta property="og:description"
+        content="Move from reactive repairs to intelligent foresight. An advanced APM dashboard built by valve experts.">
+    <meta property="og:url" content="https://www.thevalve.pro/performance-diagnostics.html">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://www.thevalve.pro/performance-diagnostics.html">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0d1226;
+            --bg-card: #111827;
+            --bg-card-hover: #1a2235;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-blue: #3b82f6;
+            --accent-blue-hover: #2563eb;
+            --accent-orange: #f59e0b;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --border-color: #1f2937;
+            --border-light: #374151;
+            --fs-h1: clamp(2.5rem, 5vw, 4rem);
+            --fs-h2: clamp(1.8rem, 4vw, 2.6rem);
+            --fs-h3: clamp(1.1rem, 2vw, 1.35rem);
+        }
+
+        html,
+        body {
+            overflow-x: hidden
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6
+        }
+
+        .container {
+            width: min(100% - 2rem, 1200px);
+            margin-inline: auto
+        }
+
+        /* NAV */
+        .floating-nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            padding: 8px 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            width: min(90%, 860px);
+            transition: all 0.3s ease
+        }
+
+        .floating-nav:hover {
+            background: rgba(10, 14, 26, 0.95);
+            border-color: rgba(59, 130, 246, 0.3)
+        }
+
+        .nav-logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 4px;
+            white-space: nowrap
+        }
+
+        .nav-logo span {
+            display: none
+        }
+
+        @media(min-width:768px) {
+            .nav-logo span {
+                display: inline
+            }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 4px;
+            list-style: none
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 14px;
+            border-radius: 20px;
+            white-space: nowrap;
+            transition: all 0.2s ease
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05)
+        }
+
+        .nav-link-cta {
+            background: var(--accent-blue);
+            color: #fff !important;
+            border-radius: 20px
+        }
+
+        .nav-link-cta:hover {
+            background: var(--accent-blue-hover) !important
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer
+        }
+
+        .mobile-menu-overlay {
+            display: none
+        }
+
+        @media(max-width:767px) {
+            .floating-nav {
+                top: 20px;
+                left: auto;
+                right: 20px;
+                transform: none;
+                width: auto;
+                padding: 12px;
+                border-radius: 50%
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                width: 24px;
+                height: 24px;
+                padding: 0
+            }
+
+            .nav-links {
+                display: none
+            }
+
+            .mobile-nav-logo {
+                display: flex;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1005;
+                background: rgba(10, 14, 26, 0.85);
+                backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 100px;
+                padding: 8px 16px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+                align-items: center;
+                gap: 8px;
+                text-decoration: none;
+                color: var(--text-primary);
+                font-size: 16px;
+                font-weight: 700
+            }
+
+            .mobile-menu-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: var(--bg-primary);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 32px;
+                padding: 2rem;
+                z-index: 2000;
+                transform: translateY(-100%);
+                transition: transform 0.3s ease;
+                opacity: 0;
+                pointer-events: none
+            }
+
+            .mobile-menu-overlay.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: auto
+            }
+
+            .mobile-nav-links {
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 24px;
+                align-items: center
+            }
+
+            .mobile-nav-link {
+                color: var(--text-primary);
+                font-size: 24px;
+                font-weight: 600;
+                text-decoration: none
+            }
+
+            .mobile-menu-close {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                background: none;
+                border: none;
+                color: var(--text-primary);
+                cursor: pointer;
+                padding: 8px
+            }
+        }
+
+        @media(min-width:768px) {
+            .mobile-nav-logo {
+                display: none
+            }
+        }
+
+        .nav-logo {
+            display: flex
+        }
+
+        @media(max-width:767px) {
+            .nav-logo {
+                display: none
+            }
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 26px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            letter-spacing: -0.01em
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: #fff
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-blue-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35)
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light)
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-card);
+            border-color: var(--text-secondary);
+            color: var(--text-primary)
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.12)
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.1)
+        }
+
+        /* BADGE */
+        .badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.12);
+            color: var(--accent-blue);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            margin-bottom: 20px
+        }
+
+        .badge-neutral {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-light)
+        }
+
+        /* SCROLL ANIMATIONS */
+        .anim {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease
+        }
+
+        .anim.slide-left {
+            transform: translateX(-30px)
+        }
+
+        .anim.slide-right {
+            transform: translateX(30px)
+        }
+
+        .anim.scale {
+            transform: scale(0.95)
+        }
+
+        .anim.in {
+            opacity: 1;
+            transform: none
+        }
+
+        .s1 {
+            transition-delay: 0.05s
+        }
+
+        .s2 {
+            transition-delay: 0.12s
+        }
+
+        .s3 {
+            transition-delay: 0.19s
+        }
+
+        .s4 {
+            transition-delay: 0.26s
+        }
+
+        /* ============ HERO ============ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 0 80px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(59, 130, 246, 0.08) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 85% 70%, rgba(16, 185, 129, 0.05) 0%, transparent 60%);
+            pointer-events: none
+        }
+
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%)
+        }
+
+        .hero-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center
+        }
+
+        .hero h1 {
+            font-size: var(--fs-h1);
+            font-weight: 800;
+            line-height: 1.08;
+            letter-spacing: -1.5px;
+            margin-bottom: 20px
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            color: var(--accent-blue)
+        }
+
+        .hero-sub {
+            color: var(--text-secondary);
+            font-size: 17px;
+            line-height: 1.75;
+            margin-bottom: 36px;
+            max-width: 480px
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap
+        }
+
+        /* Dashboard mockup */
+        .dashboard-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), transparent);
+            pointer-events: none
+        }
+
+        .dash-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px
+        }
+
+        .dash-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: .05em;
+            text-transform: uppercase
+        }
+
+        .dash-time {
+            font-size: 12px;
+            color: var(--text-muted)
+        }
+
+        .ahi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px
+        }
+
+        .ahi-item {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 12px 10px;
+            text-align: center;
+            border: 1px solid var(--border-color)
+        }
+
+        .ahi-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 500
+        }
+
+        .ahi-score {
+            font-size: 22px;
+            font-weight: 700
+        }
+
+        .ahi-score.green {
+            color: var(--accent-green)
+        }
+
+        .ahi-score.amber {
+            color: var(--accent-orange)
+        }
+
+        .ahi-score.red {
+            color: var(--accent-red)
+        }
+
+        .ahi-tag {
+            font-size: 10px;
+            margin-top: 3px;
+            font-weight: 500;
+            opacity: 0.8
+        }
+
+        .ahi-tag.green {
+            color: var(--accent-green)
+        }
+
+        .ahi-tag.amber {
+            color: var(--accent-orange)
+        }
+
+        .ahi-tag.red {
+            color: var(--accent-red)
+        }
+
+        .alert-box {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            margin-bottom: 12px
+        }
+
+        .alert-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-red);
+            margin-top: 4px;
+            flex-shrink: 0;
+            animation: pulse 2s infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0.4
+            }
+        }
+
+        .alert-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5
+        }
+
+        .alert-text strong {
+            color: var(--text-primary);
+            font-weight: 600
+        }
+
+        .dash-sparkline {
+            height: 48px;
+            width: 100%;
+            position: relative
+        }
+
+        .sparkline-svg {
+            width: 100%;
+            height: 100%
+        }
+
+        .spark-bg {
+            fill: none;
+            stroke: var(--border-color);
+            stroke-width: 1
+        }
+
+        .spark-line {
+            fill: none;
+            stroke: var(--accent-blue);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round
+        }
+
+        .spark-area {
+            fill: url(#sparkGrad)
+        }
+
+        .mini-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 16px
+        }
+
+        .mini-stat {
+            text-align: center;
+            padding: 10px 6px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color)
+        }
+
+        .mini-stat-val {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-blue)
+        }
+
+        .mini-stat-lbl {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px
+        }
+
+        @media(max-width:900px) {
+            .hero-layout {
+                grid-template-columns: 1fr;
+                gap: 48px
+            }
+        }
+
+        @media(max-width:600px) {
+            .ahi-grid {
+                grid-template-columns: repeat(3, 1fr)
+            }
+        }
+
+        /* ============ PHILOSOPHY ============ */
+        .section {
+            padding: 96px 0
+        }
+
+        .section.alt {
+            background: var(--bg-secondary)
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px
+        }
+
+        .section-header h2 {
+            font-size: var(--fs-h2);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+            margin-bottom: 16px
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 17px;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.75
+        }
+
+        .philosophy-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start
+        }
+
+        .quote-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 36px;
+            position: relative
+        }
+
+        .quote-card::before {
+            content: '\201C';
+            position: absolute;
+            top: 20px;
+            left: 28px;
+            font-size: 80px;
+            color: var(--accent-blue);
+            opacity: 0.15;
+            font-family: Georgia, serif;
+            line-height: 1
+        }
+
+        .quote-text {
+            font-size: 17px;
+            line-height: 1.75;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 24px;
+            padding-top: 20px
+        }
+
+        .quote-author {
+            display: flex;
+            align-items: center;
+            gap: 14px
+        }
+
+        .author-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0
+        }
+
+        .author-name {
+            font-weight: 600;
+            font-size: 15px
+        }
+
+        .author-role {
+            font-size: 13px;
+            color: var(--text-muted)
+        }
+
+        .philosophy-right h2 {
+            font-size: var(--fs-h2);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.5px;
+            margin-bottom: 20px
+        }
+
+        .philosophy-right p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.75;
+            margin-bottom: 20px
+        }
+
+        .metrics-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin-top: 32px
+        }
+
+        .metric-chip {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 20px;
+            transition: border-color 0.2s
+        }
+
+        .metric-chip:hover {
+            border-color: var(--border-light)
+        }
+
+        .metric-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0
+        }
+
+        .metric-icon.blue {
+            background: rgba(59, 130, 246, 0.12)
+        }
+
+        .metric-icon.green {
+            background: rgba(16, 185, 129, 0.12)
+        }
+
+        .metric-icon.orange {
+            background: rgba(245, 158, 11, 0.12)
+        }
+
+        .metric-body strong {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px
+        }
+
+        .metric-body span {
+            font-size: 13px;
+            color: var(--text-muted)
+        }
+
+        @media(max-width:900px) {
+            .philosophy-layout {
+                grid-template-columns: 1fr
+            }
+        }
+
+        /* ============ CAPABILITIES ============ */
+        .caps-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px
+        }
+
+        .cap-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 30px;
+            transition: all 0.25s ease
+        }
+
+        .cap-card:hover {
+            border-color: var(--accent-blue);
+            background: var(--bg-card-hover);
+            transform: translateY(-2px)
+        }
+
+        .cap-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px
+        }
+
+        .cap-icon.blue {
+            background: rgba(59, 130, 246, 0.12)
+        }
+
+        .cap-icon.green {
+            background: rgba(16, 185, 129, 0.12)
+        }
+
+        .cap-icon.orange {
+            background: rgba(245, 158, 11, 0.12)
+        }
+
+        .cap-icon.purple {
+            background: rgba(139, 92, 246, 0.12)
+        }
+
+        .cap-card h3 {
+            font-size: var(--fs-h3);
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.2px
+        }
+
+        .cap-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.7
+        }
+
+        @media(max-width:700px) {
+            .caps-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        /* ============ IMPACT (TABS) ============ */
+        .tabs-wrap {
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden
+        }
+
+        .tabs-nav {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color)
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 18px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+            position: relative;
+            text-align: center
+        }
+
+        .tab-btn.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.05)
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--text-secondary)
+        }
+
+        .tab-body {
+            display: none;
+            padding: 40px 36px;
+            gap: 40px;
+            align-items: start
+        }
+
+        .tab-body.active {
+            display: flex
+        }
+
+        .tab-icon-wrap {
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            background: rgba(59, 130, 246, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0
+        }
+
+        .tab-content h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.3px
+        }
+
+        .tab-content p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.75
+        }
+
+        .tab-features {
+            list-style: none;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px
+        }
+
+        .tab-features li {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-secondary)
+        }
+
+        .tab-features li::before {
+            content: '';
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1.5px solid var(--accent-blue);
+            flex-shrink: 0;
+            margin-top: 1px;
+            display: flex
+        }
+
+        @media(max-width:700px) {
+            .tab-body {
+                flex-direction: column;
+                padding: 28px 20px
+            }
+
+            .tabs-nav {
+                grid-template-columns: 1fr
+            }
+
+            .tab-btn {
+                padding: 14px
+            }
+        }
+
+        /* ============ INTEGRATION ============ */
+        .integration-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center
+        }
+
+        .integration-left h2 {
+            font-size: var(--fs-h2);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+            margin-bottom: 20px
+        }
+
+        .integration-left p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.75;
+            margin-bottom: 24px
+        }
+
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px
+        }
+
+        .protocol-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px 10px;
+            text-align: center;
+            transition: border-color 0.2s
+        }
+
+        .protocol-chip:hover {
+            border-color: var(--border-light)
+        }
+
+        .protocol-chip .pname {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 3px
+        }
+
+        .protocol-chip .ptype {
+            font-size: 11px;
+            color: var(--text-muted)
+        }
+
+        .integration-right {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px
+        }
+
+        .int-step {
+            display: flex;
+            gap: 16px;
+            align-items: start
+        }
+
+        .int-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1.5px solid var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            flex-shrink: 0
+        }
+
+        .int-step-body strong {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 3px
+        }
+
+        .int-step-body span {
+            font-size: 13px;
+            color: var(--text-muted)
+        }
+
+        @media(max-width:900px) {
+            .integration-layout {
+                grid-template-columns: 1fr
+            }
+        }
+
+        /* ============ CTA FOOTER ============ */
+        .cta-section {
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(59, 130, 246, 0.08), transparent 70%);
+            pointer-events: none
+        }
+
+        .cta-section h2 {
+            font-size: var(--fs-h2);
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            margin-bottom: 16px;
+            line-height: 1.15
+        }
+
+        .cta-section p {
+            color: var(--text-secondary);
+            font-size: 17px;
+            max-width: 540px;
+            margin: 0 auto 36px;
+            line-height: 1.75
+        }
+
+        .cta-btns {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap
+        }
+
+        /* ============ FOOTER ============ */
+        .footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border-color)
+        }
+
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-decoration: none
+        }
+
+        .footer-logo-icon {
+            width: 28px;
+            height: 28px
+        }
+
+        .footer-copyright {
+            font-size: 13px;
+            color: var(--text-muted)
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px
+        }
+
+        .footer-social a {
+            color: var(--text-muted);
+            transition: color 0.2s;
+            width: 20px;
+            height: 20px;
+            display: flex
+        }
+
+        .footer-social a:hover {
+            color: var(--text-primary)
+        }
+
+        .footer-social svg {
+            width: 20px;
+            height: 20px
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Mobile logo -->
+    <a href="index.html" class="mobile-nav-logo" aria-label="TheValvePro Home">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 6a5 5 0 0 1 10 0" />
+            <path d="M6 6h12" />
+            <path d="M12 6v9" />
+            <path d="M4 19l8-4-8-4v8z" />
+            <path d="M20 19l-8-4 8-4v8z" />
+        </svg>
+        <span>thevalve.pro</span>
+    </a>
+
+    <!-- Floating Nav -->
+    <nav class="floating-nav" role="navigation" aria-label="Main navigation">
+        <a href="index.html" class="nav-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 6a5 5 0 0 1 10 0" />
+                <path d="M6 6h12" />
+                <path d="M12 6v9" />
+                <path d="M4 19l8-4-8-4v8z" />
+                <path d="M20 19l-8-4 8-4v8z" />
+            </svg>
+            <span>thevalve.pro</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html#expertise" class="nav-link">Expertise</a></li>
+            <li><a href="index.html#industries" class="nav-link">Industries</a></li>
+            <li><a href="valve-app.html" class="nav-link">TheValve.app</a></li>
+            <li><a href="performance-diagnostics.html" class="nav-link active">Diagnostics</a></li>
+            <li><a href="index.html#contact" class="nav-link nav-link-cta">Contact</a></li>
+        </ul>
+        <button class="mobile-menu-btn" aria-label="Open menu" aria-expanded="false">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+        </button>
+    </nav>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-menu-overlay" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+        <button class="mobile-menu-close" aria-label="Close menu">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="index.html#expertise" class="mobile-nav-link">Expertise</a></li>
+            <li><a href="index.html#industries" class="mobile-nav-link">Industries</a></li>
+            <li><a href="valve-app.html" class="mobile-nav-link">TheValve.app</a></li>
+            <li><a href="performance-diagnostics.html" class="mobile-nav-link">Diagnostics</a></li>
+            <li><a href="index.html#contact" class="mobile-nav-link">Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- ===== 1. HERO ===== -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-grid"></div>
+        <div class="container">
+            <div class="hero-layout">
+                <div class="hero-left">
+                    <span class="badge">Asset Performance Management</span>
+                    <h1>Valve Engineering<br>Excellence, <em>Digitized.</em></h1>
+                    <p class="hero-sub">Move from reactive repairs to intelligent foresight. TheValve.app is an advanced
+                        APM dashboard built by valve experts to monitor, diagnose, and predict control valve performance
+                        across your entire plant.</p>
+                    <div class="hero-btns">
+                        <a href="index.html#contact" class="btn btn-primary">
+                            Request a Live Demo
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14" />
+                                <path d="m12 5 7 7-7 7" />
+                            </svg>
+                        </a>
+                        <a href="#capabilities" class="btn btn-outline">Discover the Analytics</a>
+                    </div>
+                </div>
+                <div class="hero-right anim scale in">
+                    <!-- Dashboard Mockup -->
+                    <div class="dashboard-card">
+                        <div class="dash-topbar">
+                            <span class="dash-title">Asset Health Overview — Plant 3</span>
+                            <span class="dash-time">Live · 07:54 UTC</span>
+                        </div>
+                        <div class="ahi-grid">
+                            <div class="ahi-item">
+                                <div class="ahi-label">V-104 — FCV</div>
+                                <div class="ahi-score red">31%</div>
+                                <div class="ahi-tag red">⚠ Critical</div>
+                            </div>
+                            <div class="ahi-item">
+                                <div class="ahi-label">V-212 — PCV</div>
+                                <div class="ahi-score amber">67%</div>
+                                <div class="ahi-tag amber">△ Monitor</div>
+                            </div>
+                            <div class="ahi-item">
+                                <div class="ahi-label">V-308 — BDV</div>
+                                <div class="ahi-score green">94%</div>
+                                <div class="ahi-tag green">✓ Healthy</div>
+                            </div>
+                        </div>
+                        <div class="alert-box">
+                            <div class="alert-dot"></div>
+                            <div class="alert-text"><strong>Predictive Alert — V-104:</strong> 85% probability of
+                                stiction onset. Schedule packing adjustment at next micro-stop. ETA: 11 days.</div>
+                        </div>
+                        <div class="dash-sparkline">
+                            <svg class="sparkline-svg" viewBox="0 0 300 48" preserveAspectRatio="none">
+                                <defs>
+                                    <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.25" />
+                                        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
+                                    </linearGradient>
+                                </defs>
+                                <polyline class="spark-area"
+                                    points="0,38 30,35 60,30 90,32 120,28 150,22 180,18 210,25 240,20 270,14 300,10  300,48 0,48" />
+                                <polyline class="spark-line"
+                                    points="0,38 30,35 60,30 90,32 120,28 150,22 180,18 210,25 240,20 270,14 300,10" />
+                            </svg>
+                        </div>
+                        <div class="mini-stats">
+                            <div class="mini-stat">
+                                <div class="mini-stat-val">147</div>
+                                <div class="mini-stat-lbl">Valves Monitored</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-val">14d</div>
+                                <div class="mini-stat-lbl">Advance Warning</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-val">40%</div>
+                                <div class="mini-stat-lbl">PM Reduction</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 2. PHILOSOPHY ===== -->
+    <section class="section alt">
+        <div class="container">
+            <div class="philosophy-layout">
+                <div class="anim slide-left">
+                    <div class="quote-card">
+                        <p class="quote-text">Standard analytics dashboards tell you when a valve has failed. Our
+                            intelligent APM dashboard tells you why it will fail — and when. Thirty years of hands-on
+                            failure analysis, codified into a machine you can deploy in days.</p>
+                        <div class="quote-author">
+                            <div class="author-avatar">DY</div>
+                            <div>
+                                <div class="author-name">David Young</div>
+                                <div class="author-role">Founder — TheValvePro | 30+ Years Global Valve Engineering
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="anim slide-right">
+                    <span class="badge badge-neutral">Philosophy</span>
+                    <h2
+                        style="font-size:var(--fs-h2);font-weight:700;line-height:1.15;letter-spacing:-0.5px;margin-bottom:16px">
+                        Built on Experience.<br>Driven by Data.</h2>
+                    <p style="color:var(--text-secondary);font-size:16px;line-height:1.75;margin-bottom:8px">Combining
+                        30+ years of global valve engineering expertise with real-time machine learning and streaming
+                        analytics, TheValve.app bridges the gap between raw DCS telemetry and actionable maintenance
+                        strategies.</p>
+                    <p style="color:var(--text-secondary);font-size:16px;line-height:1.75">It's not about collecting
+                        data — it's about applying deep technical integrity to extend asset life, optimise inventory,
+                        and eliminate unplanned downtime.</p>
+                    <div class="metrics-row">
+                        <div class="metric-chip s1 anim">
+                            <div class="metric-icon blue">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M2 12h4l3-9 4 18 3-9h4" />
+                                </svg>
+                            </div>
+                            <div class="metric-body"><strong>Predictive Foresight</strong><span>Identify failures up to
+                                    14 days in advance</span></div>
+                        </div>
+                        <div class="metric-chip s2 anim">
+                            <div class="metric-icon green">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                                    <polyline points="17 6 23 6 23 12" />
+                                </svg>
+                            </div>
+                            <div class="metric-body"><strong>Targeted Maintenance</strong><span>Reduce unnecessary
+                                    preventative maintenance by up to 40%</span></div>
+                        </div>
+                        <div class="metric-chip s3 anim">
+                            <div class="metric-icon orange">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                </svg>
+                            </div>
+                            <div class="metric-body"><strong>Emissions Control</strong><span>Rapidly detect and resolve
+                                    packing leaks and fugitive emissions</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 3. CAPABILITIES ===== -->
+    <section id="capabilities" class="section">
+        <div class="container">
+            <div class="section-header anim">
+                <span class="badge">Core Capabilities</span>
+                <h2>Intelligent Capabilities for<br>Critical Applications</h2>
+                <p>Four pillars of advanced diagnostics, engineered for the realities of process-critical control
+                    valves.</p>
+            </div>
+            <div class="caps-grid">
+                <div class="cap-card anim s1">
+                    <div class="cap-icon blue">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                        </svg>
+                    </div>
+                    <h3>Real-Time Asset Health Index (AHI)</h3>
+                    <p>Stop guessing. Every valve in your fleet is continuously assigned a dynamic health score
+                        (0–100%). We aggregate command signals, actual position, process variables, and actuator
+                        pressure to give you an instant, plant-wide view of asset integrity.</p>
+                </div>
+                <div class="cap-card anim s2">
+                    <div class="cap-icon orange">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3" />
+                            <path
+                                d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
+                        </svg>
+                    </div>
+                    <h3>Advanced Predictive Diagnostics</h3>
+                    <p>Decades of hands-on failure analysis, codified into ML models. Automatically detect early onset
+                        of mechanical degradation — from stiction, hysteresis, and deadband issues to pneumatic leaks
+                        and internal cavitation — long before they trigger a process alarm.</p>
+                </div>
+                <div class="cap-card anim s3">
+                    <div class="cap-icon green">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                    </div>
+                    <h3>Prescriptive, Actionable Alerts</h3>
+                    <p>Data without context creates noise. When a fault is predicted, TheValve.app provides specific,
+                        engineering-backed recommendations — not just an alert, but a directive: "85% probability of
+                        stiction in V-104. Schedule packing adjustment during the next micro-stop."</p>
+                </div>
+                <div class="cap-card anim s4">
+                    <div class="cap-icon purple">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2" />
+                            <path d="M8 21h8M12 17v4" />
+                            <path d="M7 8l2 2 4-4" />
+                        </svg>
+                    </div>
+                    <h3>Digital Twin &amp; Performance Curves</h3>
+                    <p>Visually benchmark a valve's live, real-world performance against its OEM factory-spec design
+                        curves. Instantly recognise deviations and validate repair effectiveness — without taking the
+                        asset offline.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 4. OPERATIONAL IMPACT ===== -->
+    <section id="impact" class="section alt">
+        <div class="container">
+            <div class="section-header anim">
+                <span class="badge badge-neutral">Strategic Impact</span>
+                <h2>Across the Plant Floor</h2>
+                <p>From the shop floor to the boardroom — TheValve.app delivers the right intelligence to the right
+                    people.</p>
+            </div>
+            <div class="tabs-wrap anim">
+                <div class="tabs-nav" role="tablist">
+                    <button class="tab-btn active" role="tab" aria-selected="true" data-tab="reliability">Reliability
+                        Engineers</button>
+                    <button class="tab-btn" role="tab" aria-selected="false" data-tab="maintenance">Maintenance
+                        Techs</button>
+                    <button class="tab-btn" role="tab" aria-selected="false" data-tab="leadership">Plant
+                        Leadership</button>
+                </div>
+                <div class="tab-body active" id="tab-reliability" role="tabpanel">
+                    <div class="tab-icon-wrap">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.75"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12h4l3-9 4 18 3-9h4" />
+                        </svg>
+                    </div>
+                    <div class="tab-content">
+                        <h3>For Reliability Engineers</h3>
+                        <p>Gain deep-dive diagnostic tools to analyse historical trends, investigate root causes of
+                            degradation, and maintain absolute process control.</p>
+                        <ul class="tab-features">
+                            <li>Full valve signature history and trend analysis</li>
+                            <li>Root-cause diagnostics with ML-generated fault evidence</li>
+                            <li>Export-ready reports for maintenance planning sessions</li>
+                            <li>Correlation engine linking process upsets to valve behaviour</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tab-body" id="tab-maintenance" role="tabpanel">
+                    <div class="tab-icon-wrap">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.75"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                        </svg>
+                    </div>
+                    <div class="tab-content">
+                        <h3>For Maintenance Technicians</h3>
+                        <p>Prioritise your day. Get immediate, actionable lists of which valves require attention today
+                            — exact locations and the precise parts required for the fix.</p>
+                        <ul class="tab-features">
+                            <li>Daily prioritised work list, automatically generated</li>
+                            <li>Valve location, tag number, and loop details</li>
+                            <li>Recommended parts list pre-populated from fault type</li>
+                            <li>Mobile-friendly interface for plant floor use</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tab-body" id="tab-leadership" role="tabpanel">
+                    <div class="tab-icon-wrap">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.75"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2" />
+                            <path d="M8 21h8M12 17v4" />
+                            <line x1="7" y1="10" x2="7" y2="14" />
+                            <line x1="12" y1="8" x2="12" y2="14" />
+                            <line x1="17" y1="11" x2="17" y2="14" />
+                        </svg>
+                    </div>
+                    <div class="tab-content">
+                        <h3>For Plant Leadership</h3>
+                        <p>Secure commercial viability. Access high-level KPIs, overall plant health scores, and
+                            financial metrics tied directly to asset uptime, emissions reduction, and environmental
+                            compliance.</p>
+                        <ul class="tab-features">
+                            <li>Executive dashboard with plant-wide health score</li>
+                            <li>Financial impact metrics — downtime cost avoided</li>
+                            <li>ESG &amp; emissions compliance reporting</li>
+                            <li>Benchmarking across multiple sites or units</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 5. INTEGRATION ===== -->
+    <section id="integration" class="section">
+        <div class="container">
+            <div class="integration-layout">
+                <div class="anim slide-left">
+                    <span class="badge">Integration &amp; Security</span>
+                    <h2>Seamless,<br>Low-Code Integration</h2>
+                    <p>Deploying predictive analytics shouldn't require a plant shutdown. Designed for hybrid deployment
+                        (edge or cloud), TheValve.app integrates securely with your existing DCS, SCADA, and data
+                        historians via standard industrial protocols.</p>
+                    <p>Adding a new valve to your monitoring fleet is a simple, low-code process — rapidly scaling from
+                        a single critical loop to full plant coverage.</p>
+                    <div class="protocol-grid" style="margin-top:28px">
+                        <div class="protocol-chip">
+                            <div class="pname">OPC UA</div>
+                            <div class="ptype">Protocol</div>
+                        </div>
+                        <div class="protocol-chip">
+                            <div class="pname">MQTT</div>
+                            <div class="ptype">Protocol</div>
+                        </div>
+                        <div class="protocol-chip">
+                            <div class="pname">Modbus</div>
+                            <div class="ptype">Protocol</div>
+                        </div>
+                        <div class="protocol-chip">
+                            <div class="pname">OSIsoft PI</div>
+                            <div class="ptype">Historian</div>
+                        </div>
+                        <div class="protocol-chip">
+                            <div class="pname">AVEVA</div>
+                            <div class="ptype">Historian</div>
+                        </div>
+                        <div class="protocol-chip">
+                            <div class="pname">REST API</div>
+                            <div class="ptype">CMMS</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="anim slide-right">
+                    <div
+                        style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:16px;padding:32px">
+                        <h3 style="font-size:17px;font-weight:700;margin-bottom:28px;color:var(--text-primary)">How
+                            Deployment Works</h3>
+                        <div style="display:flex;flex-direction:column;gap:24px">
+                            <div class="int-step">
+                                <div class="int-num">1</div>
+                                <div class="int-step-body"><strong>Connect your data source</strong><span>Point to your
+                                        DCS, historian, or edge gateway via standard protocol</span></div>
+                            </div>
+                            <div class="int-step">
+                                <div class="int-num">2</div>
+                                <div class="int-step-body"><strong>Define your valve fleet</strong><span>Import tag
+                                        lists — no manual configuration of signal mappings required</span></div>
+                            </div>
+                            <div class="int-step">
+                                <div class="int-num">3</div>
+                                <div class="int-step-body"><strong>Baseline &amp; calibrate</strong><span>Our models
+                                        auto-baseline each valve using first-principles physics</span></div>
+                            </div>
+                            <div class="int-step">
+                                <div class="int-num">4</div>
+                                <div class="int-step-body"><strong>Go live</strong><span>Real-time AHI scores,
+                                        predictions, and alerts within 48 hours</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 6. CTA ===== -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="anim">
+                <span class="badge" style="margin-bottom:24px">Let's Talk</span>
+                <h2>Solve Your Toughest Valve<br>Challenges Before They Happen.</h2>
+                <p>Skip the guesswork. Transform your aftermarket lifecycle management with predictive, data-driven
+                    valve intelligence. Book a 15-minute engineering intro to see the dashboard in action.</p>
+                <div class="cta-btns">
+                    <a href="https://calendly.com/thevalvepro" target="_blank" rel="noopener" class="btn btn-primary">
+                        Book 15-Minute Intro
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                    </a>
+                    <a href="index.html#contact" class="btn btn-ghost">Request a Live Demo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <a href="index.html" class="footer-logo">
+                    <svg class="footer-logo-icon" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7 6a5 5 0 0 1 10 0" />
+                        <path d="M6 6h12" />
+                        <path d="M12 6v9" />
+                        <path d="M4 19l8-4-8-4v8z" />
+                        <path d="M20 19l-8-4 8-4v8z" />
+                    </svg>
+                    thevalve.pro
+                </a>
+                <div class="footer-copyright">&copy; 2026 David Young. Valve Engineering Excellence.</div>
+                <div class="footer-social">
+                    <a href="https://www.linkedin.com/in/david-young-thevalvepro" target="_blank" rel="noopener"
+                        aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                            <rect width="4" height="12" x="2" y="9" />
+                            <circle cx="4" cy="4" r="2" />
+                        </svg>
+                    </a>
+                    <a href="mailto:contact@thevalve.pro" aria-label="Email">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="16" x="2" y="4" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll animations
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+        }, { rootMargin: '0px 0px -60px 0px', threshold: 0.08 });
+        document.querySelectorAll('.anim').forEach(el => io.observe(el));
+
+        // Tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+                document.querySelectorAll('.tab-body').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                btn.setAttribute('aria-selected', 'true');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                const t = document.querySelector(a.getAttribute('href'));
+                if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+            });
+        });
+
+        // Mobile menu
+        const mBtn = document.querySelector('.mobile-menu-btn');
+        const mOverlay = document.querySelector('.mobile-menu-overlay');
+        const mClose = document.querySelector('.mobile-menu-close');
+        function openMenu() { mOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; mBtn.setAttribute('aria-expanded', 'true'); }
+        function closeMenu() { mOverlay.classList.remove('active'); document.body.style.overflow = ''; mBtn.setAttribute('aria-expanded', 'false'); }
+        if (mBtn) mBtn.addEventListener('click', openMenu);
+        if (mClose) mClose.addEventListener('click', closeMenu);
+        document.querySelectorAll('.mobile-nav-link').forEach(l => l.addEventListener('click', closeMenu));
+    </script>
+</body>
+
+</html>
