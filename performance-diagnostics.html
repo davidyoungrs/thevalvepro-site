@@ -1506,7 +1506,6 @@
         :root[data-theme="light"] .theme-toggle:hover {
             background: rgba(0, 0, 0, 0.1);
         }
-
     </style>
 </head>
 
@@ -1587,7 +1586,8 @@
             <li><a href="index.html#expertise" class="mobile-nav-link" onclick="toggleMobileMenu()">Expertise</a></li>
             <li><a href="index.html#industries" class="mobile-nav-link" onclick="toggleMobileMenu()">Industries</a></li>
 
-            <li><a href="valve-app.html" class="mobile-nav-link nav-link-highlight" onclick="toggleMobileMenu()">TheValve.app</a>
+            <li><a href="valve-app.html" class="mobile-nav-link nav-link-highlight"
+                    onclick="toggleMobileMenu()">TheValve.app</a>
             </li>
             <li><a href="expert-apps.html" class="mobile-nav-link" onclick="toggleMobileMenu()">Expert Apps</a></li>
         </ul>
@@ -1609,7 +1609,9 @@
                 <div class="hero-left">
                     <span class="badge">Asset Performance Management</span>
                     <h1>Valve Engineering<br>Excellence, <em>Digitized.</em></h1>
-                    <p class="hero-sub">Move from reactive repairs to intelligent foresight. Our advanced Performance Analytics dashboard built by valve experts to monitor, diagnose, and predict control valve performance
+                    <p class="hero-sub">Move from reactive repairs to intelligent foresight. Our advanced Performance
+                        Analytics dashboard built by valve experts to monitor, diagnose, and predict control valve
+                        performance
                         across your entire plant.</p>
                     <div class="hero-btns">
                         <a href="index.html#contact" class="btn btn-primary">
@@ -1693,8 +1695,8 @@
                 <div class="anim slide-left">
                     <div class="quote-card">
                         <p class="quote-text">Standard analytics dashboards tell you when a valve has failed. Our
-                            intelligent APM dashboard tells you why it will fail — and when. Thirty years of hands-on
-                            failure analysis, codified into a machine you can deploy in days.</p>
+                            intelligent Performance Analytics dashboard tells you why it will fail — and when. Thirty
+                            years of hands-on failure analysis, codified into a machine you can deploy in days.</p>
                         <div class="quote-author">
                             <div class="author-avatar">DY</div>
                             <div>
@@ -1710,7 +1712,8 @@
                     <h2
                         style="font-size:var(--fs-h2);font-weight:700;line-height:1.15;letter-spacing:-0.5px;margin-bottom:16px">
                         Built on Experience.<br>Driven by Data.</h2>
-                    <p style="color:var(--text-secondary);font-size:16px;line-height:1.75;margin-bottom:8px">Bridging the gap between raw DCS telemetry and actionable maintenance strategies.</p>
+                    <p style="color:var(--text-secondary);font-size:16px;line-height:1.75;margin-bottom:8px">Bridging
+                        the gap between raw DCS telemetry and actionable maintenance strategies.</p>
                     <p style="color:var(--text-secondary);font-size:16px;line-height:1.75">It's not about collecting
                         data — it's about applying deep technical integrity to extend asset life, optimise inventory,
                         and eliminate unplanned downtime.</p>
@@ -2041,32 +2044,47 @@
     <script>
         // Scroll animations
         const io = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('in');
+                    io.unobserve(e.target);
+                }
+            });
         }, { rootMargin: '0px 0px -60px 0px', threshold: 0.08 });
         document.querySelectorAll('.anim').forEach(el => io.observe(el));
 
         // Tabs
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-selected', 'false');
+                });
                 document.querySelectorAll('.tab-body').forEach(p => p.classList.remove('active'));
+
                 btn.classList.add('active');
                 btn.setAttribute('aria-selected', 'true');
-                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+                const target = document.getElementById('tab-' + btn.dataset.tab);
+                if (target) target.classList.add('active');
             });
         });
 
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(a => {
             a.addEventListener('click', e => {
-                const t = document.querySelector(a.getAttribute('href'));
-                if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+                const href = a.getAttribute('href');
+                if (href === '#') return;
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             });
         });
 
         // Theme Toggle Logic
         const themeToggleBtn = document.getElementById('theme-toggle');
-        const sunIcon = document.querySelector('.sun-icon');
+        const sunIcon = document.queryr('.sun-icon');
         const moonIcon = document.querySelector('.moon-icon');
         const rootElement = document.documentElement;
 

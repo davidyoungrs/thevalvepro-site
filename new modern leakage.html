@@ -1166,14 +1166,14 @@
       const [fciTestUnit, setFciTestUnit] = useState("SI");        // "SI" | "Imperial"
 
       // --- Unit conversion constants & helpers ---
-      const kgHToLbH     = (v) => v * lbPerKg;
-      const m3HToFt3H    = (v) => v * 35.3146667215;
+      const kgHToLbH = (v) => v * lbPerKg;
+      const m3HToFt3H = (v) => v * 35.3146667215;
       const mlMinToGalMin = (v) => v / 3785.41;
-      const mlMinToScfh  = (v) => v * 60e-6 * 35.3146667215;
+      const mlMinToScfh = (v) => v * 60e-6 * 35.3146667215;
 
       // --- Display unit helpers ---
       const fciIsImp = fciTestUnit === "Imperial";
-      const dispMass   = (kg_h) => isNum(kg_h) ? (massFlowUnit === "lb/h" ? kgHToLbH(kg_h) : kg_h) : NaN;
+      const dispMass = (kg_h) => isNum(kg_h) ? (massFlowUnit === "lb/h" ? kgHToLbH(kg_h) : kg_h) : NaN;
       const dispFciVol = (m3_h) => isNum(m3_h) ? (fciIsImp ? m3HToFt3H(m3_h) : m3_h) : NaN;
       const fciVolUnit = fciIsImp ? "ft³/h" : "m³/h";
       const dispFciSub = (mlpm, basis) => {
@@ -1402,7 +1402,7 @@
       // Setup table rows
       const criteria = [
         { label: "FCI Allowable (Test Basis)", render: (r) => <><div className="cell-val">{isNum(r.Qtest_m3s) ? `${fmt(dispFciVol(r.Qtest_m3s * 3600), 4)} ${fciVolUnit}` : "—"}</div><div className="cell-sub">{isNum(r.Qtest_mlpm) ? `${dispFciSub(r.Qtest_mlpm, r.basis)} • ` : ""}{r.basis}</div></> },
-        { label: "Effective Area (Aeff)", render: (r) => <><div className="cell-val">{isNum(r.Aeff) ? `${fmtSci(r.Aeff, 3)} m²` : "—"}</div></> },
+        { label: "Effective Area (Aeff)", render: (r) => <><div className="cell-val">{(["II", "III", "IV"].includes(r.cls)) ? "N/A" : (isNum(r.Aeff) ? `${fmtSci(r.Aeff, 3)} m²` : "—")}</div></> },
         { label: "Operating Steam Leak (Mass)", render: (r) => <><div className="cell-val">{isNum(r.mdotSteamAdj) ? `${fmt(dispMass(r.mdotSteamAdj * 3600), 4)} ${massFlowUnit}` : "—"}</div><div className="cell-sub">{r.choked ? "Choked" : "Subcritical"}{r.tpMult > 1 ? ` • 2-phase ×${fmt(r.tpMult, 2)}` : ""}</div></> },
         { label: "Annual Steam Lost", render: (r) => <><div className="cell-val">{isNum(r.steamLost_tonnes) ? `${fmt(r.steamLost_tonnes, 1)} t/yr` : "—"}</div></> },
         { label: "Financial Impact (Loss/yr)", render: (r) => <><div className="cell-val" style={{ color: 'var(--danger)' }}>{isNum(r.costLost) ? `${fmtMoney(r.costLost, 0)}` : "—"}</div></> },
@@ -1417,7 +1417,7 @@
         const fciIsImpCSV = fciTestUnit === "Imperial";
         const rows = [
           [`FCI Allowable (${fciIsImpCSV ? "ft3/h" : "m3/h"})`, ...derived.results.map(r => isNum(r.Qtest_m3s) ? (fciIsImpCSV ? m3HToFt3H(r.Qtest_m3s * 3600) : r.Qtest_m3s * 3600) : "")],
-          ["Effective Area (m2)", ...derived.results.map(r => isNum(r.Aeff) ? r.Aeff : "")],
+          ["Effective Area (m2)", ...derived.results.map(r => (["II", "III", "IV"].includes(r.cls)) ? "N/A" : (isNum(r.Aeff) ? r.Aeff : ""))],
           [`Operating Steam Leak (${massFlowUnit})`, ...derived.results.map(r => isNum(r.mdotSteamAdj) ? (massFlowUnit === "lb/h" ? kgHToLbH(r.mdotSteamAdj * 3600) : r.mdotSteamAdj * 3600) : "")],
           ["Annual Steam Lost (t/yr)", ...derived.results.map(r => isNum(r.steamLost_tonnes) ? r.steamLost_tonnes : "")],
           ["Financial Impact (USD/yr)", ...derived.results.map(r => isNum(r.costLost) ? r.costLost : "")],
