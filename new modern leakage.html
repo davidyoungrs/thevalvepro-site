@@ -1539,7 +1539,7 @@
       const maxLog = safeLog(maxChartVal);
       const minLog = Math.min(...chartVals.map(safeLog), validActual ? safeLog(derived.globalActual) : maxLog) - 1.5;
       const logRange = maxLog - minLog || 1;
-      const getChartHeight = (v) => `${Math.max(2, ((safeLog(v) - minLog) / logRange) * 100)}%`;
+      const getChartHeight = (v) => `${Math.max(2, ((safeLog(v) - minLog) / logRange) * 80)}%`;
 
       return (
         <div className="dashboard-container">
