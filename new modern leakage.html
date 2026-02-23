@@ -1080,11 +1080,16 @@
       const term = Math.pow(Pr, 2 / gamma) - Math.pow(Pr, (gamma + 1) / gamma);
       return term <= 0 ? 0 : Cd * A * P0 * Math.sqrt((2 * gamma / (R * T0 * (gamma - 1))) * term);
     }
-    function steamCostPerTonneUSD(fuel, btu, eff, markup) {
-      if (!(isNum(fuel) && fuel > 0 && isNum(btu) && btu > 0 && isNum(eff) && eff > 0)) return NaN;
-      return ((fuel / 1e6) * 1000 * btu / eff) / 1000 * 2204.62 * (1 + (isNum(markup) ? markup : 0));
+    function steamCostPerTonneUSD(fuelPricingMMBtu, energyAdded_kJ_kg, eff, markup) {
+      if (!(isNum(fuelPricingMMBtu) && fuelPricingMMBtu > 0 && isNum(energyAdded_kJ_kg) && energyAdded_kJ_kg > 0 && isNum(eff) && eff > 0)) return NaN;
+      // fuel is $/MMBtu
+      // energyAdded is kJ/kg
+      // 1 MMBtu = 1,055,055.85 kJ
+      const costPerKJ = fuelPricingMMBtu / 1055055.85;
+      const trueCostPerKg = (energyAdded_kJ_kg * costPerKJ) / eff;
+      return trueCostPerKg * 1000 * (1 + (isNum(markup) ? markup : 0));
     }
-    function btuToKWh(btu) { return btu / 3412.141633; }
+    function kJPerKgToKWh(kJ_kg) { return kJ_kg / 3600; }
     function ratedAirFlow_scfh(Cv, P1, P2, T_R, SG = 1.0) {
       if (!(isNum(Cv) && Cv > 0 && isNum(P1) && P1 > 0 && isNum(P2) && P2 > 0 && isNum(T_R) && T_R > 0)) return NaN;
       return (P1 >= 2 * P2) ? Cv * 816 * P1 / Math.sqrt(SG * T_R) : 962 * Cv * Math.sqrt(P1 * P1 - P2 * P2) / Math.sqrt(SG * T_R);
@@ -1155,7 +1160,7 @@
       const [steamCostMode, setSteamCostMode] = useState("calc");
       const [steamCostDirect, setSteamCostDirect] = useState(15);
       const [fuelPrice, setFuelPrice] = useState(4.40);
-      const [btuPerLb, setBtuPerLb] = useState(1073);
+      const [feedwaterTempC, setFeedwaterTempC] = useState(80); // Default 80°C (176°F)
       const [boilerEff, setBoilerEff] = useState(0.857);
       const [markup, setMarkup] = useState(0.30);
       const [co2Mode, setCo2Mode] = useState("scope1");
@@ -1205,6 +1210,7 @@
           if (params.steamCostMode) setSteamCostMode(params.steamCostMode);
           if (params.steamCostDirect !== undefined) setSteamCostDirect(params.steamCostDirect);
           if (params.fuelPrice !== undefined) setFuelPrice(params.fuelPrice);
+          if (params.feedwaterTempC !== undefined) setFeedwaterTempC(params.feedwaterTempC);
           if (params.boilerEff !== undefined) setBoilerEff(params.boilerEff);
           if (params.co2Mode) setCo2Mode(params.co2Mode);
           if (params.massFlowUnit) setMassFlowUnit(params.massFlowUnit);
@@ -1214,11 +1220,11 @@
 
       // Sync state to URL hash whenever inputs change
       useEffect(() => {
-        const params = { cv, seatDia, seatDiaUnit, p1, p1Unit, p2, p2Unit, t1, t1Unit, steamMode, actualLeak, actualLeakUnit, uptimeHours, closedFrac, steamCostMode, steamCostDirect, fuelPrice, boilerEff, co2Mode, massFlowUnit, fciTestUnit };
+        const params = { cv, seatDia, seatDiaUnit, p1, p1Unit, p2, p2Unit, t1, t1Unit, steamMode, actualLeak, actualLeakUnit, uptimeHours, closedFrac, steamCostMode, steamCostDirect, fuelPrice, feedwaterTempC, boilerEff, co2Mode, massFlowUnit, fciTestUnit };
         window.history.replaceState(null, '', '#' + encodeURIComponent(JSON.stringify(params)));
         const container = document.querySelector('.dashboard-container');
         if (container) container.setAttribute('data-timestamp', new Date().toLocaleString());
-      }, [cv, seatDia, seatDiaUnit, p1, p1Unit, p2, p2Unit, t1, t1Unit, steamMode, actualLeak, actualLeakUnit, uptimeHours, closedFrac, steamCostMode, steamCostDirect, fuelPrice, boilerEff, co2Mode, massFlowUnit, fciTestUnit]);
+      }, [cv, seatDia, seatDiaUnit, p1, p1Unit, p2, p2Unit, t1, t1Unit, steamMode, actualLeak, actualLeakUnit, uptimeHours, closedFrac, steamCostMode, steamCostDirect, fuelPrice, feedwaterTempC, boilerEff, co2Mode, massFlowUnit, fciTestUnit]);
 
       const copyShareLink = useCallback(() => {
         navigator.clipboard.writeText(window.location.href).then(() => {
@@ -1265,18 +1271,20 @@
           }
         }
 
-        const calcCost = steamCostPerTonneUSD(Number(fuelPrice), Number(btuPerLb), Number(boilerEff), Number(markup));
-        const steamCostPerTonne = (steamCostMode === "calc") ? calcCost : Number(steamCostDirect);
-        const kWh_per_kg_fuel = btuToKWh(Number(btuPerLb)) / Number(boilerEff) * lbPerKg;
 
-        let thermo = { ok: false, Tsat1K: NaN, Tsat2K: NaN, up: null, down: null, h1: NaN, s1: NaN, cp1: NaN, cv1: NaN, gamma1: NaN, R: NaN, T1K: NaN, rho1: NaN, downState: "—", quality: NaN, T2K: NaN, rho2: NaN, v2: NaN };
+
+        let thermo = { ok: false, Tsat1K: NaN, Tsat2K: NaN, up: null, down: null, h1: NaN, s1: NaN, cp1: NaN, cv1: NaN, gamma1: NaN, R: NaN, T1K: NaN, rho1: NaN, downState: "—", quality: NaN, T2K: NaN, rho2: NaN, v2: NaN, h_feedwater: NaN, energyAdded_kJ_kg: NaN };
         const T1K_input = tempToK(t1, t1Unit);
         const P1_MPa = isNum(P1absPa) ? (P1absPa / 1e6) : NaN;
         const P2_MPa = isNum(P2absPa) ? (P2absPa / 1e6) : NaN;
+        const fwTemp_K = cToK(Number(feedwaterTempC));
 
         if (hasIapws && validPress && isNum(P1_MPa) && isNum(P2_MPa)) {
           try {
             const eps = 1e-3;
+            const fw = window.NeutriumJS.thermo.IAPWS97.PT.solve(P1_MPa, isNum(fwTemp_K) ? fwTemp_K : 353.15); // Default 80°C
+            const h_feedwater = fw.h;
+
             const Tsat1K = if97_Tsat_P(P1_MPa);
             const Tsat2K = if97_Tsat_P(P2_MPa);
             let T1K = T1K_input;
@@ -1307,9 +1315,15 @@
               const down = window.NeutriumJS.thermo.IAPWS97.PH.solve(P2_MPa, h1);
               T2K = down.t; rho2 = down.rho; v2 = down.v;
             }
-            thermo = { ok: true, Tsat1K, Tsat2K, up, down: null, h1, s1, cp1, cv1, gamma1, R, T1K, rho1, downState, quality, T2K, rho2, v2 };
+
+            const energyAdded_kJ_kg = h1 - h_feedwater;
+            thermo = { ok: true, Tsat1K, Tsat2K, up, down: null, h1, s1, cp1, cv1, gamma1, R, T1K, rho1, downState, quality, T2K, rho2, v2, h_feedwater, energyAdded_kJ_kg };
           } catch (e) { thermo.ok = false; }
         }
+
+        const calcCost = steamCostPerTonneUSD(Number(fuelPrice), thermo.energyAdded_kJ_kg, Number(boilerEff), Number(markup));
+        const steamCostPerTonne = (steamCostMode === "calc") ? calcCost : Number(steamCostDirect);
+        const kWh_per_kg_fuel = thermo.ok ? kJPerKgToKWh(thermo.energyAdded_kJ_kg) / Number(boilerEff) : NaN;
 
         const results = CLASS_META.map(meta => {
           const cls = meta.cls;
@@ -1409,8 +1423,8 @@
         const globalActual_kWhFuel = isNum(globalActual_steamLost_kg) && isNum(kWh_per_kg_fuel) ? globalActual_steamLost_kg * kWh_per_kg_fuel : NaN;
         const globalActual_co2_kg = isNum(globalActual_kWhFuel) ? globalActual_kWhFuel * (co2Mode === "scope1" ? Number(efScope1) : Number(efScope2)) : NaN;
 
-        return { seatDiaIn, seatDiaMm, validPress, dPpsi, testDPpsi, steamCostPerTonne, thermo, results, tightestMet, loosestMet, globalActual: globalActual_kg_h, globalActualCost: globalActual_costLost, globalActualCo2: globalActual_co2_kg, globalActualTonnes: globalActual_steamLost_tonnes };
-      }, [cv, seatDia, seatDiaUnit, p1, p1Unit, p2, p2Unit, t1, t1Unit, steamMode, actualLeak, actualLeakUnit, testMedium_II_IV, useFciDefaultTestDP, testDPpsiManual, uptimeHours, closedFrac, Cd, enableFlashing, tpCap, tpExpo, steamCostMode, steamCostDirect, fuelPrice, btuPerLb, boilerEff, markup, co2Mode, efScope1, efScope2, hasIapws]);
+        return { seatDiaIn, seatDiaMm, validPress, dPpsi, testDPpsi, steamCostPerTonne, thermo, results, tightestMet, loosestMet, globalActual: globalActual_kg_h, globalActualCost: globalActual_costLost, globalActualCo2: globalActual_co2_kg, globalActualTonnes: globalActual_steamLost_tonnes, energyAdded_kJ_kg: thermo.ok ? thermo.energyAdded_kJ_kg : NaN, fwTemp_K: isNum(feedwaterTempC) ? cToK(Number(feedwaterTempC)) : NaN };
+      }, [cv, seatDia, seatDiaUnit, p1, p1Unit, p2, p2Unit, t1, t1Unit, steamMode, actualLeak, actualLeakUnit, testMedium_II_IV, useFciDefaultTestDP, testDPpsiManual, uptimeHours, closedFrac, Cd, enableFlashing, tpCap, tpExpo, steamCostMode, steamCostDirect, fuelPrice, feedwaterTempC, boilerEff, markup, co2Mode, efScope1, efScope2, hasIapws]);
 
       // Move dispMass here so it can use derived.thermo.rho1
       const dispMass = (kg_h) => {
@@ -1496,8 +1510,9 @@
             <>
               <div className="form-row"><div><label>Plant Hours/Yr</label><input type="number" value={uptimeHours} onChange={e => setUptimeHours(e.target.value)} /></div><div><label>Closed %</label><input type="number" value={closedFrac} step="0.05" onChange={e => setClosedFrac(e.target.value)} /></div></div>
               <label>Cost Calculation Mode</label>
-              <div className="toggle-group"><div className={`toggle-btn ${steamCostMode === "calc" ? "active" : ""}`} onClick={() => setSteamCostMode("calc")}>Fuel Method</div><div className={`toggle-btn ${steamCostMode === "direct" ? "active" : ""}`} onClick={() => setSteamCostMode("direct")}>Direct $/tonne</div></div>
+              <div className="toggle-group"><div className={`toggle-btn ${steamCostMode === "calc" ? "active" : ""}`} onClick={() => setSteamCostMode("calc")}>Fuel Method <Tooltip label="" title="Thermodynamic Fuel Cost">Using IAPWS-IF97, the cost is dynamically calculated by taking the enthalpy of your steam at {p1} {p1Unit} & {t1} {t1Unit}, subtracting the energy of atmospheric feedwater, and dividing by your chosen boiler efficiency to find the true fuel energy required.</Tooltip></div><div className={`toggle-btn ${steamCostMode === "direct" ? "active" : ""}`} onClick={() => setSteamCostMode("direct")}>Direct $/tonne</div></div>
               {steamCostMode === "direct" ? <div className="form-group"><label>Steam Cost ($/tonne)</label><input type="number" value={steamCostDirect} onChange={e => setSteamCostDirect(e.target.value)} /></div> : <div className="form-row" style={{ gridTemplateColumns: '1fr 1fr' }}><div><label>Fuel ($/MMBtu)</label><input type="number" value={fuelPrice} step="0.1" onChange={e => setFuelPrice(e.target.value)} /></div><div><label>Boiler Eff</label><input type="number" value={boilerEff} step="0.01" onChange={e => setBoilerEff(e.target.value)} /></div></div>}
+              {steamCostMode === "calc" && <div className="form-row" style={{ gridTemplateColumns: '1fr 1fr' }}><div><label>Feedwater Temp (°C)</label><input type="number" value={feedwaterTempC} onChange={e => setFeedwaterTempC(e.target.value)} /></div><div><label>Energy added</label><input type="text" value={isNum(derived?.energyAdded_kJ_kg) ? `${fmt(derived.energyAdded_kJ_kg, 1)} kJ/kg` : "—"} disabled /></div></div>}
               <label><Tooltip label="CO₂e Scope Mode" title="GHG Protocol Scope">Scope 1: direct emissions from fuel burnt in your boiler (kg CO₂ per kWh fuel). Scope 2: indirect emissions from purchased electricity or grid-supplied heat. Use Scope 1 for on-site steam generation.</Tooltip></label>
               <div className="toggle-group"><div className={`toggle-btn ${co2Mode === "scope1" ? "active" : ""}`} onClick={() => setCo2Mode("scope1")}>Scope 1 (Fuel)</div><div className={`toggle-btn ${co2Mode === "scope2" ? "active" : ""}`} onClick={() => setCo2Mode("scope2")}>Scope 2 (Grid)</div></div>
             </>
