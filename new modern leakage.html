@@ -1257,22 +1257,6 @@
         const testDPpsi = (useFciDefaultTestDP && isNum(dPpsi)) ? Math.min(50, dPpsi) : Number(testDPpsiManual);
         const testDP_Pa = psiToPa(testDPpsi);
 
-        let actual_kg_s = NaN;
-        const a = actualLeak === "" ? NaN : Number(actualLeak);
-        if (isNum(a)) {
-          if (actualLeakUnit === "kg/h") actual_kg_s = a / 3600;
-          if (actualLeakUnit === "lb/h") actual_kg_s = (a / 3600) / lbPerKg;
-          if (actualLeakUnit === "kg/s") actual_kg_s = a;
-          if (actualLeakUnit === "lb/s") actual_kg_s = a / lbPerKg;
-          if (["m³/h", "m3/h"].includes(actualLeakUnit)) {
-            if (thermo.ok && isNum(thermo.rho1)) {
-              actual_kg_s = (a / 3600) * thermo.rho1;
-            }
-          }
-        }
-
-
-
         let thermo = { ok: false, Tsat1K: NaN, Tsat2K: NaN, up: null, down: null, h1: NaN, s1: NaN, cp1: NaN, cv1: NaN, gamma1: NaN, R: NaN, T1K: NaN, rho1: NaN, downState: "—", quality: NaN, T2K: NaN, rho2: NaN, v2: NaN, h_feedwater: NaN, energyAdded_kJ_kg: NaN };
         const T1K_input = tempToK(t1, t1Unit);
         const P1_MPa = isNum(P1absPa) ? (P1absPa / 1e6) : NaN;
@@ -1319,6 +1303,20 @@
             const energyAdded_kJ_kg = h1 - h_feedwater;
             thermo = { ok: true, Tsat1K, Tsat2K, up, down: null, h1, s1, cp1, cv1, gamma1, R, T1K, rho1, downState, quality, T2K, rho2, v2, h_feedwater, energyAdded_kJ_kg };
           } catch (e) { thermo.ok = false; }
+        }
+
+        let actual_kg_s = NaN;
+        const a = actualLeak === "" ? NaN : Number(actualLeak);
+        if (isNum(a)) {
+          if (actualLeakUnit === "kg/h") actual_kg_s = a / 3600;
+          if (actualLeakUnit === "lb/h") actual_kg_s = (a / 3600) / lbPerKg;
+          if (actualLeakUnit === "kg/s") actual_kg_s = a;
+          if (actualLeakUnit === "lb/s") actual_kg_s = a / lbPerKg;
+          if (["m³/h", "m3/h"].includes(actualLeakUnit)) {
+            if (thermo.ok && isNum(thermo.rho1)) {
+              actual_kg_s = (a / 3600) * thermo.rho1;
+            }
+          }
         }
 
         const calcCost = steamCostPerTonneUSD(Number(fuelPrice), thermo.energyAdded_kJ_kg, Number(boilerEff), Number(markup));
