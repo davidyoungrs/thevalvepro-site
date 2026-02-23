@@ -1259,6 +1259,11 @@
           if (actualLeakUnit === "lb/h") actual_kg_s = (a / 3600) / lbPerKg;
           if (actualLeakUnit === "kg/s") actual_kg_s = a;
           if (actualLeakUnit === "lb/s") actual_kg_s = a / lbPerKg;
+          if (["m³/h", "m3/h"].includes(actualLeakUnit)) {
+            if (thermo.ok && isNum(thermo.rho1)) {
+              actual_kg_s = (a / 3600) * thermo.rho1;
+            }
+          }
         }
 
         const calcCost = steamCostPerTonneUSD(Number(fuelPrice), Number(btuPerLb), Number(boilerEff), Number(markup));
@@ -1396,18 +1401,27 @@
           }
         }
 
-        return { seatDiaIn, seatDiaMm, validPress, dPpsi, testDPpsi, steamCostPerTonne, thermo, results, tightestMet, loosestMet, globalActual: results[0]?.actual_kg_h };
+        const globalActual_kg_h = results[0]?.actual_kg_h;
+        const globalActual_kg_s = isNum(globalActual_kg_h) ? globalActual_kg_h / 3600 : NaN;
+        const annualSecondsGlo = (isNum(uptimeHours) && isNum(closedFrac)) ? uptimeHours * closedFrac * 3600 : NaN;
+        const globalActual_steamLost_kg = isNum(globalActual_kg_s) && isNum(annualSecondsGlo) ? globalActual_kg_s * annualSecondsGlo : NaN;
+        const globalActual_steamLost_tonnes = isNum(globalActual_steamLost_kg) ? globalActual_steamLost_kg / 1000 : NaN;
+        const globalActual_costLost = isNum(globalActual_steamLost_tonnes) && isNum(steamCostPerTonne) ? globalActual_steamLost_tonnes * steamCostPerTonne : NaN;
+        const globalActual_kWhFuel = isNum(globalActual_steamLost_kg) && isNum(kWh_per_kg_fuel) ? globalActual_steamLost_kg * kWh_per_kg_fuel : NaN;
+        const globalActual_co2_kg = isNum(globalActual_kWhFuel) ? globalActual_kWhFuel * (co2Mode === "scope1" ? Number(efScope1) : Number(efScope2)) : NaN;
+
+        return { seatDiaIn, seatDiaMm, validPress, dPpsi, testDPpsi, steamCostPerTonne, thermo, results, tightestMet, loosestMet, globalActual: globalActual_kg_h, globalActualCost: globalActual_costLost, globalActualCo2: globalActual_co2_kg, globalActualTonnes: globalActual_steamLost_tonnes };
       }, [cv, seatDia, seatDiaUnit, p1, p1Unit, p2, p2Unit, t1, t1Unit, steamMode, actualLeak, actualLeakUnit, testMedium_II_IV, useFciDefaultTestDP, testDPpsiManual, uptimeHours, closedFrac, Cd, enableFlashing, tpCap, tpExpo, steamCostMode, steamCostDirect, fuelPrice, btuPerLb, boilerEff, markup, co2Mode, efScope1, efScope2, hasIapws]);
 
       // Setup table rows
       const criteria = [
         { label: "FCI Allowable (Test Basis)", render: (r) => <><div className="cell-val">{isNum(r.Qtest_m3s) ? `${fmt(dispFciVol(r.Qtest_m3s * 3600), 4)} ${fciVolUnit}` : "—"}</div><div className="cell-sub">{isNum(r.Qtest_mlpm) ? `${dispFciSub(r.Qtest_mlpm, r.basis)} • ` : ""}{r.basis}</div></> },
-        { label: "Effective Area (Aeff)", render: (r) => <><div className="cell-val">{(["II", "III", "IV"].includes(r.cls)) ? "N/A" : (isNum(r.Aeff) ? `${fmtSci(r.Aeff, 3)} m²` : "—")}</div></> },
+        { label: "Effective Area (Aeff)", render: (r) => <><div className="cell-val">{(["II", "III", "IV"].includes(r.cls)) ? "N/A" : (isNum(r.Aeff) ? `${seatDiaUnit === "in" ? fmtSci(r.Aeff * 1550.0031, 3) + " in²" : fmtSci(r.Aeff * 1e6, 3) + " mm²"}` : "—")}</div></> },
         { label: "Operating Steam Leak (Mass)", render: (r) => <><div className="cell-val">{isNum(r.mdotSteamAdj) ? `${fmt(dispMass(r.mdotSteamAdj * 3600), 4)} ${massFlowUnit}` : "—"}</div><div className="cell-sub">{r.choked ? "Choked" : "Subcritical"}{r.tpMult > 1 ? ` • 2-phase ×${fmt(r.tpMult, 2)}` : ""}</div></> },
-        { label: "Annual Steam Lost", render: (r) => <><div className="cell-val">{isNum(r.steamLost_tonnes) ? `${fmt(r.steamLost_tonnes, 1)} t/yr` : "—"}</div></> },
-        { label: "Financial Impact (Loss/yr)", render: (r) => <><div className="cell-val" style={{ color: 'var(--danger)' }}>{isNum(r.costLost) ? `${fmtMoney(r.costLost, 0)}` : "—"}</div></> },
-        { label: "CO₂ Impact", render: (r) => <><div className="cell-val" style={{ color: 'var(--warning)' }}>{isNum(r.co2_kg) ? `${fmt(r.co2_kg / 1000, 1)} tCO₂e/yr` : "—"}</div></> },
-        { label: "Actual vs Allowable", render: (r) => <><div className="cell-val" style={{ marginBottom: 8 }}>{isNum(r.delta_kg_h) ? `${fmt(dispMass(r.delta_kg_h), 4)} ${massFlowUnit}` : "—"}</div><span className={`badge ${r.status}`}><span className={`dot ${r.status}`}></span>{r.status === "good" ? "PASS" : r.status === "warn" ? "MARGINAL" : "FAIL"}</span></> }
+        { label: "Annual Steam Lost", render: (r) => <><div className="cell-val" style={{ marginBottom: 4 }}>Alw: {isNum(r.steamLost_tonnes) ? `${fmt(r.steamLost_tonnes, 1)} t/yr` : "—"}</div><div className="cell-sub" style={{ marginTop: 0 }}>Act: {isNum(derived?.globalActualTonnes) ? `${fmt(derived.globalActualTonnes, 1)} t/yr` : "—"}</div></> },
+        { label: "Financial Impact (Loss/yr)", render: (r) => <><div className="cell-val" style={{ color: 'var(--danger)', marginBottom: 4 }}>Alw: {isNum(r.costLost) ? `${fmtMoney(r.costLost, 0)}` : "—"}</div><div className="cell-sub" style={{ color: 'var(--danger)', marginTop: 0 }}>Act: {isNum(derived?.globalActualCost) ? `${fmtMoney(derived.globalActualCost, 0)}` : "—"}</div></> },
+        { label: "CO₂ Impact", render: (r) => <><div className="cell-val" style={{ color: 'var(--warning)', marginBottom: 4 }}>Alw: {isNum(r.co2_kg) ? `${fmt(r.co2_kg / 1000, 1)} tCO₂e/yr` : "—"}</div><div className="cell-sub" style={{ color: 'var(--warning)', marginTop: 0 }}>Act: {isNum(derived?.globalActualCo2) ? `${fmt(derived.globalActualCo2 / 1000, 1)} tCO₂e/yr` : "—"}</div></> },
+        { label: "Actual vs Allowable", render: (r) => { const isPass = r.delta_kg_h <= 0; return <><div className="cell-val" style={{ marginBottom: 8 }}><span className={`badge ${isPass ? 'good' : 'bad'}`}><span className={`dot ${isPass ? 'good' : 'bad'}`}></span>{isPass ? "PASS" : "FAIL"}</span></div><div className="cell-sub" style={{ marginTop: 0 }}>Diff: {isNum(r.delta_kg_h) ? `${r.delta_kg_h > 0 ? '+' : ''}${fmt(dispMass(r.delta_kg_h), 4)} ${massFlowUnit}` : "—"}</div></>; } }
       ];
 
       const exportCSV = () => {
@@ -1438,7 +1452,7 @@
             <>
               <div className="form-group"><label>Rated Cv (Required for II–IV)</label><input type="number" value={cv} onChange={e => setCv(e.target.value)} /></div>
               <div className="form-row"><div><label>Seat Diameter</label><input type="number" value={seatDia} onChange={e => setSeatDia(e.target.value)} /></div><div><label>Unit</label><select value={seatDiaUnit} onChange={e => setSeatDiaUnit(e.target.value)}><option value="mm">mm</option><option value="in">in</option></select></div></div>
-              <div className="form-row"><div><label>Measured Leakage (Mass)</label><input type="number" value={actualLeak} onChange={e => setActualLeak(e.target.value)} /></div><div><label>Unit</label><select value={actualLeakUnit} onChange={e => setActualLeakUnit(e.target.value)}><option value="kg/h">kg/h</option><option value="lb/h">lb/h</option></select></div></div>
+              <div className="form-row"><div><label>Measured Leakage {["m³/h", "m3/h"].includes(actualLeakUnit) ? "(Volume)" : "(Mass)"}</label><input type="number" value={actualLeak} onChange={e => { const v = e.target.value; setActualLeak(v === "" ? "" : Math.max(0, Number(v))); }} /></div><div><label>Unit</label><select value={actualLeakUnit} onChange={e => setActualLeakUnit(e.target.value)}><option value="kg/h">kg/h</option><option value="lb/h">lb/h</option><option value="m³/h">m³/h</option></select></div></div>
               <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--border)' }}>
                 <label>Results: Mass Flow Display</label>
                 <div className="toggle-group">
@@ -1552,47 +1566,40 @@
               <div className="kpi-grid">
                 <div className="kpi-card"><span className="kpi-label">Tightest Class Met</span><span className="kpi-value" style={{ color: derived.tightestMet !== "—" ? 'var(--success)' : 'var(--text-main)' }}>{derived.tightestMet !== "—" ? `Class ${derived.tightestMet}` : "None"}</span><span className="kpi-sub">Actual: {actualLeak} {actualLeakUnit}</span></div>
                 <div className="kpi-card"><span className="kpi-label">Downstream State</span><span className="kpi-value" style={{ fontSize: '18px' }}>{derived.thermo.ok ? derived.thermo.downState : "—"}</span><span className="kpi-sub">{derived.thermo.ok && isNum(derived.thermo.quality) ? `Quality (x) = ${fmt(derived.thermo.quality, 3)}` : "Superheated/Liquid"}</span></div>
-                <div className="kpi-card"><span className="kpi-label">Leakage Cost (Target)</span><span className="kpi-value" style={{ color: 'var(--danger)' }}>{currentTightest?.costLost ? fmtMoney(currentTightest.costLost, 0) : "—"}</span><span className="kpi-sub">If at Class {derived.tightestMet !== "—" ? derived.tightestMet : "limit"}</span></div>
-                <div className="kpi-card"><span className="kpi-label">CO₂ Impact</span><span className="kpi-value" style={{ color: 'var(--warning)' }}>{currentTightest?.co2_kg ? fmt(currentTightest.co2_kg / 1000, 1) : "—"} <span style={{ fontSize: 14 }}>t</span></span><span className="kpi-sub">Scope {co2Mode === 'scope1' ? '1' : '2'} Equivalent</span></div>
+                <div className="kpi-card"><span className="kpi-label">Actual Leakage Cost</span><span className="kpi-value" style={{ color: 'var(--danger)' }}>{isNum(derived?.globalActualCost) ? fmtMoney(derived.globalActualCost, 0) : "—"}</span><span className="kpi-sub">Based on measured leakage</span></div>
+                <div className="kpi-card"><span className="kpi-label">Actual CO₂ Impact</span><span className="kpi-value" style={{ color: 'var(--warning)' }}>{isNum(derived?.globalActualCo2) ? fmt(derived.globalActualCo2 / 1000, 1) : "—"} <span style={{ fontSize: 14 }}>t</span></span><span className="kpi-sub">Scope {co2Mode === 'scope1' ? '1' : '2'} Equivalent</span></div>
               </div>
-
-              {/* New Visual Chart Section */}
-              {maxChartVal > 0 && (
-                <div className="chart-container">
-                  <div className="chart-header">
-                    <h3 className="chart-title">Leakage Comparison: Allowable vs Actual <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>({massFlowUnit})</span></h3>
-                    <span className="chart-subtitle">Logarithmic Scale</span>
-                  </div>
-                  <div className="chart-wrapper">
-                    {/* Horizontal trendline for "Actual" leak */}
-                    {validActual && (
-                      <div style={{ position: 'absolute', bottom: getChartHeight(derived.globalActual), left: 0, right: 0, borderTop: '2px dashed var(--accent)', zIndex: 0 }}>
-                        <span style={{ position: 'absolute', right: 0, top: '-22px', fontSize: '12px', color: 'var(--accent)', fontFamily: 'var(--mono)', fontWeight: 600 }}>Actual: {fmt(dispMass(derived.globalActual), 4)} {massFlowUnit}</span>
-                      </div>
-                    )}
-
-                    {/* Bars for each class limit */}
-                    {derived.results.map(r => {
-                      if (!isNum(r.allowable_kg_h)) return <div key={r.cls} className="bar-col"></div>;
-
-                      const isMet = validActual && derived.globalActual <= r.allowable_kg_h;
-                      let barClass = "bar " + (validActual ? (isMet ? "pass" : "fail") : "neutral");
-
-                      return (
-                        <div key={r.cls} className="bar-col" style={{ zIndex: 1 }}>
-                          <div className="bar-val">{fmt(dispMass(r.allowable_kg_h), 4)}</div>
-                          <div className={barClass} style={{ height: getChartHeight(r.allowable_kg_h) }}></div>
-                          <div className="bar-label">Cls {r.cls}</div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              )}
 
               <div className="table-container">
                 <table>
                   <thead>
+                    {maxChartVal > 0 && (
+                      <tr>
+                        <th style={{ background: 'var(--panel)', borderBottom: 'none', verticalAlign: 'bottom', paddingBottom: '20px' }}>
+                          <h3 className="chart-title">Leakage Scale</h3>
+                        </th>
+                        <th colSpan="5" style={{ background: 'var(--panel)', borderBottom: 'none', padding: 0, verticalAlign: 'bottom' }}>
+                          <div className="chart-wrapper" style={{ borderBottom: '1px solid var(--border)', margin: '0', height: '140px', paddingBottom: '0', position: 'relative' }}>
+                            {validActual && (
+                              <div style={{ position: 'absolute', bottom: getChartHeight(derived.globalActual), left: 0, right: 0, borderTop: '2px dashed var(--accent)', zIndex: 0 }}>
+                                <span style={{ position: 'absolute', right: '16px', top: '-18px', fontSize: '11px', color: 'var(--accent)', fontFamily: 'var(--mono)', fontWeight: 600 }}>Actual: {fmt(dispMass(derived.globalActual), 4)} {massFlowUnit}</span>
+                              </div>
+                            )}
+                            {derived.results.map(r => {
+                              if (!isNum(r.allowable_kg_h)) return <div key={r.cls} className="bar-col"></div>;
+                              const isMet = validActual && derived.globalActual <= r.allowable_kg_h;
+                              let barClass = "bar " + (validActual ? (isMet ? "pass" : "fail") : "neutral");
+                              return (
+                                <div key={r.cls} className="bar-col" style={{ zIndex: 1 }}>
+                                  <div className="bar-val" style={{ top: '-18px', fontSize: '11px' }}>{fmt(dispMass(r.allowable_kg_h), 4)}</div>
+                                  <div className={barClass} style={{ height: getChartHeight(r.allowable_kg_h), maxWidth: '60px', borderBottom: 'none', borderRadius: '4px 4px 0 0' }}></div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </th>
+                      </tr>
+                    )}
                     <tr>
                       <th>Criteria</th>
                       {derived.results.map(r => (
