@@ -108,6 +108,22 @@
             overflow-x: hidden;
         }
 
+        /* Focus & Accessibility Improvements */
+        :focus-visible {
+            outline: 2px solid var(--accent-blue);
+            outline-offset: 2px;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
         .container {
             width: min(100% - 2rem, 1200px);
             margin-inline: auto;
@@ -790,8 +806,8 @@
 <body>
     <!-- Mobile Logo -->
     <a href="index.html" class="mobile-nav-logo">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
+        <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M7 10l5 5 5-5" />
             <path d="M12 15V3" />
         </svg>
@@ -810,8 +826,8 @@
             <li><a href="expert-apps.html" class="mobile-nav-link" onclick="toggleMobileMenu()">Expert Apps</a></li>
         </ul>
         <button class="mobile-menu-close" aria-label="Close Menu" onclick="toggleMobileMenu()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
+            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
@@ -819,7 +835,8 @@
     </div>
     <!-- Mobile Logo (Outside floating nav to avoid containing block issues) -->
     <a href="index.html" class="mobile-nav-logo">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
             <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round" />
             <path d="M2 17L12 22L22 17" stroke="white" stroke-width="2" stroke-linecap="round"
@@ -831,8 +848,8 @@
     </a>
     <nav class="floating-nav">
         <a href="index.html" class="nav-logo">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M7 6a5 5 0 0 1 10 0" />
                 <path d="M6 6h12" />
                 <path d="M12 6v9" />
@@ -841,9 +858,9 @@
             </svg>
             <span>TheValvePro</span>
         </a>
-        <button class="mobile-menu-btn" aria-label="Toggle Menu">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
+        <button class="mobile-menu-btn" aria-label="Toggle Menu" aria-expanded="false" id="mobileMenuBtn">
+            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="3" y1="12" x2="21" y2="12"></line>
                 <line x1="3" y1="6" x2="21" y2="6"></line>
                 <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -858,8 +875,8 @@
             <li><a href="expert-apps.html" class="nav-link active">Expert Apps</a></li>
             <li>
                 <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
-                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    <svg aria-hidden="true" class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" style="display: none;">
                         <circle cx="12" cy="12" r="5"></circle>
                         <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -871,8 +888,8 @@
                         <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
                         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                     </svg>
-                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    <svg aria-hidden="true" class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                     </svg>
@@ -1068,12 +1085,20 @@
                 <p style="color: var(--text-muted); font-size: 14px;">Compare repair vs. replace strategies with hard
                     data on lifecycle costs.</p>
             </div>
-            <a href="performance-diagnostics.html" class="teaser-card" style="border-style: solid; border-color: var(--accent-blue); text-decoration: none; display: block; cursor: pointer; transition: transform 0.25s ease, box-shadow 0.25s ease;" onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 12px 40px rgba(59,130,246,0.2)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+            <a href="performance-diagnostics.html" class="teaser-card"
+                style="border-style: solid; border-color: var(--accent-blue); text-decoration: none; display: block; cursor: pointer; transition: transform 0.25s ease, box-shadow 0.25s ease;"
+                onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 12px 40px rgba(59,130,246,0.2)'"
+                onmouseout="this.style.transform='';this.style.boxShadow=''">
                 <span class="status" style="color: var(--accent-blue);">Custom Tooling</span>
                 <h3 style="color: var(--text-primary);">Custom Plant Dashboards</h3>
-                <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--accent-blue);">
+                <span
+                    style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--accent-blue);">
                     See our Performance Analytics Solutions
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                    </svg>
                 </span>
             </a>
         </div>
@@ -1185,8 +1210,8 @@
     <!-- Back to Top Button -->
     <button id="back-to-top" aria-label="Back to top" title="Back to top"
         onclick="window.scrollTo({top:0,behavior:'smooth'})">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="18 15 12 9 6 15"></polyline>
         </svg>
     </button>
